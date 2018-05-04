@@ -9,13 +9,10 @@
  *      Material Modules (and/or components) to use in our app
  */
 
-// import { 
-//   MatButtonModule, 
-//   MatCheckboxModule 
-// }                                   from '@angular/material';
 import { BrowserModule }            from '@angular/platform-browser';
 import { BrowserAnimationsModule }  from '@angular/platform-browser/animations'
 import { NgModule }                 from '@angular/core';
+import { FormsModule }              from '@angular/forms';
 import { AppComponent }             from './app.component';
 import { MaterialModule }           from './material.module';
 
@@ -27,9 +24,8 @@ import { MaterialModule }           from './material.module';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    // MatButtonModule,
-    // MatCheckboxModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [ AppComponent ]
