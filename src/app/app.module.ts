@@ -1,13 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule } from '@angular/material';
-
-import { AppComponent } from './app.component';
-
-
 /**
- * Main Module
+ * AppModule
  * -------------------------------------------
  * Things to know:
  *    BrowserAnimationsModule¹: 
@@ -15,11 +7,19 @@ import { AppComponent } from './app.component';
  *      If you don't want to add another dependency to your project, you can use the NoopAnimationsModule
  *    MatxxxxxxModule¹: 
  *      Material Modules (and/or components) to use in our app
- *      TODO: Isolate Material importations in an appart shared module
- * 
- * @export
- * @class AppModule
  */
+
+// import { 
+//   MatButtonModule, 
+//   MatCheckboxModule 
+// }                                   from '@angular/material';
+import { BrowserModule }            from '@angular/platform-browser';
+import { BrowserAnimationsModule }  from '@angular/platform-browser/animations'
+import { NgModule }                 from '@angular/core';
+import { AppComponent }             from './app.component';
+import { MaterialModule }           from './material.module';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -27,11 +27,12 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatCheckboxModule
+    // MatButtonModule,
+    // MatCheckboxModule,
+    MaterialModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
 
