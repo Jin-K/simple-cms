@@ -2,7 +2,10 @@
 <mat-drawer-container autosize fullscreen>
   <mat-drawer #drawer mode="side">
     <mat-toolbar>
-      <mat-toolbar-row routerLink="/">Home</mat-toolbar-row>
+      <mat-toolbar-row routerLink="/">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </mat-toolbar-row>
     </mat-toolbar>
   </mat-drawer>
 
@@ -14,10 +17,14 @@
         </mat-icon>
       </button>
       <span>Simple CRM</span>
-      <!-- <span class="example-spacer"></span> -->
-      <!-- <button mat-button>Login</button> -->
+      <span class="example-spacer"></span>
+      <button mat-button title="Info">
+        <mat-icon>info_outline</mat-icon>
+      </button>
     </mat-toolbar>
 
-    <router-outlet></router-outlet>
+    <div class="body-margin center-align">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </mat-drawer-container>
