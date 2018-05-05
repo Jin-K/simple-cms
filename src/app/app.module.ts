@@ -9,10 +9,11 @@
  *      Material Modules (and/or components) to use in our app
  */
 
+import { NgModule }                 from '@angular/core';
 import { BrowserModule }            from '@angular/platform-browser';
 import { BrowserAnimationsModule }  from '@angular/platform-browser/animations'
-import { NgModule }                 from '@angular/core';
 import { FormsModule }              from '@angular/forms';
+import { FlexLayoutModule }         from '@angular/flex-layout';
 
 import { AppComponent }             from './app.component';
 import { Routing }                  from './app.routing';
@@ -28,8 +29,9 @@ import { HomeComponent }            from './home/home.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule,
     FormsModule,
+    FlexLayoutModule,
+    MaterialModule,
     Routing
   ],
   providers: [],
