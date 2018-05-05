@@ -1,2 +1,23 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<router-outlet></router-outlet>
+<mat-drawer-container autosize fullscreen>
+  <mat-drawer #drawer mode="side">
+    <mat-toolbar>
+      <mat-toolbar-row routerLink="/">Home</mat-toolbar-row>
+    </mat-toolbar>
+  </mat-drawer>
+
+  <div id="drawer-content">
+    <mat-toolbar color="primary">
+      <button mat-button (click)="drawer.toggle()">
+        <mat-icon>
+          menu
+        </mat-icon>
+      </button>
+      <span>Simple CRM</span>
+      <!-- <span class="example-spacer"></span> -->
+      <!-- <button mat-button>Login</button> -->
+    </mat-toolbar>
+
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>
