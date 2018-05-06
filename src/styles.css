@@ -9,13 +9,9 @@ body {
   margin: 0;
 }
 
-.body-margin {
-  margin: 50px;
-}
-
-.center-align {
-  text-align: center;
-}
+.body-margin { margin: 50px }
+.center-align { text-align: center }
 
 .margin-left-5 { margin-left: 5px }
 .margin-top-20 { margin-top: 20px }
+.margin-top-50 { margin-top: 50px }

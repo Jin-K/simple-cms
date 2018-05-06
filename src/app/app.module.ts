@@ -19,12 +19,14 @@ import { AppComponent }             from './app.component';
 import { Routing }                  from './app.routing';
 import { MaterialModule }           from './material.module';
 import { HomeComponent }            from './home/home.component';
+import { EntityComponent }          from './entity/entity.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    EntityComponent
   ],
   imports: [
     BrowserModule,
