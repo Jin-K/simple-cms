@@ -9,17 +9,24 @@
  *      Material Modules (and/or components) to use in our app
  */
 
-import { NgModule }                 from '@angular/core';
-import { BrowserModule }            from '@angular/platform-browser';
-import { BrowserAnimationsModule }  from '@angular/platform-browser/animations'
-import { FormsModule }              from '@angular/forms';
-import { FlexLayoutModule }         from '@angular/flex-layout';
+import { NgModule }                   from '@angular/core';
+import { BrowserModule }              from '@angular/platform-browser';
+import { BrowserAnimationsModule }    from '@angular/platform-browser/animations'
+import { FormsModule }                from '@angular/forms';
+import { FlexLayoutModule }           from '@angular/flex-layout';
 
-import { AppComponent }             from './app.component';
-import { Routing }                  from './app.routing';
-import { MaterialModule }           from './material.module';
-import { HomeComponent }            from './home/home.component';
-import { EntityComponent }          from './entity/entity.component';
+import { StoreModule }                from '@ngrx/store';
+
+import { storeFreeze }                from 'ngrx-store-freeze';
+
+import { AppComponent }               from './app.component';
+import { Routing }                    from './app.routing';
+import { MaterialModule }             from './material.module';
+import { HomeComponent }              from './home/home.component';
+import { EntityComponent }            from './entity/entity.component';
+
+import { INITIAL_APPLICATION_STATE }  from './core/application-state';
+import { reducers }                   from './core/reducers/reducers';
 
 
 @NgModule({
@@ -34,6 +41,7 @@ import { EntityComponent }          from './entity/entity.component';
     FormsModule,
     FlexLayoutModule,
     MaterialModule,
+    StoreModule.forRoot(reducers, {metaReducers: [storeFreeze], initialState: INITIAL_APPLICATION_STATE}),
     Routing
   ],
   providers: [],
