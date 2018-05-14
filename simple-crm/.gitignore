@@ -1,3 +1,5 @@
+## ------------ Begin Angular CLI section ------------
+
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
@@ -7,6 +9,7 @@
 
 # dependencies
 /node_modules
+package-lock.json
 
 # IDEs and editors
 /.idea
@@ -16,6 +19,10 @@
 *.launch
 .settings/
 *.sublime-workspace
+
+# IDE - Visual Studio
+obj/
+bin/
 
 # IDE - VSCode
 .vscode/*
@@ -34,6 +41,12 @@ yarn-error.log
 testem.log
 /typings
 
+# e2e
+/e2e/*.js
+/e2e/*.map
+
 # System Files
 .DS_Store
 Thumbs.db
+
+## ------------ End Angular CLI section ------------

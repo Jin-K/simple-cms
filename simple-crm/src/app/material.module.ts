@@ -1,4 +1,4 @@
-import { 
+import {
   MatButtonModule,
   MatMenuModule,
   MatCheckboxModule,
@@ -15,10 +15,24 @@ import {
 import { NgModule }         from '@angular/core';
 import { CommonModule }     from '@angular/common';
 
+const MAT_COMPONENTS = [
+  MatButtonModule,
+  MatMenuModule,
+  MatCheckboxModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
+  MatCardModule,
+  MatIconModule,
+  MatSidenavModule,
+  MatTabsModule
+];
 
 @NgModule({
-  imports: [ MatButtonModule, MatMenuModule, MatCheckboxModule, MatToolbarModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatProgressBarModule, MatCardModule, MatIconModule, MatSidenavModule, MatTabsModule ],
-  exports: [ MatButtonModule, MatMenuModule, MatCheckboxModule, MatToolbarModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule, MatProgressBarModule, MatCardModule, MatIconModule, MatSidenavModule, MatTabsModule ]
+  imports: MAT_COMPONENTS,
+  exports: MAT_COMPONENTS
 })
 
 export class MaterialModule {}

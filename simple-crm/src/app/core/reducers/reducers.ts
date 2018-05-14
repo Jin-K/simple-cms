@@ -6,4 +6,4 @@ export const reducers = {
   uiState,
   storeData,
   routerReducer: fromRouter.routerReducer
-}
+};

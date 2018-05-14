@@ -31,13 +31,13 @@ interface RouterStateUrl {
 }
 
 export interface ApplicationState {
-  uiState: UiState,
-  storeData: StoreData,
-  routerReducer: fromRouter.RouterReducerState<RouterStateUrl>
+  uiState: UiState;
+  storeData: StoreData;
+  routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
 }
 
 export const INITIAL_APPLICATION_STATE: ApplicationState = {
   uiState: INITIAL_UI_STATE,
   storeData: INITIAL_STORE_DATA,
   routerReducer: undefined
-}
+};

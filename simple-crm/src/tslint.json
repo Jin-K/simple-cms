@@ -12,6 +12,9 @@
             "element",
             "app",
             "kebab-case"
-        ]
+        ],
+        "import-spacing": false,
+        "no-debugger": false,
+        "curly": false
     }
 }
