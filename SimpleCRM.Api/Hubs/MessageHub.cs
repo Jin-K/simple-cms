@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace api.Hubs {
+namespace SimpleCRM.Api.Hubs {
   public class MessageHub : Hub {
     public override Task OnConnectedAsync() {
       Trace.TraceInformation("client connected");

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using api.Hubs;
+using SimpleCRM.Api.Hubs;
 
-namespace api.Controllers {
+namespace SimpleCRM.Api.Controllers {
 
   [Route( "api/message" )]
   public class MessageController : Controller {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using api.Providers;
+using SimpleCRM.Api.Providers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace api.Controllers {
+namespace SimpleCRM.Api.Controllers {
   [Route("api/[controller]")]
   public class NewsController : Controller {
     private NewsStore _newsStore;

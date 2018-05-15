@@ -4,10 +4,10 @@ using System.Diagnostics;
 
 using Microsoft.AspNetCore.SignalR;
 
-using api.Models.SignalR;
-using api.Providers;
+using SimpleCRM.Api.Models.SignalR;
+using SimpleCRM.Api.Providers;
 
-namespace api.Hubs {
+namespace SimpleCRM.Api.Hubs {
   public class NewsHub : Hub {
 
     private NewsStore _newsStore;

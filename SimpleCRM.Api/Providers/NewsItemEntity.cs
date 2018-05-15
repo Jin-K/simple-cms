@@ -1,4 +1,4 @@
-namespace api.Providers {
+namespace SimpleCRM.Api.Providers {
   public class NewsItemEntity {
     public long Id { get; set; }
     public string Header { get; set; }

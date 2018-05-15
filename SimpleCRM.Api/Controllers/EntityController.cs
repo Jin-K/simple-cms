@@ -1,7 +1,7 @@
-using api.Models;
+using SimpleCRM.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace api.Controllers {
+namespace SimpleCRM.Api.Controllers {
 
   [Route( "api/entity" )]
   public class EntityController : Controller {

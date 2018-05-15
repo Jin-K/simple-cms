@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace api {
+namespace SimpleCRM.Api {
   public class Program {
     public static void Main(string[] args) {
       CreateWebHostBuilder(args).Build().Run();

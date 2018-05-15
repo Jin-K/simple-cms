@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using api.Models.SignalR;
+using SimpleCRM.Api.Models.SignalR;
 
-namespace api.Providers {
+namespace SimpleCRM.Api.Providers {
   public class NewsStore {
     public NewsStore(NewsContext newsContext) {
       _newsContext = newsContext;
