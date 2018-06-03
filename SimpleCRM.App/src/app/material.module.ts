@@ -13,7 +13,7 @@ import {
   MatTabsModule
 }                           from '@angular/material';
 import { NgModule }         from '@angular/core';
-import { CommonModule }     from '@angular/common';
+// import { CommonModule }     from '@angular/common';
 
 const MAT_COMPONENTS = [
   MatButtonModule,

@@ -9,7 +9,7 @@ import * as NewsActions       from '../store/news.actions';
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']
+  styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
   public async: any;

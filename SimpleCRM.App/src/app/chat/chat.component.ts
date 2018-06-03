@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy }                   from '@angular/core';
-import { HubConnectionBuilder, LogLevel, HubConnection }  from '@aspnet/signalr';
+import { HubConnectionBuilder, HubConnection }            from '@aspnet/signalr';
 
 const ENDPOINT = 'http://simple-crm:64907';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
   private readonly connection: HubConnection = new HubConnectionBuilder().withUrl(`${ENDPOINT}/message`).build();
