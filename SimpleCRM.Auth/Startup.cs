@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using IdentityServer4.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SimpleCRM.Auth.Data;
 using SimpleCRM.Auth.Models;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
+using SimpleCRM.Auth.Services;
 
 namespace SimpleCRM.Auth {
   public class Startup {
@@ -47,6 +48,8 @@ namespace SimpleCRM.Auth {
 
       //var cert = new X509Certificate2( Path.Combine( _environment.ContentRootPath, "jinkserver.snk" ), "" );
 
+      services.AddDbContext<ApplicationDbContext>( options => options.UseSqlite( Configuration.GetConnectionString( "LocalConnection" ) ) );
+
       services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
@@ -59,6 +62,10 @@ namespace SimpleCRM.Auth {
          } );
 
       services.AddMvc();
+
+      services.AddTransient<IProfileService, IdentityWithAdditionalClaimsProfileService>();
+
+      services.AddTransient<IEmailSender, AuthMessageSender>();
 
       services.AddIdentityServer()
         //.AddSigningCredential( cert )
