@@ -86,7 +86,7 @@ export class AppModule {
     private oidcConfigService: OidcConfigService
   ) {
     this.oidcConfigService.onConfigurationLoaded.subscribe(() => {
-      const openIDImplicitFlowConfiguration         = new OpenIDImplicitFlowConfiguration();
+      const openIDImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
       openIDImplicitFlowConfiguration.stsServer                                   = this.oidcConfigService.clientConfiguration.stsServer;
       openIDImplicitFlowConfiguration.redirect_url                                = this.oidcConfigService.clientConfiguration.redirect_url;
       openIDImplicitFlowConfiguration.client_id                                   = this.oidcConfigService.clientConfiguration.client_id;
