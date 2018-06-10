@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleCRM.App.ViewModel;
 using System;
 using System.Linq;
 
@@ -17,6 +18,8 @@ namespace SimpleCRM.App {
         .AddEnvironmentVariables().Build();
 
     public void ConfigureServices(IServiceCollection services) {
+      services.Configure<ClientAppSettings>(Configuration.GetSection("ClientAppSettings"));
+
       services.AddCors( options => {
         options.AddPolicy(
           "AllowAllOrigins",
@@ -29,8 +32,8 @@ namespace SimpleCRM.App {
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
-      //loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
-      //loggerFactory.AddDebug();
+      loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
+      loggerFactory.AddDebug();
 
       var angularRoutes = new[] {
         "/entity",
