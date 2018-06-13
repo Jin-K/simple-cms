@@ -19,7 +19,7 @@ export class NewsService {
 
   constructor(private http: HttpClient, private store: Store<any>) {
     this.init();
-    this.actionUrl = 'http://simple-crm:64907/api/news';
+    this.actionUrl = 'https://localhost:44385/api/news';
 
     this.headers = new HttpHeaders();
     this.headers = this.headers.set('Content-Type', 'application/json' );
@@ -45,7 +45,7 @@ export class NewsService {
 
   private init() {
     this._hubConnection = new HubConnectionBuilder()
-      .withUrl('http://simple-crm:64907/looney')
+      .withUrl('https://localhost:44385/looney')
       .configureLogging(LogLevel.Information)
       .build();
 

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using SimpleCRM.Api.Providers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SimpleCRM.Api.Controllers {
+  //[Authorize(AuthenticationSchemes = "Bearer")]
   [Route("api/[controller]")]
   public class NewsController : Controller {
     private NewsStore _newsStore;

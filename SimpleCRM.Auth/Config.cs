@@ -41,14 +41,18 @@ namespace SimpleCRM.Auth {
           AllowOfflineAccess = true,
           AlwaysIncludeUserClaimsInIdToken = true,
           RedirectUris = new List<string> {
-            "https://localhost:4200"
+            "http://localhost:4200",
+            "https://localhost:44300",
           },
           PostLogoutRedirectUris = new List<string> {
-            "https://localhost:4200/unauthorized",
-            "https://localhost:4200"
+            "http://localhost:4200/unauthorized",
+            "https://localhost:44300/unauthorized",
+            "http://localhost:4200",
+            "https://localhost:44300",
           },
           AllowedCorsOrigins = new List<string> {
-            "https://localhost:4200"
+            "http://localhost:4200",
+            "https://localhost:44300",
           },
           AllowedScopes = new List<string> {
             "openid",

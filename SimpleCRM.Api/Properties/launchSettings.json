@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://simple-crm:64907/",
-      "sslPort": 0
+      "applicationUrl": "http://localhost:64907/",
+      "sslPort": 44385
     }
   },
   "profiles": {
@@ -20,7 +20,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://simple-crm:64907/"
+      "applicationUrl": "http://localhost:64907/"
     }
   }
 }

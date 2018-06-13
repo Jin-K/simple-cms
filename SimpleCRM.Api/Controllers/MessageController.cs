@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SimpleCRM.Api.Hubs;
 
 namespace SimpleCRM.Api.Controllers {
 
+  [Authorize(AuthenticationSchemes = "Bearer")]
   [Route( "api/message" )]
   public class MessageController : Controller {
     private IHubContext<MessageHub> _messageHubContext;

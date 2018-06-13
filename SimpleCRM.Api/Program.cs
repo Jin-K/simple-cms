@@ -16,7 +16,6 @@ namespace SimpleCRM.Api {
 
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) 
       => WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("http://simple-crm:64907");
+                .UseStartup<Startup>();
   }
 }
