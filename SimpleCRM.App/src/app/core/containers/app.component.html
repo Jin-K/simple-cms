@@ -43,7 +43,11 @@
   </div>
 </mat-drawer-container>
 <mat-menu #dropdownMenu [overlapTrigger]="false">
-  <a mat-menu-item>
+  <a mat-menu-item (click)="login()">
+    <mat-icon>how_to_reg</mat-icon>
+    <span>Login</span>
+  </a>
+  <a mat-menu-item (click)="logout()">
     <mat-icon>exit_to_app</mat-icon>
     <span>Logout</span>
   </a>
