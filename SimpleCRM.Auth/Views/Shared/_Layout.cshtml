@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SimpleCRM</title>
+
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="bg-dark mb-4 navbar navbar-dark navbar-expand-md">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ID4 with external Providers and Identity</a>
+        <button aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#topNavbarCollapse" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topNavbarCollapse">
+
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
+    </nav>
+
+    <div class="col-md-12">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2018 - ID4 with external Providers and Identity</p>
+        </footer>
+    </div>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
