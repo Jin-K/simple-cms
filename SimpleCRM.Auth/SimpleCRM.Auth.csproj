@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
+    <Folder Include="Views\Consent\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
