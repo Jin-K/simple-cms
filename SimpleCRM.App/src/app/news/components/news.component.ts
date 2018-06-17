@@ -1,17 +1,18 @@
-import { Component, OnInit }  from '@angular/core';
-import { Observable }         from 'rxjs';
-import { Store }              from '@ngrx/store';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription }     from 'rxjs';
+import { Store }                        from '@ngrx/store';
+import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
-import { NewsState }          from '../store/news.state';
-import { NewsItem }           from '../models/news-item';
-import * as NewsActions       from '../store/news.actions';
+import { NewsState }                    from '../store/news.state';
+import * as NewsActions                 from '../store/news.actions';
+import { NewsItem }                     from '../models/news-item';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss']
 })
-export class NewsComponent implements OnInit {
+export class NewsComponent implements OnInit, OnDestroy {
   public async: any;
   newsItem: NewsItem;
   newsItems: NewsItem[] = [];
@@ -20,11 +21,18 @@ export class NewsComponent implements OnInit {
   newsState$: Observable<NewsState>;
   groups = ['IT', 'global', 'sport'];
 
-  constructor(private store: Store<any>) {
+  isAuthorizedSubscription: Subscription;
+  isAuthorized = false;
+
+  constructor(
+    private store: Store<any>,
+    private oidcSecurityService: OidcSecurityService
+  ) {
     this.newsState$ = this.store.select<NewsState>(state => state.news);
 
     this.store.select<NewsState>(state => state.news).subscribe((o: NewsState) => this.newsItems = o.news.newsItems);
 
+    console.log(this.newsItems);
     this.newsItem = new NewsItem();
     this.newsItem.AddData('', '', this.author, this.group);
   }
@@ -36,6 +44,7 @@ export class NewsComponent implements OnInit {
   }
 
   public join(): void {
+    console.log('join');
     this.store.dispatch(new NewsActions.JoinGroupAction(this.group));
   }
 
@@ -44,8 +53,19 @@ export class NewsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('go');
-    this.store.dispatch(new NewsActions.SelectAllGroupsAction());
+    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
+      (isAuthorized: boolean) => {
+        this.isAuthorized = isAuthorized;
+        if (this.isAuthorized) {
+          console.log('this.store.dispatch(new NewsActions.SelectAllGroupsAction());');
+          this.store.dispatch(new NewsActions.SelectAllGroupsAction());
+        }
+      }
+    );
+    console.log('IsAuthorized:' + this.isAuthorized);
   }
 
+  ngOnDestroy(): void {
+    if (this.isAuthorizedSubscription) this.isAuthorizedSubscription.unsubscribe();
+  }
 }

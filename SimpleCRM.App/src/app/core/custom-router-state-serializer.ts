@@ -1,10 +1,10 @@
-import { RouterStateSerializer } from "@ngrx/router-store";
-import { Params, RouterStateSnapshot } from "@angular/router";
+import { RouterStateSerializer }        from '@ngrx/router-store';
+import { Params, RouterStateSnapshot }  from '@angular/router';
 
 export interface RouterStateUrl {
-  url: string,
-  params: Params,
-  queryParams: Params
+  url: string;
+  params: Params;
+  queryParams: Params;
 }
 
 export class CustomRouterStateSerializer implements RouterStateSerializer<RouterStateUrl> {

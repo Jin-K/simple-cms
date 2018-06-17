@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.connection.on('send', data => console.log(data));
     this.connection.start().then(() => console.log('Connected')).catch(err => console.error(err));
   }
-  
+
   ngOnDestroy(): void {
     this.connection.stop().catch(err => console.error(err));
   }
