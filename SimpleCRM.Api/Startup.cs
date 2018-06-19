@@ -17,6 +17,8 @@ using SimpleCRM.Api.Providers;
 using SimpleCRM.Api.Repositories;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +53,7 @@ namespace SimpleCRM.Api {
 
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
       
+      // used for the new items which belong to the signalr hub
       services.AddDbContext<NewsContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
@@ -91,7 +94,8 @@ namespace SimpleCRM.Api {
             OnMessageReceived = context => {
               if (
                 (
-                  context.Request.Path.Value.StartsWith("/message")
+                  context.Request.Path.Value.StartsWith("/signalrhome")
+                  || context.Request.Path.Value.StartsWith("/message")
                   || context.Request.Path.Value.StartsWith("/looney")
                 )
                 && context.Request.Query.TryGetValue("token", out StringValues token)
@@ -137,6 +141,7 @@ namespace SimpleCRM.Api {
       app.UseAuthentication();
 
       app.UseSignalR( routes => {
+        routes.MapHub<SignalRHomeHub>( "/signalrhome" );
         routes.MapHub<MessageHub>( "/message" );
         routes.MapHub<NewsHub>("/looney");
       });

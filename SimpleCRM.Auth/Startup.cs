@@ -82,6 +82,8 @@ namespace SimpleCRM.Auth {
       loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
       loggerFactory.AddDebug();
 
+      loggerFactory.AddSerilog();
+
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();
         app.UseDatabaseErrorPage();

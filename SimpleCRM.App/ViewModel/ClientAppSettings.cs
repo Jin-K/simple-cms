@@ -10,8 +10,8 @@ namespace SimpleCRM.App.ViewModel {
     public string client_id { get; set; }
     public string response_type { get; set; }
     public string scope { get; set; }
-    public string post_logout_redirect_url { get; set; }
-    public bool start_checkSession { get; set; }
+    public string post_logout_redirect_uri { get; set; }
+    public bool start_checksession { get; set; }
     public bool silent_renew { get; set; }
     public string startup_route { get; set; }
     public string forbidden_route { get; set; }

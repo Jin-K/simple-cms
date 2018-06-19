@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using SimpleCRM.App.ViewModel;
 using System;
 using System.Linq;
@@ -10,12 +11,21 @@ using System.Linq;
 namespace SimpleCRM.App {
   public class Startup {
     public IConfigurationRoot Configuration { get; }
-    public Startup(IHostingEnvironment env) => 
+    public Startup(IHostingEnvironment env) {
+      Log.Logger = new LoggerConfiguration()
+          .MinimumLevel.Verbose()
+          .Enrich.WithProperty("App", "SimpleCRM.App")
+          .Enrich.FromLogContext()
+          .WriteTo.Seq("http://localhost:5341")
+          .WriteTo.RollingFile("../Logs/App")
+          .CreateLogger();
+
       Configuration = new ConfigurationBuilder()
         .SetBasePath( env.ContentRootPath )
         .AddJsonFile( "appsettings.json", optional: true, reloadOnChange: true )
         .AddJsonFile( $"appsettings.{env.EnvironmentName}.json", optional: true )
         .AddEnvironmentVariables().Build();
+    }
 
     public void ConfigureServices(IServiceCollection services) {
       services.Configure<ClientAppSettings>(Configuration.GetSection("ClientAppSettings"));
@@ -34,6 +44,8 @@ namespace SimpleCRM.App {
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
       loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
       loggerFactory.AddDebug();
+
+      loggerFactory.AddSerilog();
 
       var angularRoutes = new[] {
         "/entity",

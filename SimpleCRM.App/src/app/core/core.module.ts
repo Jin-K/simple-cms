@@ -9,6 +9,7 @@ import { MaterialModule }   from '../material.module';
 import { ChatService }      from './services/chat.service';
 import { AppComponent }     from './containers/app.component';
 import { HomeComponent }    from './containers/home/home.component';
+import { Configuration }    from '../app.constants';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ export class CoreModule {
   static forRoot() {
     return {
       ngModule: CoreModule,
-      providers: [ ChatService ]
+      providers: [ ChatService, Configuration ]
     };
   }
 }
