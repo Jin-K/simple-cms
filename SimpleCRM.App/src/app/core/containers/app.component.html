@@ -32,6 +32,7 @@
       </mat-form-field>
       <button button="submit" mat-raised-button color="primary">Search</button>
       <span class="example-spacer"></span>
+      <span *ngIf="isAuthorized">Hello {{givenName}} !</span>
       <button mat-icon-button title="Info" [matMenuTriggerFor]="dropdownMenu">
         <mat-icon>info_outline</mat-icon>
       </button>
@@ -43,11 +44,11 @@
   </div>
 </mat-drawer-container>
 <mat-menu #dropdownMenu [overlapTrigger]="false">
-  <a mat-menu-item (click)="login()">
+  <a *ngIf="!isAuthorized" mat-menu-item (click)="login()">
     <mat-icon>how_to_reg</mat-icon>
     <span>Login</span>
   </a>
-  <a mat-menu-item (click)="logout()">
+  <a *ngIf="isAuthorized" mat-menu-item (click)="logout()">
     <mat-icon>exit_to_app</mat-icon>
     <span>Logout</span>
   </a>
