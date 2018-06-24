@@ -10,6 +10,7 @@ import { ChatService }      from './services/chat.service';
 import { AppComponent }     from './containers/app.component';
 import { HomeComponent }    from './containers/home/home.component';
 import { Configuration }    from '../app.constants';
+import { UserModule }       from '../user/user.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { Configuration }    from '../app.constants';
     FormsModule,
     RouterModule,
     FlexLayoutModule,
-    MaterialModule
+    MaterialModule,
+    UserModule
   ],
   declarations: [ HomeComponent, AppComponent ],
   exports: [

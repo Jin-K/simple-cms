@@ -1,6 +1,11 @@
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription }                 from 'rxjs';
+import { Store }                        from '@ngrx/store';
+import { Subscription, Observable }     from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
+
+import * as UserActions                 from '../../user/store/user.actions';
+import { UserState }                    from '../../user/store/user.state';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +18,19 @@ export class AppComponent implements OnInit, OnDestroy {
   isAuthorizedSubscription: Subscription;
   isAuthorized = false;
 
-  hasAdminRole = false
+  hasAdminRole = false;
   hasDataEventRecordsAdminRole = false;
   userDataSubscription: Subscription;
   userData: any;
 
-  givenName: string;
+  userState$: Observable<UserState>;
 
-  constructor(private oidcSecurityService: OidcSecurityService) {
+  constructor(
+    private store: Store<any>,
+    private oidcSecurityService: OidcSecurityService
+  ) {
+    this.userState$ = this.store.select<UserState>(state => state.user);
+
     if (this.oidcSecurityService.moduleSetup) this.doCallbackLogicIfRequired();
     else this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
   }
@@ -37,12 +47,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(isAuthorized => this.isAuthorized = isAuthorized);
+    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
+      isAuthorized => {
+        this.isAuthorized = isAuthorized;
+      }
+    );
 
     this.userDataSubscription = this.oidcSecurityService.getUserData().subscribe(
       userData => {
         if (userData && userData !== '' && userData.role) {
-          this.givenName = userData.given_name;
+          this.store.dispatch(new UserActions.AuthorizeComplete(userData.given_name));
+          
           for (let i = 0; i < userData.role.length; i++) {
             switch (userData.role[i]) {
               case 'dataEventRecords.admin':

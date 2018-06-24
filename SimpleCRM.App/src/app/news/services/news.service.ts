@@ -38,10 +38,10 @@ export class NewsService {
     return newsItem;
   }
 
-  //sendDirectMessage(message: string, userId: string): string {
-  //  if (this._hubConnection) this._hubConnection.invoke('SendDM', message, userId);
-  //  return message;
-  //}
+  // sendDirectMessage(message: string, userId: string): string {
+  //   if (this._hubConnection) this._hubConnection.invoke('SendDM', message, userId);
+  //   return message;
+  // }
 
   joinGroup(group: string): void {
     if (this._hubConnection) this._hubConnection.invoke('JoinGroup', group);
