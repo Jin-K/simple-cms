@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\user\store\user.actions.ts" />
+    <None Remove="src\app\user\store\user.reducers.ts" />
+    <None Remove="src\app\user\store\user.state.ts" />
+    <None Remove="src\app\user\user.module.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +33,10 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
+    <TypeScriptCompile Include="src\app\user\user.module.ts" />
+    <TypeScriptCompile Include="src\app\user\store\user.reducers.ts" />
+    <TypeScriptCompile Include="src\app\user\store\user.state.ts" />
+    <TypeScriptCompile Include="src\app\user\store\user.actions.ts" />
   </ItemGroup>
   
 </Project>
