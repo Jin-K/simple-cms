@@ -4,8 +4,8 @@ import { Store }                        from '@ngrx/store';
 import { Subscription, Observable }     from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
-import * as UserActions                 from '../../user/store/user.actions';
-import { UserState }                    from '../../user/store/user.state';
+import * as UserActions                 from './user/store/user.actions';
+import { UserState }                    from './user/store/user.state';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     else this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
   }
 
-  // Todo: Déplacer ça (login, logout) ailleurs non ? ==> dans un navigation.component comme SecurityAspNetCoreSignalR
+  // TODO: Déplacer ça (login, logout) ailleurs non ? ==> dans un navigation.component comme SecurityAspNetCoreSignalR
   login() {
     console.log('Do login logic');
     this.oidcSecurityService.authorize();

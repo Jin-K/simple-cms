@@ -15,10 +15,10 @@ import { storeFreeze }                  from 'ngrx-store-freeze';
 
 import { environment }                  from '../environments/environment';
 
-import { Routing }                      from './routing';
-import { ChatComponent }                from './chat/chat.component';
+import { AppComponent }                 from './app.component';
+import { Routing }                      from './app.routes';
+import { ChatComponent }                from './chat/chat.component'; // TODO: Create feature
 
-import { AppComponent }                 from './core/containers/app.component';
 import { CoreModule }                   from './core/core.module';
 import { CustomRouterStateSerializer }  from './core/custom-router-state-serializer';
 
@@ -32,6 +32,7 @@ import {
   OpenIDImplicitFlowConfiguration,
   AuthWellKnownEndpoints
 }                                       from 'angular-auth-oidc-client';
+import { SharedModule } from './shared/shared.module';
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');
@@ -41,6 +42,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 
 @NgModule({
   declarations: [
+    AppComponent,
     ChatComponent
   ],
   imports: [
@@ -66,6 +68,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     }),
     AuthModule.forRoot(),
     CoreModule.forRoot(),
+    SharedModule
   ],
   providers: [
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

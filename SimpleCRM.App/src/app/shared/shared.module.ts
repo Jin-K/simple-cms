@@ -1,19 +1,19 @@
 import { NgModule, ModuleWithProviders }  from '@angular/core';
 import { FlexLayoutModule }               from '@angular/flex-layout';
-import { MaterialModule }                 from '../material.module';
 import { Configuration }                  from '../app.constants';
+import { MAT_COMPONENTS }                 from './material.components';
 
 @NgModule({
   imports: [
+    ...MAT_COMPONENTS,
     FlexLayoutModule,
-    MaterialModule
   ],
   declarations: [
 
   ],
   exports: [
+    ...MAT_COMPONENTS,
     FlexLayoutModule,
-    MaterialModule
   ]
 })
 export class SharedModule {

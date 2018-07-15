@@ -4,7 +4,6 @@ import { FormsModule }      from '@angular/forms';
 import { RouterModule }     from '@angular/router';
 
 import { ChatService }      from './services/chat.service';
-import { AppComponent }     from './containers/app.component';
 import { HomeComponent }    from './containers/home/home.component';
 import { UserModule }       from '../user/user.module';
 import { SharedModule }     from '../shared/shared.module';
@@ -17,10 +16,9 @@ import { SharedModule }     from '../shared/shared.module';
     RouterModule,
     UserModule,
   ],
-  declarations: [ HomeComponent, AppComponent ],
+  declarations: [ HomeComponent ],
   exports: [
-    FormsModule,
-    AppComponent,
+    FormsModule
   ]
 })
 export class CoreModule {

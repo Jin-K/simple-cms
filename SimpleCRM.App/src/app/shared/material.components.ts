@@ -11,11 +11,9 @@ import {
   MatIconModule,
   MatSidenavModule,
   MatTabsModule
-}                           from '@angular/material';
-import { NgModule }         from '@angular/core';
-// import { CommonModule }     from '@angular/common';
+} from '@angular/material';
 
-const MAT_COMPONENTS = [
+export const MAT_COMPONENTS = [
   MatButtonModule,
   MatMenuModule,
   MatCheckboxModule,
@@ -29,10 +27,3 @@ const MAT_COMPONENTS = [
   MatSidenavModule,
   MatTabsModule
 ];
-
-@NgModule({
-  imports: MAT_COMPONENTS,
-  exports: MAT_COMPONENTS
-})
-
-export class MaterialModule { }
