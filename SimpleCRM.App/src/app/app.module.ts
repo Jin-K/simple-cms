@@ -16,14 +16,14 @@ import { storeFreeze }                  from 'ngrx-store-freeze';
 import { environment }                  from '../environments/environment';
 
 import { Routing }                      from './routing';
-import { EntityComponent }              from './entity/entity.component';
 import { ChatComponent }                from './chat/chat.component';
 
 import { AppComponent }                 from './core/containers/app.component';
 import { CoreModule }                   from './core/core.module';
-import { INITIAL_APPLICATION_STATE }    from './core/application-state';
 import { CustomRouterStateSerializer }  from './core/custom-router-state-serializer';
-import { reducers }                     from './core/reducers/reducers';
+
+import { reducers }                     from './reducers';
+import { INITIAL_APPLICATION_STATE }    from './reducers/application-state';
 
 import {
   AuthModule,
@@ -41,7 +41,6 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 
 @NgModule({
   declarations: [
-    EntityComponent,
     ChatComponent
   ],
   imports: [
@@ -66,7 +65,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
       logOnly: environment.production,
     }),
     AuthModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
   ],
   providers: [
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },

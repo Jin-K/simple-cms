@@ -1,20 +1,21 @@
 {
-    "extends": "../tslint.json",
-    "rules": {
-        "directive-selector": [
-            true,
-            "attribute",
-            "app",
-            "camelCase"
-        ],
-        "component-selector": [
-            true,
-            "element",
-            "app",
-            "kebab-case"
-        ],
-        "import-spacing": false,
-        "no-debugger": false,
-        "curly": false
-    }
+  "extends": "../tslint.json",
+  "rules": {
+    "directive-selector": [
+        true,
+        "attribute",
+        "app",
+        "camelCase"
+    ],
+    "component-selector": [
+        true,
+        "element",
+        "app",
+        "kebab-case"
+    ],
+    "import-spacing": false,
+    "no-debugger": false,
+    "curly": false,
+    "no-empty-interface": false
+  }
 }

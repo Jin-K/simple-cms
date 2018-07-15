@@ -30,7 +30,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   ) {
     this.newsState$ = this.store.select<NewsState>(state => state.news);
 
-    this.store.select<NewsState>(state => state.news).subscribe((o: NewsState) => this.newsItems = o.news.newsItems);
+    this.store.select<NewsState>(state => state.news).subscribe((o: NewsState) => this.newsItems = o.newsItems);
 
     console.log(this.newsItems);
     this.newsItem = new NewsItem();

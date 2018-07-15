@@ -83,6 +83,13 @@ module.exports = {
       {
         test: /\.html$/,
         use: 'raw-loader'
+      },
+      // Ignore warnings about System.import in Angular
+      {
+        test: /[\/\\]@angular[\/\\].+\.js$/,
+        parser: {
+          system: true
+        }
       }
     ],
     exprContextCritical: false

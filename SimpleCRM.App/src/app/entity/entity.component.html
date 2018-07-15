@@ -1,4 +1,34 @@
 <div fxFlex fxLayout="column" fxLayoutGap="20px">
+
+  <!-- Tests entity functions (with @ngrx/entity) -->
+  <mat-card>
+    <mat-card-content>
+      <div *ngFor="let entity of entities | async">
+        <img src="#" width="200" height="200" />
+
+        <h4>Entity ID: {{ entity.id }}</h4>
+        <p>Name: {{ entity.name}}</p>
+
+        <mat-card-actions align="center">
+
+          <button mat-button *ngIf="entity.name === 'small'"
+                  (click)="updateEntity(entity.id, 'large')">
+            Upgrade to large
+          </button>
+          <button mat-button *ngIf="entity.name === 'large'"
+                  (click)="updateEntity(entity.id, 'small')">
+            Downgrade to small
+          </button>
+
+          <button mat-button (click)="deleteEntity(entity.id)">DELETE</button>
+
+        </mat-card-actions>
+      </div>
+      <mat-card-actions align="left">
+        <button mat-button (click)="createEntity()">Create new Entity</button>
+      </mat-card-actions>
+    </mat-card-content>
+  </mat-card>
   
   <!-- description -->
   <mat-card>
@@ -22,7 +52,7 @@
         bred for hunting.
       </p>
     </mat-card-content>
-    <mat-card-actions align="end">
+    <mat-card-actions align="right">
       <button mat-button>LIKE</button>
       <button mat-button>SHARE</button>
     </mat-card-actions>

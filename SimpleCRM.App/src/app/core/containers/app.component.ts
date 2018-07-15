@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
       userData => {
         if (userData && userData !== '' && userData.role) {
           this.store.dispatch(new UserActions.AuthorizeComplete(userData.given_name));
-          
+
           for (let i = 0; i < userData.role.length; i++) {
             switch (userData.role[i]) {
               case 'dataEventRecords.admin':
