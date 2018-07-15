@@ -10,7 +10,7 @@ export interface Entity {
 
 // Entity adapter
 export const entityAdapter = createEntityAdapter<Entity>();
-export interface State extends EntityState<Entity> { }
+export interface EntitiesState extends EntityState<Entity> { }
 
 // Default data / initial state
 const defaultEntity = {
@@ -23,10 +23,10 @@ const defaultEntity = {
   }
 };
 
-export const initialState: State = entityAdapter.getInitialState(defaultEntity);
+export const INITIAL_ENTITIES_STATE: EntitiesState = entityAdapter.getInitialState(defaultEntity);
 
 export function entityReducer(
-  state: State = initialState,
+  state: EntitiesState = INITIAL_ENTITIES_STATE,
   action: actions.EntityActions
 ) {
   switch (action.type) {
@@ -50,11 +50,11 @@ export function entityReducer(
 }
 
 // Create the default selectors
-export const getEntityState = createFeatureSelector<State>('entity');
+export const getEntitiesState = createFeatureSelector<EntitiesState>('entity');
 
 export const {
   selectIds,
   selectEntities,
   selectAll,
   selectTotal
-} = entityAdapter.getSelectors(getEntityState);
+} = entityAdapter.getSelectors(getEntitiesState);

@@ -14,7 +14,7 @@ export class EntityComponent implements OnInit {
   entities: Observable<any>;
 
   constructor(
-    private store: Store<fromEntity.State>
+    private store: Store<fromEntity.EntitiesState>
   ) { }
 
   ngOnInit() {
