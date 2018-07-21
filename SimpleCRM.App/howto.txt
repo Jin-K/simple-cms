@@ -1,0 +1,8 @@
+# Build docker image with following command
+docker build -t simple-crm/app .
+
+# Start docker container with following command
+docker run -it -p 44300:44300 simple-crm/app
+
+# delete docker image with following command
+docker rmi -f simple-crm/app
