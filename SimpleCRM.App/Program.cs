@@ -9,12 +9,6 @@ namespace SimpleCRM.App {
       => CreateWebHostBuilder( args ).Build().Run();
     public static IWebHostBuilder CreateWebHostBuilder(string[] args)
       => WebHost.CreateDefaultBuilder( args )
-                .UseKestrel(
-                  options => options.Listen( IPAddress.Any, 44300, listenOptions => {
-                    var configuration = (IConfiguration) options.ApplicationServices.GetService( typeof( IConfiguration ) );
-                    listenOptions.UseHttps( "cert.pfx", configuration[ "certPassword" ] );
-                  } )
-                )
                 .UseStartup<Startup>();
   }
 }

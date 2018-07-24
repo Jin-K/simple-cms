@@ -83,7 +83,13 @@ namespace SimpleCRM.Api {
 
       services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
         .AddJwtBearer(options => {
-          options.Authority = "https://localhost:44321/";
+          if (System.Environment.GetEnvironmentVariable( "DOTNET_RUNNING_IN_CONTAINER" ) == "true") {
+            options.Authority = "http://auth:50772/";
+            options.RequireHttpsMetadata = false;
+          }
+          else {
+            options.Authority = "https://localhost:44321/";
+          }
           options.Audience = "dataEventRecords";
           options.IncludeErrorDetails = true;
           options.SaveToken = true;
@@ -112,12 +118,6 @@ namespace SimpleCRM.Api {
 
       services.AddAuthorization(options => { });
 
-      //services.AddCors( 
-      //  options => options.AddPolicy( 
-      //    "AllowAny", 
-      //    x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials() 
-      //  )
-      //);
       services.AddSignalR();
       //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
       services.AddMvc(options => { }).AddJsonOptions(options =>
@@ -139,6 +139,8 @@ namespace SimpleCRM.Api {
       app.UseCors("corsGlobalPolicy");
 
       app.UseAuthentication();
+
+      // app.UseHttpsRedirection();
 
       app.UseSignalR( routes => {
         routes.MapHub<SignalRHomeHub>( "/signalrhome" );

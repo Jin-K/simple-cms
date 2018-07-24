@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  app:
+    build: ./SimpleCRM.App
+    volumes:
+      - ./SimpleCRM.App:/app
+      - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
+    ports:
+      - 4200:4200
+      - 44300:44300
+    environment:
+      - ASPNETCORE_URLS=https://*:44300;http://*:4200
+      - ASPNETCORE_HTTPS_PORT=44300
+      - ASPNETCORE_ENVIRONMENT=Development
+  auth:
+    build: ./SimpleCRM.Auth
+    volumes:
+      - ./SimpleCRM.Auth:/auth
+      - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
+    ports:
+      - 50772:50772
+      - 44321:44321
+    environment:
+      - ASPNETCORE_URLS=https://*:44321;http://*:50772
+      - ASPNETCORE_HTTPS_PORT=44321
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - back-channel
+  api:
+    build: ./SimpleCRM.Api
+    volumes:
+      - ./SimpleCRM.Api:/api
+      - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
+    ports:
+      - 64907:64907
+      - 44385:44385
+    environment:
+      - ASPNETCORE_URLS=https://*:44385;http://*:64907
+      - ASPNETCORE_HTTPS_PORT=44385
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - back-channel
+
+networks:
+  back-channel:
+    driver: bridge

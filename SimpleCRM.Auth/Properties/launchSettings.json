@@ -18,7 +18,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://*:44321;http://*:50772",
+        "ASPNETCORE_HTTPS_PORT": "44321"
       },
       "applicationUrl": "https://localhost:44321/"
     }

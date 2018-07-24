@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>jinkserver.snk</AssemblyOriginatorKeyFile>
+    <UserSecretsId>UserSecret</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,12 @@
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Consent\" />
     <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="usersdatabase.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

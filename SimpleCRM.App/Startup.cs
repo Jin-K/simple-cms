@@ -53,19 +53,19 @@ namespace SimpleCRM.App {
         "/news"
       };
 
-      app.Use( async (context, next) => {
-        if (
-          context.Request.Path.HasValue
-          && !context.Request.Path.Value.Split( '/' ).Last().Contains( '.' )
-          && null != angularRoutes.FirstOrDefault(ar => context.Request.Path.Value.StartsWith(ar, StringComparison.OrdinalIgnoreCase))
-        ) {
-          context.Request.Path = new Microsoft.AspNetCore.Http.PathString( "/" );
-        }
+      app.Use( 
+        async (context, next) => {
+          if (
+            context.Request.Path.HasValue
+            && !context.Request.Path.Value.Split( '/' ).Last().Contains( '.' )
+            && null != angularRoutes.FirstOrDefault(ar => context.Request.Path.Value.StartsWith(ar, StringComparison.OrdinalIgnoreCase))
+          ) {
+            context.Request.Path = new Microsoft.AspNetCore.Http.PathString( "/" );
+          }
 
-        await next();
-      } );
-
-      app.UseCors( "AllowAllOrigins" )
+          await next();
+        } )
+        .UseCors( "AllowAllOrigins" )
         .UseDefaultFiles()
         .UseStaticFiles()
         .UseMvc( routes => {

@@ -1,11 +1,13 @@
-# Build docker image with following command
-docker build -t simple-crm/auth .
-
-# Start docker container with following command
-docker run -it -p 44321:44321 simple-crm/auth
-
-# delete docker image with following command
-docker rmi -f simple-crm/auth
-
-TODO: Checker s'il faut vraiment utiliser dans le dockerfile un self-signed certificate vu que dans le code de Startup.cs il y a une histoire de developer credentials
 TODO: Checker si tempkey.rsa est encore nécéssaire (si pas, nettoyer .gitignore)
+
+
+# Another way to do it with Docker
+
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\SimpleCRM.Auth.pfx -p crypticpassword
+dotnet dev-certs https --trust
+dotnet user-secrets -p SimpleCRM.Auth.csproj set "Kestrel:Certificates:Development:Password" "crypticpassword"
+docker build --pull -t simplecrmauth .
+docker run --name simplecrmauth --rm -it -p 50772:50772 -p 44321:44321 --network="test" -e ASPNETCORE_URLS="https://*:44321;http://*:50772" -e ASPNETCORE_HTTPS_PORT=44321 -e ASPNETCORE_ENVIRONMENT=Development -v %APPDATA%\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v %USERPROFILE%\.aspnet\https:/root/.aspnet/https/ simplecrmauth
+
+# To see container's ip address
+docker inspect -f "{{ .NetworkSettings.Networks.bridge.IPAddress }}" simplecrmauth
