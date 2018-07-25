@@ -78,9 +78,10 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 
 /*****
- * Some other IE-fixes imports
+ * Some other IE-fixes (imports, polyfills)
  */
 import 'isomorphic-fetch';
+if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector;
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
