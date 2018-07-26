@@ -1,5 +1,5 @@
-import { NewsState, INITIAL_NEWS_STATE }  from './news.state';
-import * as NewsAction                    from './news.actions';
+import { NewsState, INITIAL_NEWS_STATE }  from './state';
+import * as NewsAction                    from './actions';
 
 export function newsReducer(state: NewsState = INITIAL_NEWS_STATE, action: NewsAction.Actions): NewsState {
   switch (action.type) {

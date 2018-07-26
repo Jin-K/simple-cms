@@ -6,13 +6,13 @@ import { FormsModule }      from '@angular/forms';
 import { StoreModule }      from '@ngrx/store';
 import { EffectsModule }    from '@ngrx/effects';
 
-import { newsReducer }      from './store/news.reducer';
-import { NewsEffects }      from './store/news.effects';
-import { NewsService }      from './services/news.service';
+import { newsReducer }      from './reducer';
+import { NewsEffects }      from './effects';
+import { NewsService }      from '../../core/services/news.service';
 
-import { NewsRoutes }       from './news.routes';
+import { NewsRoutes }       from './routes';
 
-import { NewsComponent }    from './components/news.component';
+import { NewsComponent }    from '../../core/containers/news/news.component';
 
 @NgModule({
   imports: [
@@ -26,9 +26,6 @@ import { NewsComponent }    from './components/news.component';
   declarations: [NewsComponent],
   providers: [
     NewsService
-  ],
-  exports: [
-    NewsComponent
   ]
 })
 export class NewsModule { }

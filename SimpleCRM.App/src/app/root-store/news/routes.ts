@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import { NewsComponent }        from './components/news.component';
+import { NewsComponent }        from '../../core/containers/news/news.component';
 
 const routes: Routes = [
   { path: '', component: NewsComponent, pathMatch: 'full' }

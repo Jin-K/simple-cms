@@ -1,29 +1,16 @@
-import {
-  MatButtonModule,
-  MatMenuModule,
-  MatCheckboxModule,
-  MatToolbarModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-  MatCardModule,
-  MatIconModule,
-  MatSidenavModule,
-  MatTabsModule
-} from '@angular/material';
+import * as fromMaterial from '@angular/material';
 
-export const MAT_COMPONENTS = [
-  MatButtonModule,
-  MatMenuModule,
-  MatCheckboxModule,
-  MatToolbarModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-  MatCardModule,
-  MatIconModule,
-  MatSidenavModule,
-  MatTabsModule
+export const MaterialComponents = [
+  fromMaterial.MatButtonModule,
+    fromMaterial.MatMenuModule,
+    fromMaterial.MatCheckboxModule,
+    fromMaterial.MatToolbarModule,
+    fromMaterial.MatFormFieldModule,
+    fromMaterial.MatInputModule,
+    fromMaterial.MatProgressSpinnerModule,
+    fromMaterial.MatProgressBarModule,
+    fromMaterial.MatCardModule,
+    fromMaterial.MatIconModule,
+    fromMaterial.MatSidenavModule,
+    fromMaterial.MatTabsModule
 ];

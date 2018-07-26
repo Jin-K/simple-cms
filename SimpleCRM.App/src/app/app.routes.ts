@@ -8,7 +8,7 @@ const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'entity', loadChildren: './root-store/entity/entity.module#EntityModule' },
   { path: 'chat', component: ChatComponent },
-  { path: 'news', loadChildren: './news/news.module#NewsModule' },
+  { path: 'news', loadChildren: './root-store/news/news.module#NewsModule' },
 ];
 
 export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

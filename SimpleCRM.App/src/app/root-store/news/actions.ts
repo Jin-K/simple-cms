@@ -1,21 +1,20 @@
-import { NewsItem } from '../models/news-item';
-import { Action } from '@ngrx/store';
+import { Action }   from '@ngrx/store';
+import { NewsItem } from '../../core/models/news-item';
 
-export const JOIN_GROUP = '[news] JOIN_GROUP';
-export const LEAVE_GROUP = '[news] LEAVE_GROUP';
-export const JOIN_GROUP_COMPLETE = '[news] JOIN_GROUP_COMPLETE';
-export const LEAVE_GROUP_COMPLETE = '[news] LEAVE_GROUP_COMPLETE';
-export const SEND_NEWS_ITEM = '[news] SEND_NEWS_ITEM';
-export const SEND_NEWS_ITEM_COMPLETE = '[news] SEND_NEWS_ITEM_COMPLETE';
-export const RECEIVED_NEWS_ITEM = '[news] RECEIVED_NEWS_ITEM';
-export const RECEIVED_GROUP_JOINED = '[news] RECEIVED_GROUP_JOINED';
-export const RECEIVED_GROUP_LEFT = '[news] RECEIVED_GROUP_LEFT';
+export const JOIN_GROUP                 = '[news] JOIN_GROUP';
+export const LEAVE_GROUP                = '[news] LEAVE_GROUP';
+export const JOIN_GROUP_COMPLETE        = '[news] JOIN_GROUP_COMPLETE';
+export const LEAVE_GROUP_COMPLETE       = '[news] LEAVE_GROUP_COMPLETE';
+export const SEND_NEWS_ITEM             = '[news] SEND_NEWS_ITEM';
+export const SEND_NEWS_ITEM_COMPLETE    = '[news] SEND_NEWS_ITEM_COMPLETE';
+export const RECEIVED_NEWS_ITEM         = '[news] RECEIVED_NEWS_ITEM';
+export const RECEIVED_GROUP_JOINED      = '[news] RECEIVED_GROUP_JOINED';
+export const RECEIVED_GROUP_LEFT        = '[news] RECEIVED_GROUP_LEFT';
 
-export const RECEIVED_GROUP_HISTORY = '[news] RECEIVED_GROUP_HISTORY';
+export const RECEIVED_GROUP_HISTORY     = '[news] RECEIVED_GROUP_HISTORY';
 
-
-export const SELECTALL_GROUPS = '[news] Select All Groups';
-export const SELECTALL_GROUPS_COMPLETE = '[news] Select All Groups Complete';
+export const SELECTALL_GROUPS           = '[news] Select All Groups';
+export const SELECTALL_GROUPS_COMPLETE  = '[news] Select All Groups Complete';
 
 export class JoinGroupAction implements Action {
   readonly type = JOIN_GROUP;

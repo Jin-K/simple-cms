@@ -12,6 +12,15 @@
                 "reveal": "always",
                 "panel": "new"
             }
+        },
+        {
+            "type": "npm",
+            "script": "watch-webpack-dev",
+            "path": "SimpleCRM.App/",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

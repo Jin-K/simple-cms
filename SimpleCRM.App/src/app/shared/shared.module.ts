@@ -1,18 +1,18 @@
-import { NgModule, ModuleWithProviders }  from '@angular/core';
-import { FlexLayoutModule }               from '@angular/flex-layout';
-import { Configuration }                  from '../app.constants';
-import { MAT_COMPONENTS }                 from './material.components';
+import { NgModule, ModuleWithProviders }        from '@angular/core';
+import { FlexLayoutModule }                     from '@angular/flex-layout';
+import { Configuration }                        from '../app.constants';
+import { MaterialComponents } from './material.components';
 
 @NgModule({
   imports: [
-    ...MAT_COMPONENTS,
+    ...MaterialComponents,
     FlexLayoutModule,
   ],
   declarations: [
 
   ],
   exports: [
-    ...MAT_COMPONENTS,
+    ...MaterialComponents,
     FlexLayoutModule,
   ]
 })
