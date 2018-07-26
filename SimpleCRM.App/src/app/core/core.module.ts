@@ -5,7 +5,7 @@ import { RouterModule }     from '@angular/router';
 
 import { ChatService }      from './services/chat.service';
 import { HomeComponent }    from './containers/home/home.component';
-import { UserModule }       from '../user/user.module';
+import { UserModule }       from '../root-store/user/user.module';
 import { SharedModule }     from '../shared/shared.module';
 
 @NgModule({

@@ -17,7 +17,7 @@ import { RootStoreModule }              from './root-store/root-store.module';
 
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
-import { ChatComponent }                from './chat/chat.component'; // TODO: Create feature
+import { ChatComponent }                from './core/containers/chat/chat.component'; // TODO: Create feature
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');

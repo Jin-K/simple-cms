@@ -8,7 +8,7 @@ import { reducers }                                           from './reducers';
 import { storeFreeze }                                        from 'ngrx-store-freeze';
 import { INITIAL_APPLICATION_STATE }                          from './reducers/application-state';
 import { environment }                                        from '../../environments/environment.prod';
-import { CustomRouterStateSerializer }                        from '../core/custom-router-state-serializer';
+import { CustomRouterStateSerializer }                        from './custom-router-state-serializer';
 
 @NgModule({
   imports: [
