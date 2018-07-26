@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Entity } from './entity.reducer';
+import { Entity } from '../../core/models/entity';
 
 export const CREATE = '[Entities] Create';
 export const UPDATE = '[Entities] Update';

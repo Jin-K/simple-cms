@@ -4,41 +4,25 @@ import { BrowserModule }                from '@angular/platform-browser';
 import { BrowserAnimationsModule }      from '@angular/platform-browser/animations';
 
 import {
-  StoreRouterConnectingModule,
-  RouterStateSerializer
-}                                       from '@ngrx/router-store';
-import { StoreModule }                  from '@ngrx/store';
-import { EffectsModule }                from '@ngrx/effects';
-import { StoreDevtoolsModule }          from '@ngrx/store-devtools';
-
-import { storeFreeze }                  from 'ngrx-store-freeze';
-
-import { environment }                  from '../environments/environment';
-
-import { AppComponent }                 from './app.component';
-import { Routing }                      from './app.routes';
-import { ChatComponent }                from './chat/chat.component'; // TODO: Create feature
-
-import { CoreModule }                   from './core/core.module';
-import { CustomRouterStateSerializer }  from './core/custom-router-state-serializer';
-
-import { reducers }                     from './reducers';
-import { INITIAL_APPLICATION_STATE }    from './reducers/application-state';
-
-import {
   AuthModule,
   OidcSecurityService,
   OidcConfigService,
   OpenIDImplicitFlowConfiguration,
   AuthWellKnownEndpoints
 }                                       from 'angular-auth-oidc-client';
-import { SharedModule } from './shared/shared.module';
+
+import { CoreModule }                   from './core/core.module';
+import { SharedModule }                 from './shared/shared.module';
+import { RootStoreModule }              from './root-store/root-store.module';
+
+import { AppComponent }                 from './app.component';
+import { Routing }                      from './app.routes';
+import { ChatComponent }                from './chat/chat.component'; // TODO: Create feature
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');
   return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
 }
-
 
 @NgModule({
   declarations: [
@@ -50,28 +34,12 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     BrowserAnimationsModule,
     HttpClientModule,
     Routing,
-    // https://github.com/ngrx/platform/blob/master/docs/store/README.md
-    StoreModule.forRoot(
-      reducers,
-      { metaReducers: [storeFreeze], initialState: INITIAL_APPLICATION_STATE }
-    ),
-    // https://github.com/ngrx/platform/blob/master/docs/router-store/README.md
-    StoreRouterConnectingModule.forRoot({
-      stateKey: 'router', // name of reducer key
-    }),
-    // https://github.com/ngrx/platform/blob/master/docs/effects/README.md
-    EffectsModule.forRoot([]),
-    // https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
     AuthModule.forRoot(),
     CoreModule.forRoot(),
-    SharedModule
+    SharedModule,
+    RootStoreModule
   ],
   providers: [
-    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     OidcSecurityService,
     {
       provide: APP_INITIALIZER,

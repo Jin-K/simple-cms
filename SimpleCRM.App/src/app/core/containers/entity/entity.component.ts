@@ -1,8 +1,10 @@
 import { Component, OnInit }  from '@angular/core';
 import { Store }              from '@ngrx/store';
 import { Observable }         from 'rxjs';
-import * as actions           from './entity.actions';
-import * as fromEntity        from './entity.reducer';
+import * as actions           from '../../../root-store/entity/actions';
+import { EntitiesState }      from '../../../root-store/entity/state';
+import * as entitySelectors   from '../../../root-store/entity/selectors';
+import { Entity }             from '../../models/entity';
 
 @Component({
   selector: 'app-entity',
@@ -14,15 +16,15 @@ export class EntityComponent implements OnInit {
   entities: Observable<any>;
 
   constructor(
-    private store: Store<fromEntity.EntitiesState>
+    private store: Store<EntitiesState>
   ) { }
 
   ngOnInit() {
-    this.entities = this.store.select( fromEntity.selectAll );
+    this.entities = this.store.select( entitySelectors.selectAll );
   }
 
   createEntity() {
-    const entity: fromEntity.Entity = {
+    const entity: Entity = {
       id: new Date().getUTCMilliseconds().toString(),
       name: 'small',
     };

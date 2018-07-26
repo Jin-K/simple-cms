@@ -6,7 +6,7 @@ import { ChatComponent }        from './chat/chat.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'entity', loadChildren: './entity/entity.module#EntityModule' },
+  { path: 'entity', loadChildren: './root-store/entity/entity.module#EntityModule' },
   { path: 'chat', component: ChatComponent },
   { path: 'news', loadChildren: './news/news.module#NewsModule' },
 ];
