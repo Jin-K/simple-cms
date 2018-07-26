@@ -4,7 +4,7 @@ import { StoreModule }      from '@ngrx/store';
 import { entityReducer }    from './reducer';
 import { SharedModule }     from '../../shared/shared.module';
 import { EntityRoutes }     from './routes';
-import { EntityComponent }  from '../../core/containers/entity/entity.component';
+import { EntityComponent }  from '../../containers/entity/entity.component';
 
 @NgModule({
   imports: [

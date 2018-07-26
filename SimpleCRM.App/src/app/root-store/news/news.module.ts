@@ -8,11 +8,11 @@ import { EffectsModule }    from '@ngrx/effects';
 
 import { newsReducer }      from './reducer';
 import { NewsEffects }      from './effects';
-import { NewsService }      from '../../core/services/news.service';
+import { NewsService }      from '../../services/news.service';
 
 import { NewsRoutes }       from './routes';
 
-import { NewsComponent }    from '../../core/containers/news/news.component';
+import { NewsComponent }    from '../../containers/news/news.component';
 
 @NgModule({
   imports: [

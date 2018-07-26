@@ -3,7 +3,7 @@ import { Observable, Subscription }         from 'rxjs';
 import { Store }                            from '@ngrx/store';
 import { OidcSecurityService }              from 'angular-auth-oidc-client';
 
-import { NewsStoreActions, NewsStoreState } from '../../../root-store';
+import { NewsStoreActions, NewsStoreState } from '../../root-store';
 import { NewsItem }                         from '../../models/news-item';
 
 @Component({

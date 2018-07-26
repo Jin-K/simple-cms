@@ -1,9 +1,9 @@
 import { Component, OnInit }  from '@angular/core';
 import { Store }              from '@ngrx/store';
 import { Observable }         from 'rxjs';
-import * as actions           from '../../../root-store/entity/actions';
-import { EntitiesState }      from '../../../root-store/entity/state';
-import * as entitySelectors   from '../../../root-store/entity/selectors';
+import * as actions           from '../../root-store/entity/actions';
+import { EntitiesState }      from '../../root-store/entity/state';
+import * as entitySelectors   from '../../root-store/entity/selectors';
 import { Entity }             from '../../models/entity';
 
 @Component({

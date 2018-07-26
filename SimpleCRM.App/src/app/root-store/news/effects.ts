@@ -4,7 +4,7 @@ import { Actions, Effect }            from '@ngrx/effects';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of }                         from 'rxjs';
 
-import { NewsService }                from '../../core/services/news.service';
+import { NewsService }                from '../../services/news.service';
 import * as newsAction                from './actions';
 
 @Injectable()

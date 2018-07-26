@@ -1,4 +1,4 @@
-import { NewsItem } from '../../core/models/news-item';
+import { NewsItem } from '../../models/news-item';
 
 /** **** **** **** **** **** **** ** NewsState ** **** **** **** **** **** **** **/
 export interface NewsState extends NewsStateContainer { }

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy }                   from '@angular/core';
-import { HubConnectionBuilder, HubConnection }            from '@aspnet/signalr';
+import { Component, OnInit, OnDestroy }        from '@angular/core';
+import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 
 const ENDPOINT = 'https://localhost:44385';
 

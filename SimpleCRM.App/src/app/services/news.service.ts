@@ -5,9 +5,9 @@ import { Store }                                from '@ngrx/store';
 import * as signalR                             from '@aspnet/signalr';
 import { OidcSecurityService }                  from 'angular-auth-oidc-client';
 
-import { Configuration }                        from '../../app.constants';
+import { Configuration }                        from '../app.constants';
 import { NewsItem }                             from '../models/news-item';
-import * as NewsActions                         from '../../root-store/news/actions';
+import * as NewsActions                         from '../root-store/news/actions';
 
 @Injectable()
 export class NewsService {

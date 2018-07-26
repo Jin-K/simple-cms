@@ -1,5 +1,5 @@
 import { EntityState, createEntityAdapter, EntityAdapter }  from '@ngrx/entity';
-import { Entity }                                           from '../../core/models/entity';
+import { Entity }                                           from '../../models/entity';
 
 // Entity adapter
 export const entityAdapter: EntityAdapter<Entity> = createEntityAdapter<Entity>();

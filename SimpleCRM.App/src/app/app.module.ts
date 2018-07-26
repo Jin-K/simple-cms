@@ -1,7 +1,9 @@
 import { NgModule, APP_INITIALIZER }    from '@angular/core';
 import { HttpClientModule }             from '@angular/common/http';
+import { FormsModule }                  from '@angular/forms';
 import { BrowserModule }                from '@angular/platform-browser';
 import { BrowserAnimationsModule }      from '@angular/platform-browser/animations';
+import { RouterModule }                 from '@angular/router';
 
 import {
   AuthModule,
@@ -11,13 +13,14 @@ import {
   AuthWellKnownEndpoints
 }                                       from 'angular-auth-oidc-client';
 
-import { CoreModule }                   from './core/core.module';
 import { SharedModule }                 from './shared/shared.module';
 import { RootStoreModule }              from './root-store/root-store.module';
 
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
-import { ChatComponent }                from './core/containers/chat/chat.component'; // TODO: Create feature
+import { HomeComponent }                from './containers/home/home.component';
+import { ChatComponent }                from './containers/chat/chat.component'; // TODO: Create feature
+import { UserModule }                   from './root-store/user/user.module';
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');
@@ -27,16 +30,19 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-    ChatComponent
+    ChatComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+    RouterModule,
+    UserModule,
     Routing,
     AuthModule.forRoot(),
-    CoreModule.forRoot(),
-    SharedModule,
+    SharedModule.forRoot(),
     RootStoreModule
   ],
   providers: [
