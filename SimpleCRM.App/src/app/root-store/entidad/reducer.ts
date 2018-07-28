@@ -1,24 +1,24 @@
-import { EntitiesState, INITIAL_ENTITIES_STATE, entityAdapter } from './state';
+import { EntidadesState, INITIAL_ENTIDADES_STATE, entidadAdapter } from './state';
 import * as actions                                             from './actions';
 
 
 export function entityReducer(
-  state: EntitiesState = INITIAL_ENTITIES_STATE,
-  action: actions.EntityActions
+  state: EntidadesState = INITIAL_ENTIDADES_STATE,
+  action: actions.EntidadActions
 ) {
   switch (action.type) {
 
     case actions.CREATE:
-      return entityAdapter.addOne(action.entity, state);
+      return entidadAdapter.addOne(action.entity, state);
 
     case actions.UPDATE:
-      return entityAdapter.updateOne({
+      return entidadAdapter.updateOne({
         id: action.id,
         changes: action.changes,
       }, state);
 
     case actions.DELETE:
-      return entityAdapter.removeOne(action.id, state);
+      return entidadAdapter.removeOne(action.id, state);
 
     default:
       return state;

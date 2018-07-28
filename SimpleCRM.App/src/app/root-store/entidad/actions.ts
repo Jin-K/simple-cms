@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store';
-import { Entity } from '../../models/entity';
+import { Action }   from '@ngrx/store';
+import { Entidad }  from '../../models/entidad';
 
 export const CREATE = '[Entities] Create';
 export const UPDATE = '[Entities] Update';
@@ -7,14 +7,14 @@ export const DELETE = '[Entities] Delete';
 
 export class Create implements Action {
   readonly type = CREATE;
-  constructor(public entity: Entity) { }
+  constructor(public entity: Entidad) { }
 }
 
 export class Update implements Action {
   readonly type = UPDATE;
   constructor(
     public id: string,
-    public changes: Partial<Entity>
+    public changes: Partial<Entidad>
   ) { }
 }
 
@@ -23,7 +23,7 @@ export class Delete implements Action {
   constructor(public id: string) { }
 }
 
-export type EntityActions
+export type EntidadActions
   = Create
   | Update
   | Delete;

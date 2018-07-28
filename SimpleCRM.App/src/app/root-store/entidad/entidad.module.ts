@@ -3,17 +3,17 @@ import { CommonModule }     from '@angular/common';
 import { StoreModule }      from '@ngrx/store';
 import { entityReducer }    from './reducer';
 import { SharedModule }     from '../../shared/shared.module';
-import { EntityRoutes }     from './routes';
-import { EntityComponent }  from '../../containers/entity/entity.component';
+import { EntidadRoutes }     from './routes';
+import { EntidadComponent } from '../../containers/entidad/entidad.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
-    EntityRoutes,
+    EntidadRoutes,
     StoreModule.forFeature('entity', entityReducer)
     // EffectsModule.forFeature([MyFeatureStoreEffects])
   ],
-  declarations: [ EntityComponent ]
+  declarations: [ EntidadComponent ]
 })
-export class EntityModule { }
+export class EntidadModule { }

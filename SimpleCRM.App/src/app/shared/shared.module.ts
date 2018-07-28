@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders }        from '@angular/core';
 import { FlexLayoutModule }                     from '@angular/flex-layout';
 import { Configuration }                        from '../app.constants';
-import { MaterialComponents } from './material.components';
+import { MaterialComponents }                   from './material.components';
 
 @NgModule({
   imports: [

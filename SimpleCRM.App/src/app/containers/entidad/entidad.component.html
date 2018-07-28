@@ -12,20 +12,20 @@
         <mat-card-actions align="center">
 
           <button mat-button *ngIf="entity.name === 'small'"
-                  (click)="updateEntity(entity.id, 'large')">
+                  (click)="updateEntidad(entity.id, 'large')">
             Upgrade to large
           </button>
           <button mat-button *ngIf="entity.name === 'large'"
-                  (click)="updateEntity(entity.id, 'small')">
+                  (click)="updateEntidad(entity.id, 'small')">
             Downgrade to small
           </button>
 
-          <button mat-button (click)="deleteEntity(entity.id)">DELETE</button>
+          <button mat-button (click)="deleteEntidad(entity.id)">DELETE</button>
 
         </mat-card-actions>
       </div>
       <mat-card-actions align="left">
-        <button mat-button (click)="createEntity()">Create new Entity</button>
+        <button mat-button (click)="createEntidad()">Create new Entity</button>
       </mat-card-actions>
     </mat-card-content>
   </mat-card>

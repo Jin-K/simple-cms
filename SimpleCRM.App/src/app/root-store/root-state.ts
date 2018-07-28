@@ -1,5 +1,5 @@
-import { EntityStoreState } from './entity';
+import { EntidadStoreState } from './entidad';
 
 export interface State {
-  entity: EntityStoreState.EntitiesState;
+  entity: EntidadStoreState.EntidadesState;
 }

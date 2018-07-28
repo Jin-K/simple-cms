@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -8,15 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\app\entity\**" />
+    <Compile Remove="src\app\user\**" />
+    <Content Remove="src\app\entity\**" />
+    <Content Remove="src\app\user\**" />
+    <EmbeddedResource Remove="src\app\entity\**" />
+    <EmbeddedResource Remove="src\app\user\**" />
+    <None Remove="src\app\entity\**" />
+    <None Remove="src\app\user\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
-    <None Remove="src\app\entity\entity.actions.ts" />
-    <None Remove="src\app\entity\entity.reducer.ts" />
-    <None Remove="src\app\entity\entity.router.ts" />
     <None Remove="src\app\shared\material.components.ts" />
-    <None Remove="src\app\user\store\user.actions.ts" />
-    <None Remove="src\app\user\store\user.reducers.ts" />
-    <None Remove="src\app\user\store\user.state.ts" />
-    <None Remove="src\app\user\user.module.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,14 +42,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
-    <TypeScriptCompile Include="src\app\entity\entity.actions.ts" />
-    <TypeScriptCompile Include="src\app\entity\entity.reducer.ts" />
-    <TypeScriptCompile Include="src\app\entity\entity.router.ts" />
     <TypeScriptCompile Include="src\app\shared\material.components.ts" />
-    <TypeScriptCompile Include="src\app\user\user.module.ts" />
-    <TypeScriptCompile Include="src\app\user\store\user.reducers.ts" />
-    <TypeScriptCompile Include="src\app\user\store\user.state.ts" />
-    <TypeScriptCompile Include="src\app\user\store\user.actions.ts" />
   </ItemGroup>
   
 </Project>
