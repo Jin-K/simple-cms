@@ -21,6 +21,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   groups = ['IT', 'global', 'sport'];
 
   isAuthorizedSubscription: Subscription;
+  newsItemsSubscription: Subscription;
   isAuthorized = false;
 
   constructor(
@@ -29,7 +30,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   ) {
     this.newsState$ = this.store.select<NewsStoreState.NewsState>(state => state.news);
 
-    this.store.select<NewsStoreState.NewsState>(state => state.news)
+    this.newsItemsSubscription = this.store.select<NewsStoreState.NewsState>(state => state.news)
               .subscribe((o: NewsStoreState.NewsState) => this.newsItems = o.newsItems);
 
     console.log(this.newsItems);
@@ -67,5 +68,6 @@ export class NewsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.isAuthorizedSubscription) this.isAuthorizedSubscription.unsubscribe();
+    this.newsItemsSubscription.unsubscribe();
   }
 }

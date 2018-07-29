@@ -11,7 +11,7 @@ import { EntidadComponent } from '../../containers/entidad/entidad.component';
     CommonModule,
     SharedModule,
     EntidadRoutes,
-    StoreModule.forFeature('entity', entityReducer)
+    StoreModule.forFeature('entidad', entityReducer)
     // EffectsModule.forFeature([MyFeatureStoreEffects])
   ],
   declarations: [ EntidadComponent ]

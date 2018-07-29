@@ -3,24 +3,19 @@
   <!-- Tests entity functions (with @ngrx/entity) -->
   <mat-card>
     <mat-card-content>
-      <div *ngFor="let entity of entities | async">
+      <div *ngFor="let item of items | async">
         <img src="#" width="200" height="200" />
 
-        <h4>Entity ID: {{ entity.id }}</h4>
-        <p>Name: {{ entity.name}}</p>
+        <h4>Entity ID: {{ item.id }}</h4>
+        <p>Date: {{ item.dCreate }}</p>
 
         <mat-card-actions align="center">
 
-          <button mat-button *ngIf="entity.name === 'small'"
-                  (click)="updateEntidad(entity.id, 'large')">
-            Upgrade to large
-          </button>
-          <button mat-button *ngIf="entity.name === 'large'"
-                  (click)="updateEntidad(entity.id, 'small')">
+          <button mat-button (click)="updateEntidad(item.id)">
             Downgrade to small
           </button>
 
-          <button mat-button (click)="deleteEntidad(entity.id)">DELETE</button>
+          <button mat-button (click)="deleteEntidad(item.id)">DELETE</button>
 
         </mat-card-actions>
       </div>

@@ -5,11 +5,17 @@
       <mat-toolbar-row routerLink="/">
         <mat-icon>dashboard</mat-icon> Dashboard
       </mat-toolbar-row>
-      <mat-toolbar-row routerLink="entity">
-        <mat-icon>event_available</mat-icon> Tasks
+      <mat-toolbar-row [routerLink]="['entity', 'Contacts']">
+        <mat-icon>event_available</mat-icon> Contacts
+      </mat-toolbar-row>
+      <mat-toolbar-row [routerLink]="['entity', 'Companies']">
+        <mat-icon>event_available</mat-icon> Companies
+      </mat-toolbar-row>
+      <mat-toolbar-row [routerLink]="['entity', 'Actions']">
+        <mat-icon>date_range</mat-icon> Actions
       </mat-toolbar-row>
       <mat-toolbar-row routerLink="news">
-        <mat-icon>date_range</mat-icon> Agenda
+        <mat-icon>chat</mat-icon> News
       </mat-toolbar-row>
       <mat-toolbar-row routerLink="chat">
         <mat-icon>chat</mat-icon> Chat
@@ -25,7 +31,7 @@
       </button>
       <span class="margin-left-5">Simple CRM</span>
       <mat-form-field class="margin-left-5 example-form-field">
-        <input matInput type="input" placeholder="Enter something..." [(ngModel)]="searchQuery" />
+        <input matInput type="search" placeholder="Enter something..." [(ngModel)]="searchQuery" />
         <button *ngIf="searchQuery" mat-button matSuffix mat-icon-button aria-label="Clear" (click)="searchQuery=''">
           <mat-icon>close</mat-icon>
         </button>

@@ -15,16 +15,7 @@ export const INITIAL_UI_STATE: UiState = {
 };
 
 /** *** Persistent State - Client State - Transient Client State management *** **/
-export interface StoreData {
-  // participants: {[key:number]: Participant};
-  // threads: {[key:number]: Thread};
-  // messages: {[key:number]:Message};
-}
-export const INITIAL_STORE_DATA: StoreData = {
-  // threads: {},
-  // messages: {},
-  // participants: {}
-};
+// In modules
 
 /** **** **** **** **** *** URL/Router State management *** **** **** **** **** **/
 interface RouterStateUrl {
@@ -34,12 +25,10 @@ interface RouterStateUrl {
 
 export interface ApplicationState {
   uiState: UiState;
-  storeData: StoreData;
   router: fromRouter.RouterReducerState<RouterStateUrl>;
 }
 
 export const INITIAL_APPLICATION_STATE: ApplicationState = {
   uiState: INITIAL_UI_STATE,
-  storeData: INITIAL_STORE_DATA,
   router: undefined
 };

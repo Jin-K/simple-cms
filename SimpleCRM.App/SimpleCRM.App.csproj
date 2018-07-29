@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\models\contact.ts" />
+    <None Remove="src\app\models\interfaces.ts" />
+    <None Remove="src\app\models\item.ts" />
     <None Remove="src\app\shared\material.components.ts" />
   </ItemGroup>
 
@@ -42,7 +45,10 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
+    <TypeScriptCompile Include="src\app\models\contact.ts" />
+    <TypeScriptCompile Include="src\app\models\interfaces.ts" />
+    <TypeScriptCompile Include="src\app\models\item.ts" />
     <TypeScriptCompile Include="src\app\shared\material.components.ts" />
   </ItemGroup>
-  
+
 </Project>
