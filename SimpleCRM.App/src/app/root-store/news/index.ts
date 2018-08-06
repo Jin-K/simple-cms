@@ -1,5 +1,4 @@
 import * as NewsStoreActions    from './actions';
-// import * as NewsStoreSelectors  from './selectors';
 import * as NewsStoreState      from './state';
 
 export {
@@ -8,6 +7,5 @@ export {
 
 export {
   NewsStoreActions,
-  // NewsStoreSelectors,
   NewsStoreState
 };

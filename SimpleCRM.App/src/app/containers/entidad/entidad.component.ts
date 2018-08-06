@@ -1,16 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute }               from '@angular/router';
 import { Store }                        from '@ngrx/store';
 import { Observable, Subscription }     from 'rxjs';
+import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
 import * as actions                     from '../../root-store/entidad/actions';
-import { ItemsState }                   from '../../root-store/entidad/state';
 import { IItem }                        from '../../models/interfaces';
 import { Contact }                      from '../../models/contact';
 import { Action }                       from '../../models/action';
 import { Company }                      from '../../models/company';
-
-import * as _                           from 'lodash';
+import { EntidadStoreSelectors }        from '../../root-store';
 
 @Component({
   selector: 'app-entidad',
@@ -19,33 +17,42 @@ import * as _                           from 'lodash';
 })
 export class EntidadComponent implements OnInit, OnDestroy {
 
-  entities: Observable<ItemsState[]>;
   items: Observable<IItem[]>;
 
   entity: string;
-  sub: Subscription;
+  isAuthorizedSubscription: Subscription;
+  isLoadedSubscription: Subscription;
+  paramsSubscription: Subscription;
+  routeEntidadSubscription: Subscription;
+  isLoaded = false;
 
   constructor(
     private store: Store<any>,
-    private route: ActivatedRoute
+    private oidcSecurityService: OidcSecurityService
   ) { }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      const entity = params['entity'];
-      this.entity = entity;
-      // TODO: dispatch action to load the details here.
-      this.items = this.store.select(state => _.toArray(state.entidad.entities[entity] ? state.entidad.entities[entity].entities : [] ));
-    });
-    // this.entities = this.store.select( entidadSelectors.selectAll );
+    this.isLoadedSubscription     = this.store.select(EntidadStoreSelectors.selectIsLoaded)
+                                        .subscribe(loaded => this.isLoaded = loaded);
+    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized()
+                                        .subscribe((isAuthorized: boolean) => this.initStoreStuff(isAuthorized));
+    this.routeEntidadSubscription = this.store.select(EntidadStoreSelectors.selectCurrentRouterEntidad)
+                                        .subscribe(entidad => this.entity = entidad);
+
+    this.items = this.store.select(EntidadStoreSelectors.selectCurrentItems);
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    this.isLoadedSubscription.unsubscribe();
+    this.isAuthorizedSubscription.unsubscribe();
+    this.routeEntidadSubscription.unsubscribe();
+    if (this.paramsSubscription) this.paramsSubscription.unsubscribe();
   }
 
-  createEntidad() {
+  addItem() {
     let newItem: IItem;
+
+    // TODO: Remove this
     switch (this.entity) {
       case 'Contacts': newItem = new Contact('Muñoz', 'Pablo'); break;
       case 'Companies': newItem = new Company('Jin-K empire'); break;
@@ -61,5 +68,11 @@ export class EntidadComponent implements OnInit, OnDestroy {
 
   deleteEntidad(id: number) {
     this.store.dispatch( new actions.Delete( id, this.entity ) );
+  }
+
+  initStoreStuff(isAuthorized: boolean) {
+    if (!isAuthorized) return;
+    console.log('Authorizé pour la section "entidades"');
+    if (!this.isLoaded) this.store.dispatch(new actions.LoadAll());
   }
 }

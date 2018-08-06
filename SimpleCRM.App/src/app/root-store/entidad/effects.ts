@@ -1,35 +1,25 @@
-// import { Injectable } from '@angular/core';
-// import { Actions, Effect, ofType } from '@ngrx/effects';
-// import { Action } from '@ngrx/store';
-// import { Observable, of as observableOf } from 'rxjs';
-// import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-// import { DataService } from '../../services/data.service';
-// import * as featureActions from './actions';
+import { Injectable }                 from '@angular/core';
+import { Actions, Effect }            from '@ngrx/effects';
+import { of }                         from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
 
-// @Injectable()
-// export class MyFeatureStoreEffects {
-//   constructor(private dataService: DataService, private actions$: Actions) {}
+import * as entidadesActions          from './actions';
+import { EntidadService }             from '../../services/entidad.service';
+import { IEntidad }                   from '../../models/interfaces';
 
-//   @Effect()
-//   loadRequestEffect$: Observable<Action> = this.actions$.pipe(
-//     ofType<featureActions.LoadRequestAction>(
-//       featureActions.ActionTypes.LOAD_REQUEST
-//     ),
-//     startWith(new featureActions.LoadRequestAction()),
-//     switchMap(action =>
-//       this.dataService
-//         .getItems()
-//         .pipe(
-//           map(
-//             items =>
-//               new featureActions.LoadSuccessAction({
-//                 items
-//               })
-//             ),
-//             catchError(error =>
-//               observableOf(new featureActions.LoadFailureAction({ error }))
-//             )
-//       	)
-//      )
-//   );
-// }
+@Injectable()
+export class EntidadEffects {
+  constructor(
+    private entidadService: EntidadService,
+    private actions$: Actions
+  ) { }
+
+  @Effect() getAllEntidades$ = this.actions$.ofType(entidadesActions.LOAD_ALL).pipe(
+    switchMap(
+      () => this.entidadService.getAllEntidades().pipe(
+        map((data: IEntidad[]) => new entidadesActions.LoadAllComplete(data)),
+        catchError((error: any) => of(error))
+      )
+    )
+  );
+}

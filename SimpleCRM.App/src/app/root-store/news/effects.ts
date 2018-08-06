@@ -35,7 +35,7 @@ export class NewsEffects {
     })
   );
 
-  @Effect() getAllGroups$ = this.actions$.ofType(newsAction.SELECTALL_GROUPS).pipe(
+  @Effect() getAllGroups$ = this.actions$.ofType(newsAction.SELECT_ALL_GROUPS).pipe(
     switchMap(() => {
       return this.newsService.getAllGroups().pipe(
         map((data: string[]) =>  new newsAction.SelectAllGroupsActionComplete(data)),

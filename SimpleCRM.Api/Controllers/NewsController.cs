@@ -7,7 +7,7 @@ namespace SimpleCRM.Api.Controllers {
   //[Authorize(AuthenticationSchemes = "Bearer")]
   [Route("api/[controller]")]
   public class NewsController : Controller {
-    private NewsStore _newsStore;
+    NewsStore _newsStore;
 
     public NewsController(NewsStore newsStore) => _newsStore = newsStore;
 

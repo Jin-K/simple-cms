@@ -34,7 +34,7 @@ export function newsReducer(state: NewsState = INITIAL_NEWS_STATE, action: NewsA
         groups: data
       });
 
-    case NewsAction.SELECTALL_GROUPS_COMPLETE:
+    case NewsAction.SELECT_ALL_GROUPS_COMPLETE:
       return Object.assign({}, state, {
         newsItems: state.newsItems,
         groups: action.groups

@@ -22,7 +22,7 @@ import { CustomRouterStateSerializer }                        from './router-sta
       logOnly: environment.production
     }),
     StoreRouterConnectingModule.forRoot({
-      stateKey: 'router', // name of reducer key
+      stateKey: 'router',
     }),
     EffectsModule.forRoot([])
   ],

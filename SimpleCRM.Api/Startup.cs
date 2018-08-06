@@ -17,8 +17,6 @@ using SimpleCRM.Api.Providers;
 using SimpleCRM.Api.Repositories;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,13 +48,16 @@ namespace SimpleCRM.Api {
     public void ConfigureServices(IServiceCollection services) {
       var sqliteConnectionString = Configuration.GetConnectionString("SqliteConnectionString");
       var defaultConnection = Configuration.GetConnectionString("DefaultConnection");
+      var secondConnection = Configuration.GetConnectionString("SecondConnection");
 
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
       
       // used for the new items which belong to the signalr hub
       services.AddDbContext<NewsContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<EntitiesContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
+      services.AddSingleton<EntitiesStore>();
       //services.AddSingleton<UserInfoInMemory>();
 
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();

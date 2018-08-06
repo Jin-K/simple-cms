@@ -1,6 +1,6 @@
 import { Params }       from '@angular/router';
 import * as fromRouter  from '@ngrx/router-store';
-// import { EntitiesState, INITIAL_ENTITIES_STATE }  from '../entity/state';
+import { EntidadesState } from '../entidad/state';
 
 
 /** **** **** **** **** **** Local UI State management **** **** **** **** **** **/
@@ -26,6 +26,7 @@ interface RouterStateUrl {
 export interface ApplicationState {
   uiState: UiState;
   router: fromRouter.RouterReducerState<RouterStateUrl>;
+  entidad?: EntidadesState;
 }
 
 export const INITIAL_APPLICATION_STATE: ApplicationState = {

@@ -53,8 +53,7 @@ export class NewsService {
 
   getAllGroups(): Observable<string[]> {
     const token = this.oidcSecurityService.getToken();
-    console.log('getAllGroups token:');
-    console.log(token);
+    console.log('getAllGroups token: ' + token);
     if (token !== '') {
       const tokenValue = `Bearer ${token}`;
       this.headers = this.headers.append('Authorization', tokenValue);

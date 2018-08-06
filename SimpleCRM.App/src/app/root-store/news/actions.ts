@@ -13,8 +13,8 @@ export const RECEIVED_GROUP_LEFT        = '[news] RECEIVED_GROUP_LEFT';
 
 export const RECEIVED_GROUP_HISTORY     = '[news] RECEIVED_GROUP_HISTORY';
 
-export const SELECTALL_GROUPS           = '[news] Select All Groups';
-export const SELECTALL_GROUPS_COMPLETE  = '[news] Select All Groups Complete';
+export const SELECT_ALL_GROUPS          = '[news] Select All Groups';
+export const SELECT_ALL_GROUPS_COMPLETE = '[news] Select All Groups Complete';
 
 export class JoinGroupAction implements Action {
   readonly type = JOIN_GROUP;
@@ -76,13 +76,13 @@ export class ReceivedGroupHistoryAction implements Action {
 }
 
 export class SelectAllGroupsAction implements Action {
-  readonly type = SELECTALL_GROUPS;
+  readonly type = SELECT_ALL_GROUPS;
 
   constructor() { }
 }
 
 export class SelectAllGroupsActionComplete implements Action {
-  readonly type = SELECTALL_GROUPS_COMPLETE;
+  readonly type = SELECT_ALL_GROUPS_COMPLETE;
 
   constructor(public groups: string[]) { }
 }

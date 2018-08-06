@@ -20,9 +20,12 @@
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\models\action.ts" />
+    <None Remove="src\app\models\company.ts" />
     <None Remove="src\app\models\contact.ts" />
     <None Remove="src\app\models\interfaces.ts" />
     <None Remove="src\app\models\item.ts" />
+    <None Remove="src\app\services\entidad.service.ts" />
     <None Remove="src\app\shared\material.components.ts" />
   </ItemGroup>
 
@@ -45,9 +48,12 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
+    <TypeScriptCompile Include="src\app\models\action.ts" />
+    <TypeScriptCompile Include="src\app\models\company.ts" />
     <TypeScriptCompile Include="src\app\models\contact.ts" />
     <TypeScriptCompile Include="src\app\models\interfaces.ts" />
     <TypeScriptCompile Include="src\app\models\item.ts" />
+    <TypeScriptCompile Include="src\app\services\entidad.service.ts" />
     <TypeScriptCompile Include="src\app\shared\material.components.ts" />
   </ItemGroup>
 

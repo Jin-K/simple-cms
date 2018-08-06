@@ -1,9 +1,22 @@
-import { Action }   from '@ngrx/store';
-import { IItem }    from '../../models/interfaces';
+import { Action }           from '@ngrx/store';
+import { IItem, IEntidad }  from '../../models/interfaces';
 
-export const CREATE = '[Entities] Create';
-export const UPDATE = '[Entities] Update';
-export const DELETE = '[Entities] Delete';
+export const LOAD_ALL             = '[Entidad] LOAD_ALL';
+export const LOAD_ALL_COMPLETE    = '[Entidad] LOAD_ALL_COMPLETE';
+
+export const CREATE               = '[Entities] CREATE';
+export const UPDATE               = '[Entities] UPDATE';
+export const DELETE               = '[Entities] DELETE';
+
+export class LoadAll implements Action {
+  readonly type = LOAD_ALL;
+  constructor() { }
+}
+
+export class LoadAllComplete implements Action {
+  readonly type = LOAD_ALL_COMPLETE;
+  constructor(public entidades: IEntidad[]) { }
+}
 
 export class Create implements Action {
   readonly type = CREATE;
@@ -30,4 +43,9 @@ export class Delete implements Action {
   ) { }
 }
 
-export type EntidadActions = Create | Update | Delete;
+export type EntidadActions
+  = LoadAll
+  | LoadAllComplete
+  | Create
+  | Update
+  | Delete;

@@ -16,3 +16,8 @@ export interface ICompany extends IItem {
 export interface IAction extends IItem {
   name: string;
 }
+
+export interface IEntidad {
+  Id: number;
+  Name: string;
+}
