@@ -3,7 +3,6 @@ import { createFeatureSelector, createSelector }  from '@ngrx/store';
 import { EntidadesState, entidadAdapter }         from './state';
 import { ApplicationState }                       from '../reducers/application-state';
 import { IItem }                                  from '../../models/interfaces';
-import { RouterStateUrl }                         from '../router-state-serializer';
 
 // Create the default selectors
 export const getEntidadesState = createFeatureSelector<EntidadesState>('entidad');
@@ -15,8 +14,8 @@ export const {
   selectTotal
 } = entidadAdapter.getSelectors(getEntidadesState);
 
-export const selectIsLoaded = (state: ApplicationState) => state.entidad.loaded;
-export const selectCurrentRouterEntidad = (state: ApplicationState) => (state.router.state as RouterStateUrl).params.entity as string;
+export const selectIsLoaded = (state: ApplicationState) => state.entidad == null ? undefined : state.entidad.loaded;
+export const selectCurrentRouterEntidad = (state: ApplicationState) => state.router === undefined ? '' : state.router.state.params.entity as string;
 
 export const selectCurrentItems = createSelector(
   selectEntities,

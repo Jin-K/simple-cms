@@ -5,7 +5,7 @@ import { IItem }                                            from '../../models/i
 export interface ItemsState extends EntityState<IItem> {
   id: string;
   name: string;
-  selectedId: number;
+  selectedId?: number;
 }
 export interface EntidadesState extends EntityState<ItemsState> {
   loading: boolean;

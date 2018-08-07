@@ -1,3 +1,0 @@
-TODO: Trouver moyen de valider certificats ssl depuis docker sur ma machine
-TODO: Penser Ã  comment gerer la division en sub-applications sur Docker (est-ce que ce sera 3 containers ? Ou 1 seul oÃ¹ il sera possible de faire multiples "dotnet run" dans les sous-dossiers)
-TODO: Checker si tempkey.rsa est encore nécéssaire

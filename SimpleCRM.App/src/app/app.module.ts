@@ -20,7 +20,6 @@ import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
 import { HomeComponent }                from './containers/home/home.component';
 import { ChatComponent }                from './containers/chat/chat.component'; // TODO: Create feature
-import { UserModule }                   from './root-store/user/user.module';
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');
@@ -39,7 +38,6 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     HttpClientModule,
     FormsModule,
     RouterModule,
-    UserModule,
     Routing,
     AuthModule.forRoot(),
     SharedModule.forRoot(),

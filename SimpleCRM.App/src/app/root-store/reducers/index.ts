@@ -1,9 +1,5 @@
-import * as fromRouter      from '@ngrx/router-store';
-import { ActionReducerMap } from '@ngrx/store';
-import { ApplicationState } from './application-state';
-import { uiState }          from './uiState.reducer';
+import { routerReducer } from '@ngrx/router-store';
 
-export const reducers: ActionReducerMap<ApplicationState> = {
-  uiState,
-  router: fromRouter.routerReducer
+export const reducers: any = {
+  router: routerReducer
 };

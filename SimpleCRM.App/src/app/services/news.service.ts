@@ -15,7 +15,7 @@ export class NewsService {
   private actionUrl: string;
   private headers: HttpHeaders;
 
-  isAuthorizedSubscription: Subscription;
+  isAuthorizedSubscription!: Subscription;
   isAuthorized = false;
 
   constructor(

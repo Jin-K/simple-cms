@@ -1,7 +1,0 @@
-# Another way to do it with Docker
-
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\SimpleCRM.Api.pfx -p crypticpassword
-dotnet dev-certs https --trust
-dotnet user-secrets -p SimpleCRM.Api.csproj set "Kestrel:Certificates:Development:Password" "crypticpassword"
-docker build --pull -t simplecrmapi .
-docker run --name simplecrmapi --rm -it -p 64907:64907 -p 44385:44385 --network="test" -e ASPNETCORE_URLS="https://*:44385;http://*:64907" -e ASPNETCORE_HTTPS_PORT=44385 -e ASPNETCORE_ENVIRONMENT=Development -v %APPDATA%\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v %USERPROFILE%\.aspnet\https:/root/.aspnet/https/ simplecrmapi

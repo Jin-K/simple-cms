@@ -15,12 +15,12 @@ import { UserState }                    from './root-store/user/store/user.state
 export class AppComponent implements OnInit, OnDestroy {
   searchQuery = '';
 
-  isAuthorizedSubscription: Subscription;
+  isAuthorizedSubscription!: Subscription;
   isAuthorized = false;
 
   hasAdminRole = false;
   hasDataEventRecordsAdminRole = false;
-  userDataSubscription: Subscription;
+  userDataSubscription!: Subscription;
   userData: any;
 
   userState$: Observable<UserState>;

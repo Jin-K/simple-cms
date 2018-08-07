@@ -4,8 +4,10 @@ import { StoreModule }                                        from '@ngrx/store'
 import { EffectsModule }                                      from '@ngrx/effects';
 import { StoreDevtoolsModule }                                from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
-import { reducers }                                           from './reducers';
 import { storeFreeze }                                        from 'ngrx-store-freeze';
+
+import { UserModule }                                         from './user/user.module';
+import { reducers }                                           from './reducers';
 import { INITIAL_APPLICATION_STATE }                          from './reducers/application-state';
 import { environment }                                        from '../../environments/environment.prod';
 import { CustomRouterStateSerializer }                        from './router-state-serializer';
@@ -24,7 +26,8 @@ import { CustomRouterStateSerializer }                        from './router-sta
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router',
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    UserModule
   ],
   declarations: [],
   providers: [

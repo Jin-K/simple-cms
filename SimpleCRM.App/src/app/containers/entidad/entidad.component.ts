@@ -8,7 +8,7 @@ import { IItem }                        from '../../models/interfaces';
 import { Contact }                      from '../../models/contact';
 import { Action }                       from '../../models/action';
 import { Company }                      from '../../models/company';
-import { EntidadStoreSelectors }        from '../../root-store';
+import * as EntidadStoreSelectors       from '../../root-store/entidad/selectors';
 
 @Component({
   selector: 'app-entidad',
@@ -17,28 +17,28 @@ import { EntidadStoreSelectors }        from '../../root-store';
 })
 export class EntidadComponent implements OnInit, OnDestroy {
 
-  items: Observable<IItem[]>;
+  items!: Observable<IItem[]>;
 
-  entity: string;
+  entity!: string;
   isAuthorizedSubscription: Subscription;
   isLoadedSubscription: Subscription;
-  paramsSubscription: Subscription;
   routeEntidadSubscription: Subscription;
+  paramsSubscription!: Subscription;
   isLoaded = false;
 
   constructor(
     private store: Store<any>,
     private oidcSecurityService: OidcSecurityService
-  ) { }
+  ) {
+    this.isLoadedSubscription = this.store.select(EntidadStoreSelectors.selectIsLoaded)
+      .subscribe(loaded => this.isLoaded = !!loaded);
+    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized()
+      .subscribe((isAuthorized: boolean) => this.initStoreStuff(isAuthorized));
+    this.routeEntidadSubscription = this.store.select(EntidadStoreSelectors.selectCurrentRouterEntidad)
+      .subscribe(entidad => this.entity = entidad);
+  }
 
   ngOnInit() {
-    this.isLoadedSubscription     = this.store.select(EntidadStoreSelectors.selectIsLoaded)
-                                        .subscribe(loaded => this.isLoaded = loaded);
-    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized()
-                                        .subscribe((isAuthorized: boolean) => this.initStoreStuff(isAuthorized));
-    this.routeEntidadSubscription = this.store.select(EntidadStoreSelectors.selectCurrentRouterEntidad)
-                                        .subscribe(entidad => this.entity = entidad);
-
     this.items = this.store.select(EntidadStoreSelectors.selectCurrentItems);
   }
 
@@ -57,6 +57,7 @@ export class EntidadComponent implements OnInit, OnDestroy {
       case 'Contacts': newItem = new Contact('Muñoz', 'Pablo'); break;
       case 'Companies': newItem = new Company('Jin-K empire'); break;
       case 'Actions': newItem = new Action('Work !'); break;
+      default: return;
     }
 
     this.store.dispatch(new actions.Create(newItem, this.entity ) );

@@ -3,7 +3,8 @@ import { Observable, Subscription }         from 'rxjs';
 import { Store }                            from '@ngrx/store';
 import { OidcSecurityService }              from 'angular-auth-oidc-client';
 
-import { NewsStoreActions, NewsStoreState } from '../../root-store';
+import * as NewsStoreActions                from '../../root-store/news/actions';
+import * as NewsStoreState                  from '../../root-store/news/state';
 import { NewsItem }                         from '../../models/news-item';
 
 @Component({
@@ -20,7 +21,7 @@ export class NewsComponent implements OnInit, OnDestroy {
   newsState$: Observable<NewsStoreState.NewsState>;
   groups = ['IT', 'global', 'sport'];
 
-  isAuthorizedSubscription: Subscription;
+  isAuthorizedSubscription!: Subscription;
   newsItemsSubscription: Subscription;
   isAuthorized = false;
 

@@ -1,5 +1,6 @@
-import { EntidadStoreState } from './entidad';
+// TODO: Delete or replace with application-state
+// import { EntidadStoreState } from './entidad';
 
-export interface State {
-  entity: EntidadStoreState.EntidadesState;
-}
+// export interface State {
+//   entity: EntidadStoreState.EntidadesState;
+// }
