@@ -8,7 +8,7 @@ import { storeFreeze }                                        from 'ngrx-store-f
 
 import { UserModule }                                         from './user/user.module';
 import { reducers }                                           from './reducers';
-import { INITIAL_APPLICATION_STATE }                          from './reducers/application-state';
+import { INITIAL_APPLICATION_STATE }                          from './application-state';
 import { environment }                                        from '../../environments/environment.prod';
 import { CustomRouterStateSerializer }                        from './router-state-serializer';
 

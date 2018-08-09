@@ -7,7 +7,7 @@ import { OidcSecurityService }                  from 'angular-auth-oidc-client';
 
 import { Configuration }                        from '../app.constants';
 import { NewsItem }                             from '../models/news-item';
-import * as NewsActions                         from '../root-store/news/actions';
+import { NewsActions }                          from '../root-store';
 
 @Injectable()
 export class NewsService {

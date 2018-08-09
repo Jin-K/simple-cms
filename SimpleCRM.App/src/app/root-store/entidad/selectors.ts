@@ -1,10 +1,15 @@
+import { Params }                                 from '@angular/router';
 import { createFeatureSelector, createSelector }  from '@ngrx/store';
+import { Dictionary }                             from '@ngrx/entity';
 
-import { EntidadesState, entidadAdapter }         from './state';
-import { ApplicationState }                       from '../reducers/application-state';
+import {
+  EntidadesState,
+  entidadAdapter,
+  ItemsState
+}                                                 from './state';
 import { IItem }                                  from '../../models/interfaces';
+import { getUrlParams }                           from '../selectors';
 
-// Create the default selectors
 export const getEntidadesState = createFeatureSelector<EntidadesState>('entidad');
 
 export const {
@@ -14,20 +19,18 @@ export const {
   selectTotal
 } = entidadAdapter.getSelectors(getEntidadesState);
 
-export const selectIsLoaded = (state: ApplicationState) => state.entidad == null ? undefined : state.entidad.loaded;
-export const selectCurrentRouterEntidad = (state: ApplicationState) => state.router === undefined ? '' : state.router.state.params.entity as string;
+export const selectRouterEntidad = createSelector(getUrlParams, (params: Params) => params.entity as string);
+export const selectIsLoaded = createSelector(getEntidadesState, (state: EntidadesState) => state.loaded);
+export const selectCurrentItems = createSelector( selectEntities, selectRouterEntidad, getItems );
 
-export const selectCurrentItems = createSelector(
-  selectEntities,
-  selectCurrentRouterEntidad,
-  (entities, currentEntidad) => {
-    const items: IItem[] = [];
-    const selected = entities[ currentEntidad ];
-    if (selected) {
-      const entidadItems = selected.entities;
-      for (const i in entidadItems) items.push( entidadItems[ i ] );
-    }
-    return items;
+function getItems(entities: Dictionary<ItemsState>, entidad: string) {
+  const items: IItem[] = [];
+  const selected = entities[entidad];
+
+  if (selected) {
+    const entidadItems = selected.entities;
+    for (const i in entidadItems) items.push(entidadItems[i]);
   }
-);
 
+  return items;
+}

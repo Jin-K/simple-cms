@@ -2,7 +2,7 @@ import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule }  from '@ngrx/store';
 
-import { userReducer }  from './store/user.reducers';
+import { userReducer }  from './reducer';
 
 @NgModule({
   imports: [
@@ -10,8 +10,6 @@ import { userReducer }  from './store/user.reducers';
     StoreModule.forFeature('user', userReducer)
   ],
   declarations: [
-  ],
-  exports: [
   ]
 })
 export class UserModule { }

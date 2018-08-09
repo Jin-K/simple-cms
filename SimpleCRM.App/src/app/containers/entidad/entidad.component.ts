@@ -20,10 +20,12 @@ export class EntidadComponent implements OnInit, OnDestroy {
   items!: Observable<IItem[]>;
 
   entity!: string;
+
   isAuthorizedSubscription: Subscription;
   isLoadedSubscription: Subscription;
   routeEntidadSubscription: Subscription;
   paramsSubscription!: Subscription;
+
   isLoaded = false;
 
   constructor(
@@ -31,10 +33,10 @@ export class EntidadComponent implements OnInit, OnDestroy {
     private oidcSecurityService: OidcSecurityService
   ) {
     this.isLoadedSubscription = this.store.select(EntidadStoreSelectors.selectIsLoaded)
-      .subscribe(loaded => this.isLoaded = !!loaded);
+      .subscribe(loaded => this.isLoaded = loaded );
     this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized()
       .subscribe((isAuthorized: boolean) => this.initStoreStuff(isAuthorized));
-    this.routeEntidadSubscription = this.store.select(EntidadStoreSelectors.selectCurrentRouterEntidad)
+    this.routeEntidadSubscription = this.store.select(EntidadStoreSelectors.selectRouterEntidad)
       .subscribe(entidad => this.entity = entidad);
   }
 

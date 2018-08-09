@@ -14,12 +14,6 @@
       <mat-toolbar-row [routerLink]="['entity', 'Actions']">
         <mat-icon>date_range</mat-icon> Actions
       </mat-toolbar-row>
-      <mat-toolbar-row routerLink="news">
-        <mat-icon>chat</mat-icon> News
-      </mat-toolbar-row>
-      <mat-toolbar-row routerLink="chat">
-        <mat-icon>chat</mat-icon> Chat
-      </mat-toolbar-row>
     </mat-toolbar>
   </mat-drawer>
 
@@ -57,6 +51,14 @@
   <a *ngIf="isAuthorized" mat-menu-item (click)="logout()">
     <mat-icon>exit_to_app</mat-icon>
     <span>Logout</span>
+  </a>
+  <a mat-menu-item routerLink="news">
+    <mat-icon>chat</mat-icon>
+    <span>News</span>
+  </a>
+  <a mat-menu-item routerLink="chat">
+    <mat-icon>chat</mat-icon>
+    <span>Chat</span>
   </a>
   <a mat-menu-item>
     <mat-icon>info_outline</mat-icon>
