@@ -17,8 +17,6 @@ using SimpleCRM.Api.Providers;
 using SimpleCRM.Api.Repositories;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,13 +48,16 @@ namespace SimpleCRM.Api {
     public void ConfigureServices(IServiceCollection services) {
       var sqliteConnectionString = Configuration.GetConnectionString("SqliteConnectionString");
       var defaultConnection = Configuration.GetConnectionString("DefaultConnection");
+      var secondConnection = Configuration.GetConnectionString("SecondConnection");
 
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
       
       // used for the new items which belong to the signalr hub
       services.AddDbContext<NewsContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<EntitiesContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
+      services.AddSingleton<EntitiesStore>();
       //services.AddSingleton<UserInfoInMemory>();
 
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
@@ -83,7 +84,13 @@ namespace SimpleCRM.Api {
 
       services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
         .AddJwtBearer(options => {
-          options.Authority = "https://localhost:44321/";
+          if (System.Environment.GetEnvironmentVariable( "DOTNET_RUNNING_IN_CONTAINER" ) == "true") {
+            options.Authority = "http://auth:50772/";
+            options.RequireHttpsMetadata = false;
+          }
+          else {
+            options.Authority = "https://localhost:44321/";
+          }
           options.Audience = "dataEventRecords";
           options.IncludeErrorDetails = true;
           options.SaveToken = true;
@@ -112,12 +119,6 @@ namespace SimpleCRM.Api {
 
       services.AddAuthorization(options => { });
 
-      //services.AddCors( 
-      //  options => options.AddPolicy( 
-      //    "AllowAny", 
-      //    x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials() 
-      //  )
-      //);
       services.AddSignalR();
       //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
       services.AddMvc(options => { }).AddJsonOptions(options =>
@@ -139,6 +140,8 @@ namespace SimpleCRM.Api {
       app.UseCors("corsGlobalPolicy");
 
       app.UseAuthentication();
+
+      // app.UseHttpsRedirection();
 
       app.UseSignalR( routes => {
         routes.MapHub<SignalRHomeHub>( "/signalrhome" );

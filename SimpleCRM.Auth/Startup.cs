@@ -67,7 +67,8 @@ namespace SimpleCRM.Auth {
 
       services.AddTransient<IEmailSender, AuthMessageSender>();
 
-      services.AddIdentityServer()
+      services.AddIdentityServer( x => { x.IssuerUri = "https://localhost:44321/"; } )
+      //services.AddIdentityServer()
         //.AddSigningCredential( cert )
         .AddDeveloperSigningCredential()
         .AddInMemoryIdentityResources( Config.GetIdentityResources() )

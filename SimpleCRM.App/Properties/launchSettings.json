@@ -15,13 +15,15 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "simple-crm": {
+    "SimpleCRM.App": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://*:44300;http://*:4200",
+        "ASPNETCORE_HTTPS_PORT": "44300"
       },
-      "applicationUrl": "http://localhost:62827/"
+      "applicationUrl": "http://localhost:4200/"
     }
   }
 }

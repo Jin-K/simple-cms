@@ -1,29 +1,9 @@
 import { NgModule, APP_INITIALIZER }    from '@angular/core';
 import { HttpClientModule }             from '@angular/common/http';
+import { FormsModule }                  from '@angular/forms';
 import { BrowserModule }                from '@angular/platform-browser';
 import { BrowserAnimationsModule }      from '@angular/platform-browser/animations';
-
-import {
-  StoreRouterConnectingModule,
-  RouterStateSerializer
-}                                       from '@ngrx/router-store';
-import { StoreModule }                  from '@ngrx/store';
-import { EffectsModule }                from '@ngrx/effects';
-import { StoreDevtoolsModule }          from '@ngrx/store-devtools';
-
-import { storeFreeze }                  from 'ngrx-store-freeze';
-
-import { environment }                  from '../environments/environment';
-
-import { Routing }                      from './routing';
-import { EntityComponent }              from './entity/entity.component';
-import { ChatComponent }                from './chat/chat.component';
-
-import { AppComponent }                 from './core/containers/app.component';
-import { CoreModule }                   from './core/core.module';
-import { INITIAL_APPLICATION_STATE }    from './core/application-state';
-import { CustomRouterStateSerializer }  from './core/custom-router-state-serializer';
-import { reducers }                     from './core/reducers/reducers';
+import { RouterModule }                 from '@angular/router';
 
 import {
   AuthModule,
@@ -33,43 +13,37 @@ import {
   AuthWellKnownEndpoints
 }                                       from 'angular-auth-oidc-client';
 
+import { SharedModule }                 from './shared/shared.module';
+import { RootStoreModule }              from './root-store/';
+
+import { AppComponent }                 from './app.component';
+import { Routing }                      from './app.routes';
+import { HomeComponent }                from './containers/home/home.component';
+import { ChatComponent }                from './containers/chat/chat.component'; // TODO: Create feature
+
 export function loadConfig(oidcConfigService: OidcConfigService) {
   console.log('APP_INITIALIZER STARTING');
   return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
 }
 
-
 @NgModule({
   declarations: [
-    EntityComponent,
-    ChatComponent
+    AppComponent,
+    ChatComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
+    RouterModule,
     Routing,
-    // https://github.com/ngrx/platform/blob/master/docs/store/README.md
-    StoreModule.forRoot(
-      reducers,
-      { metaReducers: [storeFreeze], initialState: INITIAL_APPLICATION_STATE }
-    ),
-    // https://github.com/ngrx/platform/blob/master/docs/router-store/README.md
-    StoreRouterConnectingModule.forRoot({
-      stateKey: 'router', // name of reducer key
-    }),
-    // https://github.com/ngrx/platform/blob/master/docs/effects/README.md
-    EffectsModule.forRoot([]),
-    // https://github.com/ngrx/platform/blob/master/docs/store-devtools/README.md
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
     AuthModule.forRoot(),
-    CoreModule.forRoot()
+    SharedModule.forRoot(),
+    RootStoreModule
   ],
   providers: [
-    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
     OidcSecurityService,
     {
       provide: APP_INITIALIZER,
@@ -101,7 +75,7 @@ export class AppModule {
       openIDImplicitFlowConfiguration.unauthorized_route                          = this.oidcConfigService.clientConfiguration.unauthorized_route;
       openIDImplicitFlowConfiguration.log_console_warning_active                  = this.oidcConfigService.clientConfiguration.log_console_warning_active;
       openIDImplicitFlowConfiguration.log_console_debug_active                    = this.oidcConfigService.clientConfiguration.log_console_debug_active;
-      openIDImplicitFlowConfiguration.max_id_token_iat_offset_allowed_in_seconds = this.oidcConfigService.clientConfiguration.max_id_token_iat_offset_allowed_in_seconds;
+      openIDImplicitFlowConfiguration.max_id_token_iat_offset_allowed_in_seconds  = this.oidcConfigService.clientConfiguration.max_id_token_iat_offset_allowed_in_seconds;
       // tslint:enable:max-line-length
 
       const authWellKnownEndpoints = new AuthWellKnownEndpoints();
