@@ -1,28 +1,13 @@
-// TODO: Do I need this file ?
-// import { createSelector, MemoizedSelector } from '@ngrx/store';
-// import {
-//   MyFeatureStoreSelectors
-// } from './my-feature-store';
+import { createSelector }   from '@ngrx/store';
+import { ApplicationState } from './application-state';
+import { RouterStateUrl }   from './router-state-serializer';
 
-// import {
-//   MyOtherFeatureStoreSelectors
-// } from './my-other-feature-store';
+const INITIAL_ROUTER_STATE = {
+  url: "/",
+  params: {},
+  queryParams: {}
+};
 
-// export const selectError: MemoizedSelector<object, string> = createSelector(
-//   MyFeatureStoreSelectors.selectMyFeatureError,
-//   MyOtherFeatureStoreSelectors.selectMyOtherFeatureError,
-//   (myFeatureError: string, myOtherFeatureError: string) => {
-//     return myFeature || myOtherFeature;
-//   }
-// );
+const getRouterStateUrl = (state: ApplicationState) => state.router === undefined ? INITIAL_ROUTER_STATE : state.router.state;
 
-// export const selectIsLoading: MemoizedSelector<
-//   object,
-//   boolean
-// > = createSelector(
-//   MyFeatureStoreSelectors.selectMyFeatureIsLoading,
-//   MyOtherFeatureStoreSelectors.selectMyOtherFeatureIsLoading,
-//   (myFeature: boolean, myOtherFeature: boolean) => {
-//     return myFeature || myOtherFeature;
-//   }
-// );
+export const getUrlParams = createSelector(getRouterStateUrl, (state: RouterStateUrl) => state.params);

@@ -1,5 +1,5 @@
-import { UserState, INITIAL_USER_STATE }  from './user.state';
-import * as UserAction                    from './user.actions';
+import { UserState, INITIAL_USER_STATE }  from './state';
+import * as UserAction                    from './actions';
 
 
 export function userReducer(state: UserState = INITIAL_USER_STATE, action: UserAction.Actions): UserState {

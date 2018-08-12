@@ -50,9 +50,10 @@ function addEntidades(state: EntidadesState, entidades: IEntidad[]): EntidadesSt
   const ids = state.ids as string[];
   const entidadesToAdd: ItemsState[] = [];
 
-  for (let i = 0; i < entidades.length; i++) {
-    const entidad = entidades[i];
+  entidades.forEach(entidad => {
+
     if (ids.indexOf(entidad.Name) < 0) {
+
       const _entidad: ItemsState = {
         id: entidad.Id.toString(),
         name: entidad.Name,
@@ -60,9 +61,12 @@ function addEntidades(state: EntidadesState, entidades: IEntidad[]): EntidadesSt
         entities: {},
         selectedId: undefined
       };
+
       entidadesToAdd.push(_entidad);
+
     }
-  }
+
+  });
 
   const newState = Object.assign({}, state, { loaded: true });
 

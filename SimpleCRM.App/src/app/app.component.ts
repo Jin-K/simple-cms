@@ -4,8 +4,8 @@ import { Store }                        from '@ngrx/store';
 import { Subscription, Observable }     from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
-import * as UserActions                 from './root-store/user/store/user.actions';
-import { UserState }                    from './root-store/user/store/user.state';
+import * as UserActions                 from './root-store/user/actions';
+import { UserState }                    from './root-store/user/state';
 
 @Component({
   selector: 'app-root',

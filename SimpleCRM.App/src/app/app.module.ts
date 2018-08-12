@@ -14,7 +14,7 @@ import {
 }                                       from 'angular-auth-oidc-client';
 
 import { SharedModule }                 from './shared/shared.module';
-import { RootStoreModule }              from './root-store/root-store.module';
+import { RootStoreModule }              from './root-store';
 
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
@@ -75,7 +75,7 @@ export class AppModule {
       openIDImplicitFlowConfiguration.unauthorized_route                          = this.oidcConfigService.clientConfiguration.unauthorized_route;
       openIDImplicitFlowConfiguration.log_console_warning_active                  = this.oidcConfigService.clientConfiguration.log_console_warning_active;
       openIDImplicitFlowConfiguration.log_console_debug_active                    = this.oidcConfigService.clientConfiguration.log_console_debug_active;
-      openIDImplicitFlowConfiguration.max_id_token_iat_offset_allowed_in_seconds = this.oidcConfigService.clientConfiguration.max_id_token_iat_offset_allowed_in_seconds;
+      openIDImplicitFlowConfiguration.max_id_token_iat_offset_allowed_in_seconds  = this.oidcConfigService.clientConfiguration.max_id_token_iat_offset_allowed_in_seconds;
       // tslint:enable:max-line-length
 
       const authWellKnownEndpoints = new AuthWellKnownEndpoints();
