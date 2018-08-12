@@ -8,8 +8,6 @@ import { userReducer }  from './reducer';
   imports: [
     CommonModule,
     StoreModule.forFeature('user', userReducer)
-  ],
-  declarations: [
   ]
 })
 export class UserModule { }

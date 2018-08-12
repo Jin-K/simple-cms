@@ -14,7 +14,7 @@ import {
 }                                       from 'angular-auth-oidc-client';
 
 import { SharedModule }                 from './shared/shared.module';
-import { RootStoreModule }              from './root-store/';
+import { RootStoreModule }              from './root-store';
 
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
