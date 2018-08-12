@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>jinkserver.snk</AssemblyOriginatorKeyFile>
     <UserSecretsId>UserSecret</UserSecretsId>
   </PropertyGroup>
