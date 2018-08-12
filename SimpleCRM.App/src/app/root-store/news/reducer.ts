@@ -28,7 +28,6 @@ export function newsReducer(state: NewsState = INITIAL_NEWS_STATE, action: NewsA
         if (entry !== action.group)
           data.push(entry);
       }
-      console.log(data);
       return Object.assign({}, state, {
         newsItems: state.newsItems,
         groups: data

@@ -32,9 +32,8 @@ export class NewsComponent implements OnInit, OnDestroy {
     this.newsState$ = this.store.select<NewsStoreState.NewsState>(state => state.news);
 
     this.newsItemsSubscription = this.store.select<NewsStoreState.NewsState>(state => state.news)
-              .subscribe((o: NewsStoreState.NewsState) => this.newsItems = o.newsItems);
+          .subscribe((o: NewsStoreState.NewsState) => this.newsItems = o.newsItems);
 
-    console.log(this.newsItems);
     this.newsItem = new NewsItem();
     this.newsItem.AddData('', '', this.author, this.group);
   }
@@ -46,7 +45,6 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   public join(): void {
-    console.log('join');
     this.store.dispatch(new NewsStoreActions.JoinGroupAction(this.group));
   }
 
@@ -58,10 +56,7 @@ export class NewsComponent implements OnInit, OnDestroy {
     this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
       (isAuthorized: boolean) => {
         this.isAuthorized = isAuthorized;
-        if (this.isAuthorized) {
-          console.log('this.store.dispatch(new NewsActions.SelectAllGroupsAction());');
-          this.store.dispatch(new NewsStoreActions.SelectAllGroupsAction());
-        }
+        if (this.isAuthorized) this.store.dispatch(new NewsStoreActions.SelectAllGroupsAction());
       }
     );
     console.log('IsAuthorized:' + this.isAuthorized);

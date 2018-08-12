@@ -3,19 +3,15 @@
 
   <mat-drawer #drawer mode="side">
 
-    <!-- NavigationComponent -->
     <app-navigation></app-navigation>
 
   </mat-drawer>
 
   <div id="drawer-content">
 
-    <!-- TODO: Find solution for flex-style -->
     <app-topbar
       [drawer]="drawer"
-      [searchQuery]="searchQuery"
       [isAuthorized]="isAuthorized"
-      [userState]="userState$ | async"
     ></app-topbar>
 
     <div class="body-margin">

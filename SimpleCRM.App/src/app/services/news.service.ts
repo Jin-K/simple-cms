@@ -53,7 +53,6 @@ export class NewsService {
 
   getAllGroups(): Observable<string[]> {
     const token = this.oidcSecurityService.getToken();
-    console.log('getAllGroups token: ' + token);
     if (token !== '') {
       const tokenValue = `Bearer ${token}`;
       this.headers = this.headers.append('Authorization', tokenValue);
@@ -71,7 +70,6 @@ export class NewsService {
   }
 
   private initHub() {
-    console.log('initHub');
     const token = this.oidcSecurityService.getToken();
     let tokenValue = '';
     if (token !== '') tokenValue = `?token=${token}`;
@@ -88,8 +86,6 @@ export class NewsService {
     });
 
     this._hubConnection.on('JoinGroup', (data: string) => {
-      console.log('received data from the hub');
-      console.log(data);
       this.store.dispatch(new NewsActions.ReceivedGroupJoinedAction(data));
     });
 
@@ -98,8 +94,6 @@ export class NewsService {
     });
 
     this._hubConnection.on('History', (newsItems: NewsItem[]) => {
-      console.log('recieved history from the hub');
-      console.log(newsItems);
       this.store.dispatch(new NewsActions.ReceivedGroupHistoryAction(newsItems));
     });
   }

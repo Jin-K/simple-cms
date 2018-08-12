@@ -22,7 +22,6 @@ import { HomeComponent }                from './containers/home/home.component';
 import { ChatComponent }                from './containers/chat/chat.component'; // TODO: Create feature
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
-  console.log('APP_INITIALIZER STARTING');
   return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
 }
 

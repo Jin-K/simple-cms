@@ -13,9 +13,9 @@ import { TopbarComponent }                from './components/topbar/topbar.compo
   imports: [
     FormsModule,
     CommonModule,
+    RouterModule,
     ...MaterialComponents,
-    FlexLayoutModule,
-    RouterModule
+    FlexLayoutModule
   ],
   declarations: [
     NavigationComponent,

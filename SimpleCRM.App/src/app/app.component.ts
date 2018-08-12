@@ -1,11 +1,10 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store }                        from '@ngrx/store';
-import { Subscription, Observable }     from 'rxjs';
+import { Subscription }                 from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
 import * as UserActions                 from './root-store/user/actions';
-import { UserState }                    from './root-store/user/state';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +12,6 @@ import { UserState }                    from './root-store/user/state';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  searchQuery = '';
-
   isAuthorizedSubscription!: Subscription;
   isAuthorized = false;
 
@@ -23,23 +20,19 @@ export class AppComponent implements OnInit, OnDestroy {
   userDataSubscription!: Subscription;
   userData: any;
 
-  userState$: Observable<UserState>;
-
   constructor(
     private store: Store<any>,
     private oidcSecurityService: OidcSecurityService
   ) {
-    this.userState$ = this.store.select<UserState>(state => state.user);
-
-    if (this.oidcSecurityService.moduleSetup) this.doCallbackLogicIfRequired();
-    else this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
+    if (this.oidcSecurityService.moduleSetup)
+      this.doCallbackLogicIfRequired();
+    else
+      this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
   }
 
   ngOnInit() {
     this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
-      isAuthorized => {
-        this.isAuthorized = isAuthorized;
-      }
+      isAuthorized => this.isAuthorized = isAuthorized
     );
 
     this.userDataSubscription = this.oidcSecurityService.getUserData().subscribe(
@@ -58,8 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           }
         }
-
-        console.log('userData getting data');
       }
     );
   }
@@ -72,7 +63,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   doCallbackLogicIfRequired(): any {
     if (window.location.hash) {
-      console.log('doing stuff');
       this.oidcSecurityService.authorizedCallback();
     }
   }

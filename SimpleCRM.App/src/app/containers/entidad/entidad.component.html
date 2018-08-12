@@ -19,7 +19,7 @@
 
         </mat-card-actions>
       </div>
-      <mat-card-actions align="left">
+      <mat-card-actions *ngIf="isLoaded" align="left">
         <button mat-button (click)="addItem()">Add item</button>
       </mat-card-actions>
     </mat-card-content>

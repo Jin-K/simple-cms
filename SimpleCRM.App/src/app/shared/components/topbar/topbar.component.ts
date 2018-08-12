@@ -1,6 +1,9 @@
 import { Component, Input }     from '@angular/core';
 import { MatDrawer }            from '@angular/material';
+import { Store }                from '@ngrx/store';
+import { Observable }           from 'rxjs';
 import { OidcSecurityService }  from 'angular-auth-oidc-client';
+
 import { UserState }            from '../../../root-store';
 
 @Component({
@@ -14,23 +17,25 @@ export class TopbarComponent {
   drawer: MatDrawer;
 
   @Input()
-  searchQuery: string;
-
-  @Input()
   isAuthorized: boolean;
 
   @Input()
-  userState: UserState;
+  userState$: Observable<UserState>;
 
-  constructor(private oidcSecurityService: OidcSecurityService) { }
+  searchQuery = '';
+
+  constructor(
+    private store: Store<any>,
+    private oidcSecurityService: OidcSecurityService
+  ) {
+    this.userState$ = this.store.select<UserState>(state => state.user);
+  }
 
   login() {
-    console.log('Do login logic');
     this.oidcSecurityService.authorize();
   }
 
   logout() {
-    console.log('Do logout logic');
     this.oidcSecurityService.logoff();
   }
 

@@ -26,7 +26,6 @@ export class EntidadService {
   getAllEntidades(): Observable<IEntidad[]> {
     if (!this.headers.has('Authorization')) {
       const token = this.oidcSecurityService.getToken();
-      console.log('getAllEntidades token: ' + token);
       if (token !== '') {
         const tokenValue = `Bearer ${token}`;
         this.headers = this.headers.append('Authorization', tokenValue);
