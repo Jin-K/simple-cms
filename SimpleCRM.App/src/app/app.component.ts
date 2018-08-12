@@ -35,17 +35,6 @@ export class AppComponent implements OnInit, OnDestroy {
     else this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
   }
 
-  // TODO: Déplacer ça (login, logout) ailleurs non ? ==> dans un navigation.component comme SecurityAspNetCoreSignalR
-  login() {
-    console.log('Do login logic');
-    this.oidcSecurityService.authorize();
-  }
-
-  logout() {
-    console.log('Do logout logic');
-    this.oidcSecurityService.logoff();
-  }
-
   ngOnInit() {
     this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
       isAuthorized => {

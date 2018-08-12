@@ -1,0 +1,19 @@
+<mat-toolbar>
+
+  <mat-toolbar-row routerLink="/">
+    <mat-icon>dashboard</mat-icon> Dashboard
+  </mat-toolbar-row>
+
+  <mat-toolbar-row [routerLink]="['entity', 'Contacts']">
+    <mat-icon>event_available</mat-icon> Contacts
+  </mat-toolbar-row>
+
+  <mat-toolbar-row [routerLink]="['entity', 'Companies']">
+    <mat-icon>event_available</mat-icon> Companies
+  </mat-toolbar-row>
+
+  <mat-toolbar-row [routerLink]="['entity', 'Actions']">
+    <mat-icon>date_range</mat-icon> Actions
+  </mat-toolbar-row>
+
+</mat-toolbar>

@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="config\" />
+    <Folder Include="src\app\shared\components\" />
   </ItemGroup>
 
   <ItemGroup>

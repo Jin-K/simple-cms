@@ -3,7 +3,7 @@ import { ApplicationState } from './application-state';
 import { RouterStateUrl }   from './router-state-serializer';
 
 const INITIAL_ROUTER_STATE = {
-  url: "/",
+  url: '/',
   params: {},
   queryParams: {}
 };
