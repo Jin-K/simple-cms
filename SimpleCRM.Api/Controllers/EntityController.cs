@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleCRM.Api.Models;
+using SimpleCRM.Api.Models.ViewModel;
 using SimpleCRM.Api.Providers;
 using System.Linq;
 
@@ -15,7 +15,7 @@ namespace SimpleCRM.Api.Controllers {
 
     [HttpGet]
     public IActionResult GetAllEntities() => 
-      Ok( _entitiesStore.GetAllEntities().Select( entity => (Entidad) entity ) );
+      Ok( _entitiesStore.GetAllEntities().Select( entity => entity.ToEntidad() ) );
   }
 
 }
