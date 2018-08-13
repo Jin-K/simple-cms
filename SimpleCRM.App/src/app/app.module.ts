@@ -19,7 +19,6 @@ import { RootStoreModule }              from './root-store';
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
 import { HomeComponent }                from './containers/home/home.component';
-import { ChatComponent }                from './containers/chat/chat.component'; // TODO: Create feature
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
@@ -28,7 +27,6 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-    ChatComponent,
     HomeComponent
   ],
   imports: [
