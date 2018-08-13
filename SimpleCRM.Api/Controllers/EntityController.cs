@@ -13,8 +13,9 @@ namespace SimpleCRM.Api.Controllers {
 
     public EntityController(EntitiesStore entitiesStore) => _entitiesStore = entitiesStore;
 
-    public Entidad[] GetAllEntities() =>
-      _entitiesStore.GetAllEntities().Select( entity => (Entidad) entity).ToArray();
+    [HttpGet]
+    public IActionResult GetAllEntities() => 
+      Ok( _entitiesStore.GetAllEntities().Select( entity => (Entidad) entity ) );
   }
 
 }

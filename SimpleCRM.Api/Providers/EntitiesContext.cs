@@ -5,5 +5,6 @@ namespace SimpleCRM.Api.Providers {
   public class EntitiesContext : DbContext {
     public EntitiesContext(DbContextOptions<EntitiesContext> options) : base( options ) { }
     public DbSet<Entity> Entities { get; set; }
+    public DbSet<_Label> Labels { get; set; }
   }
 }
