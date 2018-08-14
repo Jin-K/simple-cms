@@ -53,12 +53,14 @@ namespace SimpleCRM.Api {
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
       
       // used for the new items which belong to the signalr hub
-      services.AddDbContext<NewsContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
-      services.AddDbContext<EntitiesContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<EntitiesContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<NewsContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
       services.AddSingleton<EntitiesStore>();
       //services.AddSingleton<UserInfoInMemory>();
+
+      services.AddTransient<IDataEventRecordRepository, DataEventRecordRepository>();
 
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
       policy.Headers.Add("*");
@@ -124,8 +126,6 @@ namespace SimpleCRM.Api {
       services.AddMvc(options => { }).AddJsonOptions(options =>
         options.SerializerSettings.ContractResolver = new DefaultContractResolver()
       );
-
-      services.AddTransient<IDataEventRecordRepository, DataEventRecordRepository>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

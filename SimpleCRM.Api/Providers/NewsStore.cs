@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SimpleCRM.Api.Data;
 using SimpleCRM.Api.Models.SignalR;
 
 namespace SimpleCRM.Api.Providers {

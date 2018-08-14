@@ -1,4 +1,4 @@
-﻿using SimpleCRM.Api.Models;
+﻿using SimpleCRM.Api.Models.EF;
 using System.Collections.Generic;
 using System.Linq;
 

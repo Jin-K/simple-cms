@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleCRM.Api.Models.ViewModel;
 using SimpleCRM.Api.Providers;
 using System.Linq;
 
