@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimpleCRM.Api.Models.EF {
+namespace SimpleCRM.Data.Entities {
   public class _Label {
     public int Id { get; set; }
     public string Label { get; set; }

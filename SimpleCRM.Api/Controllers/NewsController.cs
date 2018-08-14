@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using SimpleCRM.Api.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using SimpleCRM.Business.Providers;
 
 namespace SimpleCRM.Api.Controllers {
   //[Authorize(AuthenticationSchemes = "Bearer")]

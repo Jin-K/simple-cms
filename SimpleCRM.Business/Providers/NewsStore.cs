@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using SimpleCRM.Api.Data;
-using SimpleCRM.Api.Models.SignalR;
+using SimpleCRM.Business.Models;
+using SimpleCRM.Data.Contexts;
+using SimpleCRM.Data.Entities;
 
-namespace SimpleCRM.Api.Providers {
+namespace SimpleCRM.Business.Providers {
   public class NewsStore {
     public NewsStore(NewsContext newsContext) {
       _newsContext = newsContext;

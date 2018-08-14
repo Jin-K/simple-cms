@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SimpleCRM.Api.Models;
+using SimpleCRM.Data.Entities;
 
-namespace SimpleCRM.Api.Data {
+namespace SimpleCRM.Data.Contexts {
   public class DataEventRecordContext : DbContext {
     public DataEventRecordContext(DbContextOptions<DataEventRecordContext> options) : base(options) { }
 

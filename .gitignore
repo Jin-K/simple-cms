@@ -1,4 +1,7 @@
 # IDE - Visual Studio
 .vs/
 Logs/
-SimpleCRM.AngularWebpackStarter/
+SimpleCRM.Business/bin/
+SimpleCRM.Business/obj/
+SimpleCRM.Data/obj/
+SimpleCRM.Data/bin/

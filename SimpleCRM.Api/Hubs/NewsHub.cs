@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 using Microsoft.AspNetCore.SignalR;
 
-using SimpleCRM.Api.Models.SignalR;
-using SimpleCRM.Api.Providers;
-using System.Net;
+using SimpleCRM.Business.Models;
+using SimpleCRM.Business.Providers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SimpleCRM.Api.Hubs {

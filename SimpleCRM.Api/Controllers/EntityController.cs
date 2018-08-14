@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SimpleCRM.Api.Providers;
+using SimpleCRM.Business.Providers;
 using System.Linq;
 
 namespace SimpleCRM.Api.Controllers {

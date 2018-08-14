@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using SimpleCRM.Api.Providers;
+using SimpleCRM.Data.Entities;
 
-namespace SimpleCRM.Api.Data {
+namespace SimpleCRM.Data.Contexts {
   public class NewsContext : DbContext {
       public NewsContext(DbContextOptions<NewsContext> options) : base(options) { }
 

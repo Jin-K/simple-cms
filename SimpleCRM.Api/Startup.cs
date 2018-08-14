@@ -11,10 +11,9 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using SimpleCRM.Api.Data;
 using SimpleCRM.Api.Hubs;
-using SimpleCRM.Api.Providers;
-using SimpleCRM.Api.Repositories;
+using SimpleCRM.Business.Providers;
+using SimpleCRM.Data.Contexts;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -53,14 +52,12 @@ namespace SimpleCRM.Api {
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
       
       // used for the new items which belong to the signalr hub
-      services.AddDbContext<EntitiesContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<CrmContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
       services.AddDbContext<NewsContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
       services.AddSingleton<EntitiesStore>();
       //services.AddSingleton<UserInfoInMemory>();
-
-      services.AddTransient<IDataEventRecordRepository, DataEventRecordRepository>();
 
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
       policy.Headers.Add("*");
