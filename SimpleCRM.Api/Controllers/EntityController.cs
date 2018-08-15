@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCRM.Business.Providers;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace SimpleCRM.Api.Controllers {
 
@@ -13,8 +13,7 @@ namespace SimpleCRM.Api.Controllers {
     public EntityController(EntitiesStore entitiesStore) => _entitiesStore = entitiesStore;
 
     [HttpGet]
-    public IActionResult GetAllEntities() => 
-      Ok( _entitiesStore.GetAllEntities().Select( entity => entity.ToEntidad() ) );
+    public async Task<IActionResult> Get() => Ok( await _entitiesStore.GetAllEntities() );
   }
 
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SimpleCRM.Api.Hubs;
+using System.Threading.Tasks;
 
 namespace SimpleCRM.Api.Controllers {
 
@@ -12,9 +13,9 @@ namespace SimpleCRM.Api.Controllers {
 
     public MessageController(IHubContext<MessageHub> messageHubContext) => _messageHubContext = messageHubContext;
 
-    public IActionResult Post() {
-      // Broadcast the message to our clients
-      _messageHubContext.Clients.All.SendAsync( "send", "Hello from the server" );
+    [HttpPost]
+    public async Task<IActionResult> Post() {
+      await _messageHubContext.Clients.All.SendAsync( "send", "Hello from the server" ); // Broadcast the message to our clients
       return Ok();
     }
   }

@@ -1,4 +1,3 @@
-using SimpleCRM.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimpleCRM.Data.Entities {
@@ -11,7 +10,5 @@ namespace SimpleCRM.Data.Entities {
 
     [ForeignKey("LabelId")]
     public _Label Label { get; set; }
-
-    public Entidad ToEntidad() => new Entidad { Id = Id, Name = Name };
   }
 }

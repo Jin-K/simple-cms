@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SimpleCRM.Business.Models;
 using SimpleCRM.Data.Contexts;
 using SimpleCRM.Data.Entities;
@@ -12,11 +14,11 @@ namespace SimpleCRM.Business.Providers {
 
     private readonly NewsContext _newsContext;
 
-    public void AddGroup(string group) {
-      _newsContext.NewsGroups.Add(new NewsGroup {
+    public async Task AddGroup(string group) {
+      await _newsContext.NewsGroups.AddAsync(new NewsGroup {
         Name = group
       });
-      _newsContext.SaveChanges();
+      await _newsContext.SaveChangesAsync();
     }
 
     public bool GroupExists(string group) {
@@ -47,8 +49,6 @@ namespace SimpleCRM.Business.Providers {
       );
     }
 
-    public List<string> GetAllGroups() {
-      return _newsContext.NewsGroups.Select(t => t.Name).ToList();
-    }
+    public async Task<List<string>> GetAllGroups() => await _newsContext.NewsGroups.Select(t => t.Name).ToListAsync();
   }
 }

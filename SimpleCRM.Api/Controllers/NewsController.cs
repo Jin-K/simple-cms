@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using SimpleCRM.Business.Providers;
+using System.Threading.Tasks;
 
 namespace SimpleCRM.Api.Controllers {
   //[Authorize(AuthenticationSchemes = "Bearer")]
@@ -12,14 +12,13 @@ namespace SimpleCRM.Api.Controllers {
     public NewsController(NewsStore newsStore) => this.newsStore = newsStore;
 
     [HttpPost]
-    public IActionResult AddGroup([FromQuery] string group) {
+    public async Task<IActionResult> AddGroup([FromQuery] string group) {
       if (string.IsNullOrEmpty(group)) return BadRequest();
-      newsStore.AddGroup(group);
+      await newsStore.AddGroup(group);
       return Created("AddGroup", group);
     }
 
-    public List<string> GetAllGroups() {
-      return newsStore.GetAllGroups();
-    }
+    [HttpGet]
+    public async Task<IActionResult> GetAllGroups() => Ok( await newsStore.GetAllGroups() );
   }
 }

@@ -1,7 +1,9 @@
-﻿using SimpleCRM.Data.Contexts;
-using SimpleCRM.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleCRM.Business.Models;
+using SimpleCRM.Data.Contexts;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SimpleCRM.Business.Providers {
   public class EntitiesStore {
@@ -9,6 +11,7 @@ namespace SimpleCRM.Business.Providers {
 
     public EntitiesStore(CrmContext entitiesContext) => _entitiesContext = entitiesContext;
 
-    public List<Entity> GetAllEntities() => _entitiesContext.Entities.ToList();
+    public async Task<IEnumerable<Entidad>> GetAllEntities() => 
+      await _entitiesContext.Entities.Select( e => new Entidad { Id = e.Id, Name = e.Name } ).ToListAsync();
   }
 }
