@@ -48,6 +48,7 @@ namespace SimpleCRM.Auth {
 
       //var cert = new X509Certificate2( Path.Combine( _environment.ContentRootPath, "jinkserver.snk" ), "" );
 
+      // TODO: Use same DBContext as SimpleCRM.Data (Merge contexts like the "amraps" project)
       services.AddDbContext<ApplicationDbContext>( options => options.UseSqlite( Configuration.GetConnectionString( "LocalConnection" ) ) );
 
       services.AddIdentity<ApplicationUser, IdentityRole>()

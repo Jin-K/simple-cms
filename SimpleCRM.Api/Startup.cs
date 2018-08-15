@@ -47,12 +47,15 @@ namespace SimpleCRM.Api {
     public void ConfigureServices(IServiceCollection services) {
       var sqliteConnectionString = Configuration.GetConnectionString("SqliteConnectionString");
       var defaultConnection = Configuration.GetConnectionString("DefaultConnection");
+      var defaultConnectionSQLite = Configuration.GetConnectionString("DefaultConnectionSQLite");
       var secondConnection = Configuration.GetConnectionString("SecondConnection");
 
       services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
-      
+
+      //services.AddDbContext<CrmContext>( options => options.UseSqlite( defaultConnectionSQLite ), ServiceLifetime.Singleton );
+      services.AddDbContext<CrmContext>( options => options.UseSqlServer( defaultConnection ), ServiceLifetime.Singleton );
+
       // used for the new items which belong to the signalr hub
-      services.AddDbContext<CrmContext>( options => options.UseSqlite( defaultConnection ), ServiceLifetime.Singleton );
       services.AddDbContext<NewsContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();

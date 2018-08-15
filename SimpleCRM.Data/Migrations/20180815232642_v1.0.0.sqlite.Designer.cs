@@ -2,32 +2,30 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleCRM.Data.Contexts;
 
 namespace SimpleCRM.Data.Migrations
 {
     [DbContext(typeof(CrmContext))]
-    partial class CrmContextModelSnapshot : ModelSnapshot
+    [Migration("20180815232642_v1.0.0.sqlite")]
+    partial class v100sqlite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846");
 
             modelBuilder.Entity("SimpleCRM.Data.Entities._Label", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<int>("Custom")
                         .ValueGeneratedOnAdd()
@@ -41,23 +39,22 @@ namespace SimpleCRM.Data.Migrations
                     b.ToTable("Labels");
 
                     b.HasData(
-                        new { Id = 1, Created = new DateTime(2018, 8, 16, 1, 27, 20, 521, DateTimeKind.Local), Custom = 0, Label = "Sociétés" },
-                        new { Id = 2, Created = new DateTime(2018, 8, 16, 1, 27, 20, 523, DateTimeKind.Local), Custom = 0, Label = "Contacts" },
-                        new { Id = 3, Created = new DateTime(2018, 8, 16, 1, 27, 20, 523, DateTimeKind.Local), Custom = 0, Label = "Projets" },
-                        new { Id = 4, Created = new DateTime(2018, 8, 16, 1, 27, 20, 523, DateTimeKind.Local), Custom = 0, Label = "Documents" },
-                        new { Id = 5, Created = new DateTime(2018, 8, 16, 1, 27, 20, 523, DateTimeKind.Local), Custom = 0, Label = "Actions" }
+                        new { Id = 1, Created = new DateTime(2018, 8, 16, 1, 26, 41, 959, DateTimeKind.Local), Custom = 0, Label = "Sociétés" },
+                        new { Id = 2, Created = new DateTime(2018, 8, 16, 1, 26, 41, 961, DateTimeKind.Local), Custom = 0, Label = "Contacts" },
+                        new { Id = 3, Created = new DateTime(2018, 8, 16, 1, 26, 41, 961, DateTimeKind.Local), Custom = 0, Label = "Projets" },
+                        new { Id = 4, Created = new DateTime(2018, 8, 16, 1, 26, 41, 961, DateTimeKind.Local), Custom = 0, Label = "Documents" },
+                        new { Id = 5, Created = new DateTime(2018, 8, 16, 1, 26, 41, 961, DateTimeKind.Local), Custom = 0, Label = "Actions" }
                     );
                 });
 
             modelBuilder.Entity("SimpleCRM.Data.Entities.Account", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("FullName");
 
@@ -79,12 +76,11 @@ namespace SimpleCRM.Data.Migrations
             modelBuilder.Entity("SimpleCRM.Data.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.HasKey("Id");
 
@@ -94,12 +90,11 @@ namespace SimpleCRM.Data.Migrations
             modelBuilder.Entity("SimpleCRM.Data.Entities.Contact", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.HasKey("Id");
 
@@ -112,7 +107,7 @@ namespace SimpleCRM.Data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getdate()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<int>("Custom")
                         .ValueGeneratedOnAdd()
@@ -130,11 +125,11 @@ namespace SimpleCRM.Data.Migrations
                     b.ToTable("Entities");
 
                     b.HasData(
-                        new { Id = 10, Created = new DateTime(2018, 8, 16, 1, 27, 20, 525, DateTimeKind.Local), Custom = 0, LabelId = 1, Name = "Companies" },
-                        new { Id = 11, Created = new DateTime(2018, 8, 16, 1, 27, 20, 525, DateTimeKind.Local), Custom = 0, LabelId = 2, Name = "Contacts" },
-                        new { Id = 20, Created = new DateTime(2018, 8, 16, 1, 27, 20, 525, DateTimeKind.Local), Custom = 0, LabelId = 3, Name = "Projects" },
-                        new { Id = 31, Created = new DateTime(2018, 8, 16, 1, 27, 20, 525, DateTimeKind.Local), Custom = 0, LabelId = 4, Name = "Documents" },
-                        new { Id = 32, Created = new DateTime(2018, 8, 16, 1, 27, 20, 525, DateTimeKind.Local), Custom = 0, LabelId = 5, Name = "Actions" }
+                        new { Id = 10, Created = new DateTime(2018, 8, 16, 1, 26, 41, 963, DateTimeKind.Local), Custom = 0, LabelId = 1, Name = "Companies" },
+                        new { Id = 11, Created = new DateTime(2018, 8, 16, 1, 26, 41, 963, DateTimeKind.Local), Custom = 0, LabelId = 2, Name = "Contacts" },
+                        new { Id = 20, Created = new DateTime(2018, 8, 16, 1, 26, 41, 963, DateTimeKind.Local), Custom = 0, LabelId = 3, Name = "Projects" },
+                        new { Id = 31, Created = new DateTime(2018, 8, 16, 1, 26, 41, 963, DateTimeKind.Local), Custom = 0, LabelId = 4, Name = "Documents" },
+                        new { Id = 32, Created = new DateTime(2018, 8, 16, 1, 26, 41, 963, DateTimeKind.Local), Custom = 0, LabelId = 5, Name = "Actions" }
                     );
                 });
 
