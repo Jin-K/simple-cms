@@ -5,8 +5,7 @@ using System;
 
 namespace SimpleCRM.Data.Contexts {
   public class CrmContext : DbContext {
-
-    ContextType contextType;
+    readonly ContextType contextType;
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Entity> Entities { get; set; }
@@ -88,9 +87,20 @@ namespace SimpleCRM.Data.Contexts {
 
       modelBuilder.Entity<Account>().Property( a => a.Created ).HasDefaultValueSql( defaultNowSql );
 
-      modelBuilder.Entity<Contact>().Property( c => c.Created ).HasDefaultValueSql( defaultNowSql );
+      modelBuilder.Entity<Contact>( contactBuilder => {
+        contactBuilder.Property( c => c.Created ).HasDefaultValueSql( defaultNowSql );
+        contactBuilder.HasData(
+          new Contact { Id = 1, FirstName = "Angel", LastName = "Muñoz" },
+          new Contact { Id = 2, FirstName = "Pablo", LastName = "Muñoz" }
+        );
+      } );
 
-      modelBuilder.Entity<Company>().Property( c => c.Created ).HasDefaultValueSql( defaultNowSql );
+      modelBuilder.Entity<Company>( companyBuilder => {
+        companyBuilder.Property( c => c.Created ).HasDefaultValueSql( defaultNowSql );
+        companyBuilder.HasData(
+          new Company { Id = 1, Name = "Intense Designing" }
+        );
+      } );
 
     }
   }

@@ -4,7 +4,7 @@ import { Observable }               from 'rxjs';
 import { OidcSecurityService }      from 'angular-auth-oidc-client';
 
 import { Configuration }            from '../app.constants';
-import { IEntidad }                 from '../models/interfaces';
+import { IEntidad, IItem }          from '../models/interfaces';
 
 @Injectable()
 export class EntidadService {
@@ -24,6 +24,17 @@ export class EntidadService {
   }
 
   getAllEntidades(): Observable<IEntidad[]> {
+    this._ensureAuthorization();
+    return this.http.get<IEntidad[]>(this.actionUrl, { headers: this.headers });
+  }
+
+  getAllItems(entity: string): Observable<IItem[]> {
+    console.log(`fetching items of "${ entity }" entity`);
+    this._ensureAuthorization();
+    return this.http.get<IItem[]>(`${this.actionUrl}/${entity}`, { headers: this.headers });
+  }
+
+  _ensureAuthorization(): void {
     if (!this.headers.has('Authorization')) {
       const token = this.oidcSecurityService.getToken();
       if (token !== '') {
@@ -31,7 +42,5 @@ export class EntidadService {
         this.headers = this.headers.append('Authorization', tokenValue);
       }
     }
-
-    return this.http.get<IEntidad[]>(this.actionUrl, { headers: this.headers });
   }
 }

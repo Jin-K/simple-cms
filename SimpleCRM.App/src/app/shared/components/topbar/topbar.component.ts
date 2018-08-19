@@ -14,10 +14,10 @@ import { UserState }            from '../../../root-store';
 export class TopbarComponent {
 
   @Input()
-  drawer: MatDrawer;
+  drawer!: MatDrawer;
 
   @Input()
-  isAuthorized: boolean;
+  isAuthorized!: boolean;
 
   @Input()
   userState$: Observable<UserState>;

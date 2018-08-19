@@ -3,4 +3,10 @@
     public int Id { get; set; }
     public string Name { get; set; }
   }
+
+  public struct Item {
+    public int id { get; set; }
+    public bool active { get; set; }
+    public System.DateTime dCreate { get; set; }
+  }
 }

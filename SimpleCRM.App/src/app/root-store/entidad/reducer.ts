@@ -21,6 +21,14 @@ export function entityReducer(
     case actions.LOAD_ALL_COMPLETE:
       return addEntidades(state, action.entidades);
 
+    case actions.LOAD_ALL_ITEMS_COMPLETE:
+      entities = Object.assign({}, state.entities);
+      if (entities[action.entity]) {
+        entities[action.entity] = itemAdapter.addMany(action.items, entities[action.entity]);
+        entities[action.entity].loaded = true;
+      }
+      return Object.assign({}, state, { entities });
+
     case actions.CREATE:
       entities = Object.assign({}, state.entities);
       entities[action.entity] = itemAdapter.addOne(action.item, state.entities[action.entity]);
@@ -45,11 +53,11 @@ export function entityReducer(
   }
 }
 
-// TODO: memoize ?
 function addEntidades(state: EntidadesState, entidades: IEntidad[]): EntidadesState {
   const ids = state.ids as string[];
   const entidadesToAdd: ItemsState[] = [];
 
+  // TODO: memoize ?
   entidades.forEach(entidad => {
 
     if (ids.indexOf(entidad.Name) < 0) {
@@ -57,9 +65,10 @@ function addEntidades(state: EntidadesState, entidades: IEntidad[]): EntidadesSt
       const _entidad: ItemsState = {
         id: entidad.Id.toString(),
         name: entidad.Name,
+        loaded: false,
+        selectedId: undefined,
         ids: [],
-        entities: {},
-        selectedId: undefined
+        entities: {}
       };
 
       entidadesToAdd.push(_entidad);

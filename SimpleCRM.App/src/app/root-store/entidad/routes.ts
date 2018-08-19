@@ -1,9 +1,9 @@
 import { Routes, RouterModule } from '@angular/router';
-import { EntidadComponent }      from '../../containers/entidad/entidad.component';
+import { ItemListComponent }    from '../../containers/entidad/item-list/item-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Contacts', pathMatch: 'full' },
-  { path: ':entity', component: EntidadComponent }
+  { path: ':entity', component: ItemListComponent }
 ];
 
 export const EntidadRoutes = RouterModule.forChild(routes);

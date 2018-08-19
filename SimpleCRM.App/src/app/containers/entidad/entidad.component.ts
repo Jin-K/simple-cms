@@ -24,7 +24,6 @@ export class EntidadComponent implements OnInit, OnDestroy {
   isAuthorizedSubscription: Subscription;
   isLoadedSubscription: Subscription;
   routeEntidadSubscription: Subscription;
-  paramsSubscription!: Subscription;
 
   isLoaded = false;
 
@@ -48,7 +47,6 @@ export class EntidadComponent implements OnInit, OnDestroy {
     this.isLoadedSubscription.unsubscribe();
     this.isAuthorizedSubscription.unsubscribe();
     this.routeEntidadSubscription.unsubscribe();
-    if (this.paramsSubscription) this.paramsSubscription.unsubscribe();
   }
 
   addItem() {

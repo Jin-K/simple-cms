@@ -21,9 +21,10 @@ export const {
 
 export const selectRouterEntidad = createSelector(getUrlParams, (params: Params) => params.entity as string);
 export const selectIsLoaded = createSelector(getEntidadesState, (state: EntidadesState) => state.loaded);
-export const selectCurrentItems = createSelector( selectEntities, selectRouterEntidad, getItems );
+export const selectCurrentItems = createSelector(selectEntities, selectRouterEntidad, getItems);
+export const selectItemsIsLoaded = createSelector(selectEntities, selectRouterEntidad, getItemsIsLoaded);
 
-function getItems(entities: Dictionary<ItemsState>, entidad: string) {
+function getItems(entities: Dictionary<ItemsState>, entidad: string): IItem[] {
   const items: IItem[] = [];
   const selected = entities[entidad];
 
@@ -33,4 +34,9 @@ function getItems(entities: Dictionary<ItemsState>, entidad: string) {
   }
 
   return items;
+}
+
+function getItemsIsLoaded(entities: Dictionary<ItemsState>, entidad: string): boolean {
+  const selected = entities[entidad];
+  return selected && selected.loaded;
 }
