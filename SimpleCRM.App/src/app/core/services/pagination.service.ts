@@ -1,14 +1,14 @@
-import { Injectable, OnDestroy }    from '@angular/core';
-import { EntityPaginationSettings } from './../classes/entity-pagination.settings';
+import { Injectable, OnDestroy }  from '@angular/core';
+import { PaginationSettings }     from './../classes/pagination-settings.class';
 
-import * as _                       from 'lodash';
+import * as _                     from 'lodash';
 
 @Injectable()
-export class PaginationService implements OnDestroy {
-  private static entitiesSettingsCache: _.Dictionary<EntityPaginationSettings> = {};
+export class PaginationService<T> implements OnDestroy {
+  private static entitiesSettingsCache: _.Dictionary<PaginationSettings<any>> = {};
 
   getPaginationSettings(entity: string) {
-    if (!PaginationService.entitiesSettingsCache[entity]) PaginationService.entitiesSettingsCache[entity] = new EntityPaginationSettings();
+    if (!PaginationService.entitiesSettingsCache[entity]) PaginationService.entitiesSettingsCache[entity] = new PaginationSettings<T>();
     return PaginationService.entitiesSettingsCache[entity];
   }
 

@@ -24,7 +24,7 @@ export class EntidadService {
     private http: HttpClient,
     private configuration: Configuration,
     private oidcSecurityService: OidcSecurityService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService<IItem>
   ) {
     // using private member to avoid multiple calls on getter -> _ensureAuthorization
     this._headers = this._headers.set('Content-Type', APPLICATION_JSON);

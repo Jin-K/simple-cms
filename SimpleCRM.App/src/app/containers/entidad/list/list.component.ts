@@ -12,10 +12,10 @@ import { ActivatedRoute }           from '@angular/router';
 import { Subject }                  from 'rxjs';
 import { Observable }               from 'rxjs/internal/Observable';
 
-import { EntityPaginationSettings } from '../../../core/classes/entity-pagination.settings';
-import { IItem }                    from '../../../models/interfaces';
+import { PaginationSettings }       from '../../../core/classes/pagination-settings.class';
 import { PaginationService }        from '../../../core/services/pagination.service';
 import { PaginationItemList }       from '../../../core/models/pagination-items-list.type';
+import { IItem }                    from '../../../models/interfaces';
 
 /**
  * @title ??
@@ -38,11 +38,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['select', 'id', 'active', 'dCreate', 'actions'];
   dataSource: IItem[] = [];
-  paginationSettings: EntityPaginationSettings;
+  paginationSettings: PaginationSettings<IItem>;
 
   constructor(
     private route: ActivatedRoute,
-    private paginationService: PaginationService
+    private paginationService: PaginationService<IItem>
   ) { }
 
   ngOnInit(): void {

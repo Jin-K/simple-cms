@@ -1,16 +1,15 @@
 import { PageEvent, Sort }    from '@angular/material';
 import { Subject }            from 'rxjs';
 import { PaginatorSelection } from '../classes/paginator-selection.class';
-import { IItem }              from '../../models/interfaces';
 import { PaginationItemList } from '../models/pagination-items-list.type';
 import { PaginationModel }    from '../models/pagination.model';
 
-export class EntityPaginationSettings {
+export class PaginationSettings<T> {
 
   private readonly dataAndCountSubject: Subject<PaginationItemList> = new Subject();
 
   private readonly model: PaginationModel = new PaginationModel();
-  private readonly selection: PaginatorSelection<IItem> = new PaginatorSelection<IItem>(this.dataAndCountSubject);
+  private readonly selection: PaginatorSelection<T> = new PaginatorSelection<T>(this.dataAndCountSubject);
 
   public get page(): number { return this.model.pageIndex + 1; }
 
@@ -46,7 +45,7 @@ export class EntityPaginationSettings {
     this.selection.toggleMaster();
   }
 
-  public toggleChildSelection(row: IItem): void {
+  public toggleChildSelection(row: T): void {
     this.selection.toggleChild(row);
   }
 
