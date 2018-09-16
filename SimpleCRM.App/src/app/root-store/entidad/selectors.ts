@@ -1,4 +1,3 @@
-import { Params }                                 from '@angular/router';
 import { createFeatureSelector, createSelector }  from '@ngrx/store';
 import { Dictionary }                             from '@ngrx/entity';
 
@@ -6,9 +5,10 @@ import {
   EntidadesState,
   entidadAdapter,
   ItemsState
-}                                                 from './state';
-import { IItem }                                  from '../../models/interfaces';
-import { getUrlParams }                           from '../selectors';
+}                                                       from './state';
+import { PaginationItemList }                           from '../../core/models/pagination-items-list.type';
+
+import * as _                                           from 'lodash';
 
 export const getEntidadesState = createFeatureSelector<EntidadesState>('entidad');
 
@@ -19,24 +19,17 @@ export const {
   selectTotal
 } = entidadAdapter.getSelectors(getEntidadesState);
 
-export const selectRouterEntidad = createSelector(getUrlParams, (params: Params) => params.entity as string);
-export const selectIsLoaded = createSelector(getEntidadesState, (state: EntidadesState) => state.loaded);
-export const selectCurrentItems = createSelector(selectEntities, selectRouterEntidad, getItems);
-export const selectItemsIsLoaded = createSelector(selectEntities, selectRouterEntidad, getItemsIsLoaded);
+export const selectCurrentEntity = createSelector(getEntidadesState, state => state.current);
+export const selectCurrentItems = createSelector(selectEntities, selectCurrentEntity, getPaginationItems);
 
-function getItems(entities: Dictionary<ItemsState>, entidad: string): IItem[] {
-  const items: IItem[] = [];
-  const selected = entities[entidad];
+function getPaginationItems(entities: Dictionary<ItemsState>, current: string): PaginationItemList {
+  const entity = entities[current];
+  if (entity === undefined) return { Items: [], Count: 0 };
+  const ids = entity.displayedItems;
+  const dataSlice = _.map(ids, id => _.find(entity.entities, item => item.id === id));
 
-  if (selected) {
-    const entidadItems = selected.entities;
-    for (const i in entidadItems) items.push(entidadItems[i]);
-  }
-
-  return items;
-}
-
-function getItemsIsLoaded(entities: Dictionary<ItemsState>, entidad: string): boolean {
-  const selected = entities[entidad];
-  return selected && selected.loaded;
+  return {
+    Items: dataSlice,
+    Count: entity.count
+  };
 }

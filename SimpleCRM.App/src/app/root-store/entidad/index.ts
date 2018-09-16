@@ -1,9 +1,9 @@
-import * as EntidadStoreActions    from './actions';
-import * as EntidadStoreSelectors  from './selectors';
-import * as EntidadStoreState      from './state';
+import * as entidadActions    from './actions';
+import * as entidadSelectors  from './selectors';
+import * as entidadState      from './state';
 
 export {
-  EntidadStoreActions,
-  EntidadStoreSelectors,
-  EntidadStoreState
+  entidadActions,
+  entidadSelectors,
+  entidadState
 };

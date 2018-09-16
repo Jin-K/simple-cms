@@ -1,15 +1,15 @@
 import { Action }           from '@ngrx/store';
 import { IItem, IEntidad }  from '../../models/interfaces';
 
-export const LOAD_ALL_ITEMS           = '[Entidad] LOAD_ALL_ITEMS';
-export const LOAD_ALL_ITEMS_COMPLETE  = '[Entidad] LOAD_ALL_ITEMS_COMPLETE';
-
 export const LOAD_ALL                 = '[Entidad] LOAD_ALL';
 export const LOAD_ALL_COMPLETE        = '[Entidad] LOAD_ALL_COMPLETE';
 
 export const CREATE                   = '[Entities] CREATE';
 export const UPDATE                   = '[Entities] UPDATE';
 export const DELETE                   = '[Entities] DELETE';
+
+export const PAGINATE                 = '[Entidad] PAGINATE';
+export const PAGINATE_SUCCESS         = '[Entidad] PAGINATE_SUCCESS';
 
 export class LoadAll implements Action {
   readonly type = LOAD_ALL;
@@ -19,16 +19,6 @@ export class LoadAll implements Action {
 export class LoadAllComplete implements Action {
   readonly type = LOAD_ALL_COMPLETE;
   constructor(public entidades: IEntidad[]) { }
-}
-
-export class LoadAllItems implements Action {
-  readonly type = LOAD_ALL_ITEMS;
-  constructor(public entity: string) { }
-}
-
-export class LoadAllItemsComplete implements Action {
-  readonly type = LOAD_ALL_ITEMS_COMPLETE;
-  constructor(public entity: string, public items: IItem[]) { }
 }
 
 export class Create implements Action {
@@ -56,11 +46,27 @@ export class Delete implements Action {
   ) { }
 }
 
+export class Paginate implements Action {
+  readonly type = PAGINATE;
+  constructor(
+    public entity: string
+  ) { }
+}
+
+export class PaginateSuccess implements Action {
+  readonly type = PAGINATE_SUCCESS;
+  constructor(
+    public entity: string,
+    public dataSlice: IItem[],
+    public totalCount: number
+  ) { }
+}
+
 export type EntidadActions
   = LoadAll
   | LoadAllComplete
-  | LoadAllItems
-  | LoadAllItemsComplete
   | Create
   | Update
-  | Delete;
+  | Delete
+  | Paginate
+  | PaginateSuccess;

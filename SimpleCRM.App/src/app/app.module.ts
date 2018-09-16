@@ -13,6 +13,7 @@ import {
   AuthWellKnownEndpoints
 }                                       from 'angular-auth-oidc-client';
 
+import { CoreModule }                   from './core/core.module';
 import { SharedModule }                 from './shared/shared.module';
 import { RootStoreModule }              from './root-store';
 
@@ -36,6 +37,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     FormsModule,
     RouterModule,
     Routing,
+    CoreModule,
     AuthModule.forRoot(),
     SharedModule.forRoot(),
     RootStoreModule

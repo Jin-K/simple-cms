@@ -1,11 +1,18 @@
-import { Injectable }                 from '@angular/core';
-import { Actions, Effect }            from '@ngrx/effects';
-import { of }                         from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { Injectable }         from '@angular/core';
+import { Actions, Effect }    from '@ngrx/effects';
+import { of as observableOf } from 'rxjs';
+import {
+  switchMap,
+  map,
+  catchError
+}                             from 'rxjs/operators';
 
-import * as entidadesActions          from './actions';
-import { EntidadService }             from '../../services/entidad.service';
-import { IEntidad, IItem }            from '../../models/interfaces';
+import * as entidadesActions  from './actions';
+import { EntidadService }     from '../../services/entidad.service';
+import {
+  IEntidad,
+  IItem
+}                             from '../../models/interfaces';
 
 @Injectable()
 export class EntidadEffects {
@@ -18,17 +25,19 @@ export class EntidadEffects {
     switchMap(
       () => this.entidadService.getAllEntidades().pipe(
         map((data: IEntidad[]) => new entidadesActions.LoadAllComplete(data)),
-        catchError((error: any) => of(error))
+        catchError((error: any) => observableOf(error))
       )
     )
   );
 
-  @Effect() getAllItems$ = this.actions$.ofType(entidadesActions.LOAD_ALL_ITEMS).pipe(
-    switchMap(
-      (action: entidadesActions.LoadAllItems) => this.entidadService.getAllItems(action.entity).pipe(
-        map((data: IItem[]) => new entidadesActions.LoadAllItemsComplete(action.entity, data)),
-        catchError((error: any) => of (error))
-      )
-    )
+  @Effect() pagination$ = this.actions$.ofType(entidadesActions.PAGINATE).pipe(
+    switchMap((action: entidadesActions.Paginate) => this.entidadService.getAll(action.entity).pipe(
+      map((response: any) => {
+        const totalCount: number = JSON.parse(response.headers.get('X-Pagination')).totalCount;
+        const dataSource: IItem[] = response.body.value;
+        return new entidadesActions.PaginateSuccess(action.entity, dataSource, totalCount);
+      }),
+      catchError(error => observableOf(error))
+    ))
   );
 }

@@ -16,6 +16,7 @@
     "import-spacing": false,
     "no-debugger": false,
     "curly": false,
-    "no-empty-interface": false
+    "no-empty-interface": false,
+    "one-line": false
   }
 }

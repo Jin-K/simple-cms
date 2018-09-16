@@ -67,6 +67,7 @@ namespace SimpleCRM.Api {
       policy.Methods.Add("*");
       policy.Origins.Add("*");
       policy.SupportsCredentials = true;
+      policy.ExposedHeaders.Add( "X-Pagination" );
 
       services.AddCors(options => options.AddPolicy("corsGlobalPolicy", policy));
 

@@ -5,42 +5,52 @@ import { OidcSecurityService }      from 'angular-auth-oidc-client';
 
 import { Configuration }            from '../app.constants';
 import { IEntidad, IItem }          from '../models/interfaces';
+import { PaginationService }        from '../core/services/pagination.service';
+
+const AUTHORIZATION_HEADER = 'Authorization';
+const APPLICATION_JSON = 'application/json';
 
 @Injectable()
 export class EntidadService {
-  private actionUrl: string;
-  private headers: HttpHeaders;
+  private actionUrl = `${this.configuration.Server}api/entity`;
+  private _headers: HttpHeaders = new HttpHeaders();
+
+  private get headers(): HttpHeaders {
+    this.ensureAuthorization();
+    return this._headers;
+  }
 
   constructor(
     private http: HttpClient,
     private configuration: Configuration,
-    private oidcSecurityService: OidcSecurityService
+    private oidcSecurityService: OidcSecurityService,
+    private paginationService: PaginationService
   ) {
-    this.actionUrl = `${this.configuration.Server}api/entity`;
-
-    this.headers = new HttpHeaders();
-    this.headers = this.headers.set('Content-Type', 'application/json');
-    this.headers = this.headers.set('Accept', 'application/json');
+    // using private member to avoid multiple calls on getter -> _ensureAuthorization
+    this._headers = this._headers.set('Content-Type', APPLICATION_JSON);
+    this._headers = this._headers.set('Accept', APPLICATION_JSON);
   }
 
   getAllEntidades(): Observable<IEntidad[]> {
-    this._ensureAuthorization();
-    return this.http.get<IEntidad[]>(this.actionUrl, { headers: this.headers });
+    return this.http.get<IEntidad[]>(`${this.actionUrl}/entities`, { headers: this.headers });
   }
 
-  getAllItems(entity: string): Observable<IItem[]> {
-    console.log(`fetching items of "${ entity }" entity`);
-    this._ensureAuthorization();
-    return this.http.get<IItem[]>(`${this.actionUrl}/${entity}`, { headers: this.headers });
+  getAll(entity: string) {
+    const paginationSettings = this.paginationService.getPaginationSettings(entity);
+    paginationSettings.loading = true;
+    const requestUrl = `${this.actionUrl}/all?page=${paginationSettings.page}`
+      + `&pageCount=${paginationSettings.pageSize}`
+      + `&orderBy=${paginationSettings.sort}&query=${entity}`;
+    return this.http.get<IItem[]>(requestUrl, { observe: 'response', headers: this.headers });
   }
 
-  _ensureAuthorization(): void {
-    if (!this.headers.has('Authorization')) {
-      const token = this.oidcSecurityService.getToken();
-      if (token !== '') {
-        const tokenValue = `Bearer ${token}`;
-        this.headers = this.headers.append('Authorization', tokenValue);
-      }
+  private ensureAuthorization(): void {
+    const token = this.oidcSecurityService.getToken();
+    if (token !== '') {
+      const tokenValue = `Bearer ${token}`;
+      this._headers = this._headers.has(AUTHORIZATION_HEADER) ?
+        this._headers.set(AUTHORIZATION_HEADER, tokenValue) :
+        this._headers.append(AUTHORIZATION_HEADER, tokenValue);
     }
   }
 }

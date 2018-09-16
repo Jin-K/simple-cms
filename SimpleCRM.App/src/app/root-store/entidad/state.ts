@@ -6,11 +6,13 @@ export interface ItemsState extends EntityState<IItem> {
   id: string;
   name: string;
   loaded: boolean;
-  selectedId?: number;
+  count?: number;
+  displayedItems?: number[];
 }
 export interface EntidadesState extends EntityState<ItemsState> {
   loading: boolean;
   loaded: boolean;
+  current?: string;
 }
 
 // adapters adapter

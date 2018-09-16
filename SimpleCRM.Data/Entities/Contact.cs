@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace SimpleCRM.Data.Entities {
-  public class Contact {
+  public class Contact : IEntidad {
 
     [Key]
     public int Id { get; set; }

@@ -20,6 +20,16 @@
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\core\core.module.ts" />
+    <None Remove="src\app\core\classes\paginator-selection.class.ts" />
+    <None Remove="src\app\core\enums\items-selection-state.enum.ts" />
+    <None Remove="src\app\core\guards\auth.guard.ts" />
+    <None Remove="src\app\core\guards\entidades-can-activate.guard.ts" />
+    <None Remove="src\app\core\guards\pagination.resolver.ts" />
+    <None Remove="src\app\core\interfaces\paginator-options.interface.ts" />
+    <None Remove="src\app\core\models\pagination-items-list.type.ts" />
+    <None Remove="src\app\core\services\entity-pagination.settings.ts" />
+    <None Remove="src\app\core\services\pagination.service.ts" />
     <None Remove="src\app\models\action.ts" />
     <None Remove="src\app\models\company.ts" />
     <None Remove="src\app\models\contact.ts" />
@@ -40,7 +50,6 @@
 
   <ItemGroup>
     <Folder Include="config\" />
-    <Folder Include="src\app\shared\components\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +61,17 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
+    <TypeScriptCompile Include="src\app\core\core.module.ts" />
+    <TypeScriptCompile Include="src\app\core\classes\paginator-selection.class.ts" />
+    <TypeScriptCompile Include="src\app\core\components\paginator\paginator.component.ts" />
+    <TypeScriptCompile Include="src\app\core\enums\items-selection-state.enum.ts" />
+    <TypeScriptCompile Include="src\app\core\guards\auth.guard.ts" />
+    <TypeScriptCompile Include="src\app\core\models\pagination-items-list.type.ts" />
+    <TypeScriptCompile Include="src\app\core\services\pagination.service.ts" />
+    <TypeScriptCompile Include="src\app\root-store\entidad\guards\entidades-can-activate.guard.ts" />
+    <TypeScriptCompile Include="src\app\core\interfaces\paginator-options.interface.ts" />
+    <TypeScriptCompile Include="src\app\core\models\pagination.model.ts" />
+    <TypeScriptCompile Include="src\app\core\classes\entity-pagination.settings.ts" />
     <TypeScriptCompile Include="src\app\models\action.ts" />
     <TypeScriptCompile Include="src\app\models\company.ts" />
     <TypeScriptCompile Include="src\app\models\contact.ts" />
