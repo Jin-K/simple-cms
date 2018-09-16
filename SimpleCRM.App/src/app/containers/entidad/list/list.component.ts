@@ -36,7 +36,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private componentDestroyed$ = new Subject<boolean>();
 
-  displayedColumns = ['select', 'id', 'active', 'dCreate', 'actions'];
+  displayedColumns = ['select', 'id', 'active', 'created', 'actions'];
   dataSource: IItem[] = [];
   paginationSettings: PaginationSettings<IItem>;
 

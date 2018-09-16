@@ -3,6 +3,7 @@ import { Routes, RouterModule }     from '@angular/router';
 
 import { HomeComponent }            from './containers/home/home.component';
 import { CanActivateViaAuthGuard }  from './core/guards/auth.guard';
+import { UnauthorizedComponent }    from './containers/unauthorized/unauthorized.component';
 
 const appRoutes: Routes = [
   {
@@ -23,6 +24,10 @@ const appRoutes: Routes = [
     path: 'news',
     loadChildren: './root-store/news/news.module#NewsModule'
   },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent
+  }
 ];
 
 export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);

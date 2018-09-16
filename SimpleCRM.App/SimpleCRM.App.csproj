@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <Folder Include="config\" />
+    <Folder Include="src\app\containers\unauthorized\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,7 +72,7 @@
     <TypeScriptCompile Include="src\app\root-store\entidad\guards\entidades-can-activate.guard.ts" />
     <TypeScriptCompile Include="src\app\core\interfaces\paginator-options.interface.ts" />
     <TypeScriptCompile Include="src\app\core\models\pagination.model.ts" />
-    <TypeScriptCompile Include="src\app\core\classes\entity-pagination.settings.ts" />
+    <TypeScriptCompile Include="src\app\core\classes\pagination-settings.class.ts" />
     <TypeScriptCompile Include="src\app\models\action.ts" />
     <TypeScriptCompile Include="src\app\models\company.ts" />
     <TypeScriptCompile Include="src\app\models\contact.ts" />

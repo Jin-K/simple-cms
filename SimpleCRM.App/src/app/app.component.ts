@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store }                        from '@ngrx/store';
 import { Subscription }                 from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
-
 import * as UserActions                 from './root-store/user/actions';
 
 @Component({
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<any>,
-    private oidcSecurityService: OidcSecurityService
+    private oidcSecurityService: OidcSecurityService,
   ) {
     if (this.oidcSecurityService.moduleSetup)
       this.doCallbackLogicIfRequired();

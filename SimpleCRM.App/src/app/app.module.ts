@@ -10,7 +10,8 @@ import {
   OidcSecurityService,
   OidcConfigService,
   OpenIDImplicitFlowConfiguration,
-  AuthWellKnownEndpoints
+  AuthWellKnownEndpoints,
+  OidcSecurityStorage
 }                                       from 'angular-auth-oidc-client';
 
 import { CoreModule }                   from './core/core.module';
@@ -20,6 +21,7 @@ import { RootStoreModule }              from './root-store';
 import { AppComponent }                 from './app.component';
 import { Routing }                      from './app.routes';
 import { HomeComponent }                from './containers/home/home.component';
+import { UnauthorizedComponent }        from './containers/unauthorized/unauthorized.component';
 
 export function loadConfig(oidcConfigService: OidcConfigService) {
   return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
@@ -28,7 +30,8 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
 export class AppModule {
   constructor(
     private oidcSecurityService: OidcSecurityService,
-    private oidcConfigService: OidcConfigService
+    private oidcConfigService: OidcConfigService,
+    private oidcSecurityStorage: OidcSecurityStorage
   ) {
     this.oidcConfigService.onConfigurationLoaded.subscribe(() => {
       const openIDImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
@@ -69,7 +73,7 @@ export class AppModule {
       openIDImplicitFlowConfiguration.post_logout_redirect_uri                    = this.oidcConfigService.clientConfiguration.post_logout_redirect_uri;
       openIDImplicitFlowConfiguration.start_checksession                          = this.oidcConfigService.clientConfiguration.start_checksession;
       openIDImplicitFlowConfiguration.silent_renew                                = this.oidcConfigService.clientConfiguration.silent_renew;
-      openIDImplicitFlowConfiguration.post_login_route                            = this.oidcConfigService.clientConfiguration.startup_route;
+      openIDImplicitFlowConfiguration.post_login_route                            = this.oidcSecurityStorage.read('returnUrl') || this.oidcConfigService.clientConfiguration.startup_route;
       openIDImplicitFlowConfiguration.forbidden_route                             = this.oidcConfigService.clientConfiguration.forbidden_route;
       openIDImplicitFlowConfiguration.unauthorized_route                          = this.oidcConfigService.clientConfiguration.unauthorized_route;
       openIDImplicitFlowConfiguration.log_console_warning_active                  = this.oidcConfigService.clientConfiguration.log_console_warning_active;

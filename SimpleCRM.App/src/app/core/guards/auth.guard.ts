@@ -1,28 +1,38 @@
-import { Injectable }           from '@angular/core';
-import { CanActivate }          from '@angular/router';
-import { OidcSecurityService }  from 'angular-auth-oidc-client';
-import { map }                  from 'rxjs/operators';
-import { Observable }           from 'rxjs';
+import { Injectable, Injector }                                             from '@angular/core';
+import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { OidcSecurityService, OidcSecurityStorage }                         from 'angular-auth-oidc-client';
+import { Observable }                                                       from 'rxjs';
+import { map }                                                              from 'rxjs/operators';
 
-/** Used to ensure authentication for some routes
- * Inspired on https://github.com/aviabird/angularspree/blob/master/src/app/core/guards/auth.guard.ts */
 @Injectable()
 export class CanActivateViaAuthGuard implements CanActivate {
-  isAuthenticated: boolean;
-  isRedirecting: boolean;
+  oidcSecurityService: OidcSecurityService;
 
   constructor(
-    private oidcSecurityService: OidcSecurityService
+    private router: Router,
+    private injector: Injector,
+    private oidcSecurityStorage: OidcSecurityStorage,
   ) { }
 
-  canActivate(): Observable<boolean> {
+  canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+    console.log('checking if online...');
+
+    if (this.oidcSecurityService === undefined) {
+      this.oidcSecurityService = this.injector.get(OidcSecurityService);
+    }
+
     return this.oidcSecurityService.getIsAuthorized().pipe(
       map((isAuthorized: boolean) => {
-        if (!isAuthorized && !this.isRedirecting) {
-          this.isRedirecting = true;
-          this.oidcSecurityService.authorize();
+        console.log('AuthorizationGuard, canActivate isAuthorized: ' + isAuthorized);
+
+        if (isAuthorized) return true;
+
+        if (!window.location.hash) {
+          this.oidcSecurityStorage.write('returnUrl', state.url);
+          this.router.navigate(['/unauthorized']);
         }
-        return isAuthorized;
+
+        return false;
       })
     );
   }

@@ -52,11 +52,9 @@ namespace SimpleCRM.Api.Controllers {
     public async Task<IActionResult> GetMainEntities() => Ok( await _entitiesStore.GetAllEntities() );
 
     #region Helpers
+    // TODO: Do I need this ?
     List<object> CreateLinksForCollection(QueryParameters queryParameters, int totalCount) {
       var links = new List<object>();
-
-      // TODO: Do I need it ?
-
       return links;
     }
     #endregion
