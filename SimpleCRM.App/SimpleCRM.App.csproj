@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\containers\entidad\entity-base\entity-base.component.ts" />
     <None Remove="src\app\core\core.module.ts" />
     <None Remove="src\app\core\classes\paginator-selection.class.ts" />
     <None Remove="src\app\core\enums\items-selection-state.enum.ts" />
@@ -63,6 +64,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="src\app\app.constants.ts" />
+    <TypeScriptCompile Include="src\app\containers\entidad\entity-base\entity-base.component.ts" />
     <TypeScriptCompile Include="src\app\core\core.module.ts" />
     <TypeScriptCompile Include="src\app\core\classes\paginator-selection.class.ts" />
     <TypeScriptCompile Include="src\app\core\components\paginator\paginator.component.ts" />
