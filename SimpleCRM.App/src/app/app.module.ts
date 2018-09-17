@@ -23,10 +23,6 @@ import { Routing }                      from './app.routes';
 import { HomeComponent }                from './containers/home/home.component';
 import { UnauthorizedComponent }        from './containers/unauthorized/unauthorized.component';
 
-export function loadConfig(oidcConfigService: OidcConfigService) {
-  return () => oidcConfigService.load(`${window.location.origin}/api/ClientAppSettings`);
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +45,7 @@ export function loadConfig(oidcConfigService: OidcConfigService) {
     OidcSecurityService,
     {
       provide: APP_INITIALIZER,
-      useFactory: loadConfig,
+      useFactory: (configService: OidcConfigService) => (() => configService.load(`${window.location.origin}/api/ClientAppSettings`)),
       deps: [OidcConfigService],
       multi: true
     }

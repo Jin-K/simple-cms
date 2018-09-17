@@ -2,6 +2,7 @@
 using SimpleCRM.Business.Models;
 using SimpleCRM.Data.Contexts;
 using SimpleCRM.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -33,18 +34,19 @@ namespace SimpleCRM.Business.Providers {
         case "Contacts":  return _entitiesContext.Contacts.Count();
         case "Companies": return _entitiesContext.Companies.Count();
         case "Actions":   return _entitiesContext.Actions.Count();
-        default: return 0;
+        default: throw new ArgumentException( $"Unexpected entity: {entity}" );
       }
     }
 
     public IEnumerable<Item> GetAll(QueryParameters queryParameters) {
       string entity = queryParameters.Query;
+
       IQueryable<IEntidad> _allItems;
       switch (entity) {
         case "Actions":   _allItems = _entitiesContext.Actions.AsQueryable(); break;
         case "Contacts":  _allItems = _entitiesContext.Contacts.AsQueryable(); break;
         case "Companies": _allItems = _entitiesContext.Companies.AsQueryable(); break;
-        default: return null;
+        default: throw new ArgumentException( $"Unexpected entity: {entity}" );
       }
 
       if (!queryParameters.OrderBy.StartsWith("active")) _allItems = _allItems.OrderBy( queryParameters.OrderBy, queryParameters.Descending ); ;
@@ -53,6 +55,21 @@ namespace SimpleCRM.Business.Providers {
         .Skip( queryParameters.PageCount * ( queryParameters.Page - 1 ) )
         .Take( queryParameters.PageCount )
         .Select( e => new Item { id = e.Id, active = true, created = e.Created } );
+    }
+
+    public Item GetItem(GetItemParameters getItemParameters) {
+      var entity = getItemParameters.Entity;
+      var id = getItemParameters.Id;
+
+      IEntidad rawObject;
+      switch(entity) {
+        case "Action": rawObject = _entitiesContext.Actions.Find( id ); break;
+        case "Contacts": rawObject = _entitiesContext.Contacts.Find( id ); break;
+        case "Companies": rawObject = _entitiesContext.Companies.Find( id ); break;
+        default: throw new ArgumentException($"Unexpected entity: {entity}");
+      }
+
+      return new Item { id = rawObject.Id, active = true, created = rawObject.Created };
     }
   }
 }

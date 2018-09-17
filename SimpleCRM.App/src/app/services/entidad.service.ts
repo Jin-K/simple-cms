@@ -31,7 +31,7 @@ export class EntidadService {
     this._headers = this._headers.set('Accept', APPLICATION_JSON);
   }
 
-  getAllEntidades(): Observable<IEntidad[]> {
+  getAllEntities(): Observable<IEntidad[]> {
     return this.http.get<IEntidad[]>(`${this.actionUrl}/entities`, { headers: this.headers });
   }
 
@@ -42,6 +42,11 @@ export class EntidadService {
       + `&pageCount=${paginationSettings.pageSize}`
       + `&orderBy=${paginationSettings.sort}&query=${entity}`;
     return this.http.get<IItem[]>(requestUrl, { observe: 'response', headers: this.headers });
+  }
+
+  getItem(entity: string, id: string): Observable<IItem> {
+    const requestUrl = `${this.actionUrl}/item?entity=${entity}&id=${id}`;
+    return this.http.get<IItem>(requestUrl, { headers: this.headers });
   }
 
   private ensureAuthorization(): void {

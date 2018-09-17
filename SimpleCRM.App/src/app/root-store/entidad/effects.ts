@@ -23,7 +23,7 @@ export class EntidadEffects {
 
   @Effect() getAllEntidades$ = this.actions$.ofType(entidadesActions.LOAD_ALL).pipe(
     switchMap(
-      () => this.entidadService.getAllEntidades().pipe(
+      () => this.entidadService.getAllEntities().pipe(
         map((data: IEntidad[]) => new entidadesActions.LoadAllComplete(data)),
         catchError((error: any) => observableOf(error))
       )

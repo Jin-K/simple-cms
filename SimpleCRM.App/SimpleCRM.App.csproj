@@ -36,6 +36,7 @@
     <None Remove="src\app\models\interfaces.ts" />
     <None Remove="src\app\models\item.ts" />
     <None Remove="src\app\root-store\chat\routes.ts" />
+    <None Remove="src\app\root-store\entidad\guards\item.resolver.ts" />
     <None Remove="src\app\root-store\reducers.ts" />
     <None Remove="src\app\services\entidad.service.ts" />
     <None Remove="src\app\shared\material.components.ts" />
@@ -79,6 +80,7 @@
     <TypeScriptCompile Include="src\app\models\interfaces.ts" />
     <TypeScriptCompile Include="src\app\models\item.ts" />
     <TypeScriptCompile Include="src\app\root-store\chat\routes.ts" />
+    <TypeScriptCompile Include="src\app\root-store\entidad\guards\item.resolver.ts" />
     <TypeScriptCompile Include="src\app\root-store\reducers.ts" />
     <TypeScriptCompile Include="src\app\services\entidad.service.ts" />
     <TypeScriptCompile Include="src\app\shared\material.components.ts" />

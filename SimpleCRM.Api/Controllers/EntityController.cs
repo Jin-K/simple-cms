@@ -36,11 +36,8 @@ namespace SimpleCRM.Api.Controllers {
 
       var links = CreateLinksForCollection(queryParameters, allItemCount);
 
-      //var toReturn = allItems.Select(x => ExpandSingleItem(x));
-      var toReturn = allItems;
-
       return Ok( new {
-        value = toReturn,
+        value = allItems,
         links
       } );
 
@@ -50,6 +47,15 @@ namespace SimpleCRM.Api.Controllers {
     [HttpGet( Name = nameof( GetMainEntities ) )]
     [Route( "entities" )]
     public async Task<IActionResult> GetMainEntities() => Ok( await _entitiesStore.GetAllEntities() );
+
+    // GET api/entity/item
+    [HttpGet( Name = nameof(GetItem) )]
+    [Route( "item" )]
+    public IActionResult GetItem([FromQuery] GetItemParameters getItemParameters) {
+      var item = _entitiesStore.GetItem(getItemParameters);
+
+      return Ok( item );
+    }
 
     #region Helpers
     // TODO: Do I need this ?

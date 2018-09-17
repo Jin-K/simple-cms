@@ -43,8 +43,9 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
+        <a mat-icon-button [routerLink]="['consult', element.id]"><mat-icon>launch</mat-icon></a>
+        <a mat-icon-button [routerLink]="['edit', element.id]"><mat-icon>edit</mat-icon></a>
         <button mat-icon-button (click)="deleteRow.emit(element)"><mat-icon>delete</mat-icon></button>
-        <a mat-icon-button [routerLink]="['/details', element.id]"><mat-icon>edit</mat-icon></a>
       </td>
     </ng-container>
 
