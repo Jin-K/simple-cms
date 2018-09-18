@@ -6,7 +6,7 @@ import { StoreDevtoolsModule }                                from '@ngrx/store-
 import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
 import { storeFreeze }                                        from 'ngrx-store-freeze';
 
-import { UserModule }                                         from './user/user.module';
+import { UserModule }                                         from './user';
 import { reducers }                                           from './reducers';
 import { INITIAL_APPLICATION_STATE }                          from './application-state';
 import { environment }                                        from '../../environments/environment.prod';

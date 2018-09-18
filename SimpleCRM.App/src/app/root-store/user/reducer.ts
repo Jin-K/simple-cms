@@ -1,11 +1,10 @@
 import { UserState, INITIAL_USER_STATE }  from './state';
-import * as UserAction                    from './actions';
+import { Actions, AUTHORIZE_COMPLETE }    from './actions';
 
-
-export function userReducer(state: UserState = INITIAL_USER_STATE, action: UserAction.Actions): UserState {
+export function userReducer(state: UserState = INITIAL_USER_STATE, action: Actions): UserState {
   switch (action.type) {
 
-    case UserAction.AUTHORIZE_COMPLETE:
+    case AUTHORIZE_COMPLETE:
       return Object.assign({}, state, {
         isConnected: true,
         login: action.login

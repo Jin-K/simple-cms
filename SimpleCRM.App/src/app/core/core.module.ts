@@ -1,31 +1,17 @@
-import { NgModule, ModuleWithProviders }  from '@angular/core';
-import { CommonModule }                   from '@angular/common';
-
-import { SharedModule }                   from '../shared/shared.module';
-import { PaginatorComponent }             from './components/paginator/paginator.component';
-import { CanActivateViaAuthGuard }        from './guards/auth.guard';
-import { PaginationService }              from './services/pagination.service';
+import { NgModule }                 from '@angular/core';
+import { CommonModule }             from '@angular/common';
+import { AuthGuard }                from './guards';
 
 @NgModule({
   imports: [
-    CommonModule,
-    SharedModule
+    CommonModule
   ],
   declarations: [
-    PaginatorComponent
   ],
   exports: [
-    PaginatorComponent
   ],
   providers: [
-    CanActivateViaAuthGuard
+    AuthGuard
   ]
 })
-export class CoreModule {
-  static forPagination(): ModuleWithProviders {
-    return {
-      ngModule: CoreModule,
-      providers: [PaginationService]
-    };
-  }
-}
+export class CoreModule { }

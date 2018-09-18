@@ -1,9 +1,8 @@
-import { ModuleWithProviders }      from '@angular/core';
-import { Routes, RouterModule }     from '@angular/router';
+import { ModuleWithProviders }                  from '@angular/core';
+import { Routes, RouterModule }                 from '@angular/router';
 
-import { HomeComponent }            from './containers/home/home.component';
-import { CanActivateViaAuthGuard }  from './core/guards/auth.guard';
-import { UnauthorizedComponent }    from './containers/unauthorized/unauthorized.component';
+import { HomeComponent, UnauthorizedComponent } from './core/components';
+import { AuthGuard }                            from './core/guards';
 
 const appRoutes: Routes = [
   {
@@ -14,7 +13,7 @@ const appRoutes: Routes = [
   {
     path: 'entity',
     loadChildren: './root-store/entidad/entidad.module#EntidadModule',
-    canActivate: [CanActivateViaAuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'chat',

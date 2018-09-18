@@ -13,12 +13,6 @@ export const MaterialComponents = [
   fromMaterial.MatIconModule,
   fromMaterial.MatSidenavModule,
   fromMaterial.MatTabsModule,
-
   fromMaterial.MatTableModule,
-  fromMaterial.MatPaginatorModule,
-  fromMaterial.MatSortModule,
-
-  // Required 4 core/components/paginator.component.ts
-  fromMaterial.MatSelectModule,
-  fromMaterial.MatTooltipModule
+  fromMaterial.MatSortModule
 ];

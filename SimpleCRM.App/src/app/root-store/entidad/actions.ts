@@ -1,5 +1,5 @@
 import { Action }           from '@ngrx/store';
-import { IItem, IEntidad }  from '../../models/interfaces';
+import { IItem, IEntidad }  from '../../core/models';
 
 export const LOAD_ALL                 = '[Entidad] LOAD_ALL';
 export const LOAD_ALL_COMPLETE        = '[Entidad] LOAD_ALL_COMPLETE';

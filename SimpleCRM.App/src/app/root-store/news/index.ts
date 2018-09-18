@@ -1,11 +1,7 @@
-import * as NewsStoreActions    from './actions';
-import * as NewsStoreState      from './state';
+import * as newsActions from './actions';
+import * as newsState   from './state';
 
 export {
-  NewsModule
-} from './news.module';
-
-export {
-  NewsStoreActions,
-  NewsStoreState
+  newsActions,
+  newsState
 };

@@ -5,7 +5,7 @@ import { Observable }                                                       from
 import { map }                                                              from 'rxjs/operators';
 
 @Injectable()
-export class CanActivateViaAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   oidcSecurityService: OidcSecurityService;
 
   constructor(

@@ -5,12 +5,13 @@ import {
   EntidadesState,
   entidadAdapter,
   ItemsState
-}                                                       from './state';
-import { PaginationItemList }                           from '../../core/models/pagination-items-list.type';
+}                                                 from './state';
+import { PaginationItemList }                     from '../../core/modules/pagination';
+import { IItem }                                  from '../../core/models';
 
-import * as _                                           from 'lodash';
+import * as _                                     from 'lodash';
 
-export const getEntidadesState = createFeatureSelector<EntidadesState>('entidad');
+const getEntidadesState = createFeatureSelector<EntidadesState>('entidad');
 
 export const {
   selectIds,
@@ -19,10 +20,10 @@ export const {
   selectTotal
 } = entidadAdapter.getSelectors(getEntidadesState);
 
-export const selectCurrentEntity = createSelector(getEntidadesState, state => state.current);
+const selectCurrentEntity = createSelector(getEntidadesState, state => state.current);
 export const selectCurrentItems = createSelector(selectEntities, selectCurrentEntity, getPaginationItems);
 
-function getPaginationItems(entities: Dictionary<ItemsState>, current: string): PaginationItemList {
+function getPaginationItems(entities: Dictionary<ItemsState>, current: string): PaginationItemList<IItem> {
   const entity = entities[current];
   if (entity === undefined) return { Items: [], Count: 0 };
   const ids = entity.displayedItems;

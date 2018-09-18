@@ -1,10 +1,10 @@
-import { Injectable }                                          from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import { Injectable }                                           from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot}  from '@angular/router';
 import { Observable }                                           from 'rxjs';
 import { catchError }                                           from 'rxjs/operators';
 
-import { EntidadService }                                       from '../../../services/entidad.service';
-import { IItem }                                                from '../../../models/interfaces';
+import { EntidadService }                                       from '../../../core/services';
+import { IItem }                                                from '../../../core/models';
 
 /**
  * Copied over from Angular Router

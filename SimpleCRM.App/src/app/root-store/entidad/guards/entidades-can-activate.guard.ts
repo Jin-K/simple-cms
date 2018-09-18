@@ -1,10 +1,10 @@
 import { Injectable }                         from '@angular/core';
 import { CanActivate }                        from '@angular/router';
 import { Store }                              from '@ngrx/store';
+import { Observable, of as observableOf }     from 'rxjs';
 
 import { ApplicationState }                   from '../../../root-store/application-state';
 import { entidadSelectors, entidadActions }   from '../../../root-store/entidad';
-import { Observable, of as observableOf }     from 'rxjs';
 
 @Injectable()
 export class EntidadesGuard implements CanActivate {

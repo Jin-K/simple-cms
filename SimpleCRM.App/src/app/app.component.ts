@@ -1,9 +1,10 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router }                       from '@angular/router';
 import { Store }                        from '@ngrx/store';
 import { Subscription }                 from 'rxjs';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
-import * as UserActions                 from './root-store/user/actions';
+import { userActions }                  from './root-store/user';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<any>,
     private oidcSecurityService: OidcSecurityService,
+    private router: Router
   ) {
     if (this.oidcSecurityService.moduleSetup)
       this.doCallbackLogicIfRequired();
@@ -31,13 +33,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
-      isAuthorized => this.isAuthorized = isAuthorized
+      isAuthorized => {
+        if (this.isAuthorized && !isAuthorized) this.router.navigate(['']);
+        this.isAuthorized = isAuthorized;
+      }
     );
 
     this.userDataSubscription = this.oidcSecurityService.getUserData().subscribe(
       userData => {
         if (userData && userData !== '' && userData.role) {
-          this.store.dispatch(new UserActions.AuthorizeComplete(userData.given_name));
+          this.store.dispatch(new userActions.AuthorizeComplete(userData.given_name));
 
           for (let i = 0; i < userData.role.length; i++) {
             switch (userData.role[i]) {

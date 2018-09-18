@@ -8,7 +8,7 @@ import {
   entidadAdapter
 }                     from './state';
 import * as actions   from './actions';
-import { IEntidad }   from '../../models/interfaces';
+import { IEntidad }   from '../../core/models';
 
 export function entityReducer(
   state: EntidadesState = INITIAL_ENTIDADES_STATE,

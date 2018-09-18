@@ -1,5 +1,5 @@
 import { Action }   from '@ngrx/store';
-import { NewsItem } from '../../models/news-item';
+import { NewsItem } from '../../core/models/news-item';
 
 export const JOIN_GROUP                 = '[news] JOIN_GROUP';
 export const LEAVE_GROUP                = '[news] LEAVE_GROUP';

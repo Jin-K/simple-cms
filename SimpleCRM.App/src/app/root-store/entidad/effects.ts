@@ -7,12 +7,12 @@ import {
   catchError
 }                             from 'rxjs/operators';
 
-import * as entidadesActions  from './actions';
-import { EntidadService }     from '../../services/entidad.service';
+import { entidadActions }     from '.';
+import { EntidadService }     from '../../core/services';
 import {
   IEntidad,
   IItem
-}                             from '../../models/interfaces';
+}                             from '../../core/models';
 
 @Injectable()
 export class EntidadEffects {
@@ -21,21 +21,21 @@ export class EntidadEffects {
     private actions$: Actions
   ) { }
 
-  @Effect() getAllEntidades$ = this.actions$.ofType(entidadesActions.LOAD_ALL).pipe(
+  @Effect() getAllEntidades$ = this.actions$.ofType(entidadActions.LOAD_ALL).pipe(
     switchMap(
       () => this.entidadService.getAllEntities().pipe(
-        map((data: IEntidad[]) => new entidadesActions.LoadAllComplete(data)),
+        map((data: IEntidad[]) => new entidadActions.LoadAllComplete(data)),
         catchError((error: any) => observableOf(error))
       )
     )
   );
 
-  @Effect() pagination$ = this.actions$.ofType(entidadesActions.PAGINATE).pipe(
-    switchMap((action: entidadesActions.Paginate) => this.entidadService.getAll(action.entity).pipe(
+  @Effect() pagination$ = this.actions$.ofType(entidadActions.PAGINATE).pipe(
+    switchMap((action: entidadActions.Paginate) => this.entidadService.getAll(action.entity).pipe(
       map((response: any) => {
         const totalCount: number = JSON.parse(response.headers.get('X-Pagination')).totalCount;
         const dataSource: IItem[] = response.body.value;
-        return new entidadesActions.PaginateSuccess(action.entity, dataSource, totalCount);
+        return new entidadActions.PaginateSuccess(action.entity, dataSource, totalCount);
       }),
       catchError(error => observableOf(error))
     ))

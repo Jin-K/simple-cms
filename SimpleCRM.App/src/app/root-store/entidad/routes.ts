@@ -1,9 +1,10 @@
-import { Routes, RouterModule }   from '@angular/router';
-import { EntidadesGuard }         from './guards/entidades-can-activate.guard';
-import { ItemResolver }           from './guards/item.resolver';
-import { ListOverviewComponent }  from '../../containers/entidad/list-overview/list-overview.component';
-import { EntityConsultComponent } from '../../containers/entidad/entity-consult/entity-consult.component';
-import { EntityEditComponent }    from '../../containers/entidad/entity-edit/entity-edit.component';
+import { Routes, RouterModule }         from '@angular/router';
+import { EntidadesGuard, ItemResolver } from './guards';
+import {
+  ListOverviewComponent,
+  EntityConsultComponent,
+  EntityEditComponent
+}                                       from './components';
 
 const routes: Routes = [
   { // if no matching route -> redirect to Contacts's items list

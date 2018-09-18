@@ -1,5 +1,5 @@
 import { EntityState, createEntityAdapter, EntityAdapter }  from '@ngrx/entity';
-import { IItem }                                            from '../../models/interfaces';
+import { IItem }                                            from '../../core/models';
 
 // states
 export interface ItemsState extends EntityState<IItem> {
