@@ -8,12 +8,13 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "webpack-dev": "webpack --env=dev",
-    "webpack-production": "webpack --env=prod",
     "build-dev": "npm run webpack-dev",
     "build-production": "npm run webpack-production",
+    "start-with-ssl": "ng serve --port 44300 --ssl true",
     "watch-webpack-dev": "webpack --env=dev --watch --color",
-    "watch-webpack-production": "webpack --env=prod --watch --color"
+    "watch-webpack-production": "webpack --env=prod --watch --color",
+    "webpack-dev": "webpack --env=dev",
+    "webpack-production": "webpack --env=prod"
   },
   "private": true,
   "dependencies": {
@@ -98,9 +99,5 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
   },
-  "-vs-binding": {
-    "ProjectOpened": [
-      "watch-webpack-dev"
-    ]
-  }
+  "-vs-binding": { "ProjectOpened": [ "start-with-ssl" ] }
 }
