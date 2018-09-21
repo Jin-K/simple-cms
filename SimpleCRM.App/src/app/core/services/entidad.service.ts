@@ -12,7 +12,7 @@ const APPLICATION_JSON = 'application/json';
 
 @Injectable()
 export class EntidadService {
-  private actionUrl = `${this.configuration.Server}api/entity`;
+  private actionUrl = `${this.configuration.api_endpoint}api/entity`;
   private _headers: HttpHeaders = new HttpHeaders();
 
   private get headers(): HttpHeaders {

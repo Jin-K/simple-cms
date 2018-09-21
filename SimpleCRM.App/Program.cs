@@ -1,7 +1,5 @@
-using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 
 namespace SimpleCRM.App {
   public class Program {

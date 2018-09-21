@@ -24,6 +24,7 @@
     <None Remove="src\app\core\guards\index.ts" />
     <None Remove="src\app\core\index.ts" />
     <None Remove="src\app\core\models\index.ts" />
+    <None Remove="src\app\core\services\app-config.service.ts" />
     <None Remove="src\app\core\services\index.ts" />
     <None Remove="src\app\root-store\entidad\components\entity-base\entity-base.component.ts" />
     <None Remove="src\app\core\core.module.ts" />
@@ -42,7 +43,6 @@
     <None Remove="src\app\root-store\entidad\guards\item.resolver.ts" />
     <None Remove="src\app\root-store\reducers.ts" />
     <None Remove="src\app\root-store\user\index.ts" />
-    <None Remove="src\app\shared\index.ts" />
     <None Remove="src\app\shared\material.components.ts" />
     <None Remove="src\main-aot.webpack.ts" />
   </ItemGroup>
@@ -75,6 +75,7 @@
     <TypeScriptCompile Include="src\app\core\guards\index.ts" />
     <TypeScriptCompile Include="src\app\core\index.ts" />
     <TypeScriptCompile Include="src\app\core\models\index.ts" />
+    <TypeScriptCompile Include="src\app\core\services\app-config.service.ts" />
     <TypeScriptCompile Include="src\app\core\services\index.ts" />
     <TypeScriptCompile Include="src\app\root-store\entidad\components\entity-base\entity-base.component.ts" />
     <TypeScriptCompile Include="src\app\core\core.module.ts" />
@@ -100,7 +101,6 @@
     <TypeScriptCompile Include="src\app\root-store\reducers.ts" />
     <TypeScriptCompile Include="src\app\core\services\entidad.service.ts" />
     <TypeScriptCompile Include="src\app\root-store\user\index.ts" />
-    <TypeScriptCompile Include="src\app\shared\index.ts" />
     <TypeScriptCompile Include="src\app\shared\material.components.ts" />
     <TypeScriptCompile Include="src\main-aot.webpack.ts" />
   </ItemGroup>

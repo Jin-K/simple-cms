@@ -1,12 +1,15 @@
-import { Component, OnInit }                from '@angular/core';
-import { ActivatedRoute }                   from '@angular/router';
-import { Store }                            from '@ngrx/store';
-import { Observable }                       from 'rxjs';
+import { Component, OnInit }  from '@angular/core';
+import { ActivatedRoute }     from '@angular/router';
+import { Store }              from '@ngrx/store';
+import { Observable }         from 'rxjs';
 
-import { PaginationItemList }               from '../../../../core/modules/pagination';
-import { IItem }                            from '../../../../core/models';
-import { entidadActions, entidadSelectors } from '../../../../root-store/entidad';
-import { ApplicationState }                 from '../../../../root-store/application-state';
+import { PaginationItemList } from '../../../../core/modules/pagination';
+import { IItem }              from '../../../../core/models';
+import {
+  entidadActions,
+  entidadSelectors,
+  ApplicationState
+}                             from '../../../../root-store';
 
 /**
  * @title ??

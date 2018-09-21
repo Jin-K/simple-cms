@@ -61,6 +61,6 @@ namespace SimpleCRM.Auth {
           }
         }
       };
-
   }
+
 }

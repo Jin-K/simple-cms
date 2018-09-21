@@ -24,7 +24,7 @@ export class NewsService {
     private configuration: Configuration,
     private oidcSecurityService: OidcSecurityService
   ) {
-    this.actionUrl = `${this.configuration.Server}api/news`;
+    this.actionUrl = `${this.configuration.api_endpoint}api/news`;
 
     this.headers = new HttpHeaders();
     this.headers = this.headers.set('Content-Type', 'application/json' );
@@ -75,7 +75,7 @@ export class NewsService {
     if (token !== '') tokenValue = `?token=${token}`;
 
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.configuration.Server}looney${tokenValue}`)
+      .withUrl(`${this.configuration.api_endpoint}looney${tokenValue}`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 

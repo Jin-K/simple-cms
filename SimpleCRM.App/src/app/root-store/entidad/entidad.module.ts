@@ -6,7 +6,7 @@ import { EffectsModule }                from '@ngrx/effects';
 import { entityReducer }                from './reducer';
 import { EntidadesGuard, ItemResolver } from './guards';
 import { EntidadEffects }               from './effects';
-import { EntidadRoutes }                from './routes';
+import { entidadRoutes }                from './routes';
 
 import { SharedModule }                 from '../../shared';
 import { PaginationModule }             from '../../core/modules/pagination';
@@ -25,7 +25,7 @@ import {
     CommonModule,
     SharedModule.forRoot(),
     PaginationModule,
-    EntidadRoutes,
+    entidadRoutes,
     StoreModule.forFeature('entidad', entityReducer),
     EffectsModule.forFeature([EntidadEffects])
   ],

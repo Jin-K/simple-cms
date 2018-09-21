@@ -14,5 +14,6 @@ export const MaterialComponents = [
   fromMaterial.MatSidenavModule,
   fromMaterial.MatTabsModule,
   fromMaterial.MatTableModule,
-  fromMaterial.MatSortModule
+  fromMaterial.MatSortModule,
+  fromMaterial.MatSelectModule
 ];

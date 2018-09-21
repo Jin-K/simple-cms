@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (token !== '') tokenValue = '?token=' + token;
 
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.configuration.Server}signalrhome${tokenValue}`)
+      .withUrl(`${this.configuration.api_endpoint}signalrhome${tokenValue}`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 

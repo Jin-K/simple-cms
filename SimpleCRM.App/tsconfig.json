@@ -21,7 +21,7 @@
   },
   "exclude": [
     "node_modules",
-    "./src/main-aot.webpack.ts"
+    "**/main-aot.webpack.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "useWebpackText": true

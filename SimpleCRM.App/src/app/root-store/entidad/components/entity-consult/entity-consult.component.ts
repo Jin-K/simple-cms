@@ -1,4 +1,5 @@
-import { Component, OnInit }    from '@angular/core';
+import { Component }            from '@angular/core';
+import { ActivatedRoute }       from '@angular/router';
 import { EntityBaseComponent }  from './../entity-base/entity-base.component';
 
 @Component({
@@ -6,8 +7,10 @@ import { EntityBaseComponent }  from './../entity-base/entity-base.component';
   templateUrl: './entity-consult.component.html',
   styleUrls: ['./entity-consult.component.scss']
 })
-export class EntityConsultComponent extends EntityBaseComponent implements OnInit {
+export class EntityConsultComponent extends EntityBaseComponent {
 
-  ngOnInit() { super.ngOnInit(); }
+  constructor(protected route: ActivatedRoute) {
+    super();
+  }
 
 }

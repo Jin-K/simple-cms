@@ -1,0 +1,39 @@
+<form [formGroup]="myForm">
+
+  <p>Value: {{myForm.value | json}}</p>
+
+  <mat-form-field class="full">
+    <input matInput placeholder="email" formControlName="email" />
+
+    <mat-error *ngIf="email.invalid && email.touched">
+      Your email does not look right
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="full">
+    <input matInput placeholder="password" formControlName="password" />
+
+    <mat-hint align="right">Must have one letter, and one number</mat-hint>
+
+    <mat-error *ngIf="password.invalid && password.touched" class="has-text-error">
+      That password sucks
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="age" [value]="0" formControlName="age" />
+
+    <mat-error *ngIf="age.errors?.min && age.touched">
+      {{ age.errors.min.actual }} is young to use this app kiddo!
+    </mat-error>
+
+    <mat-error *ngIf="age.errors?.max && age.touched">
+      {{ age.errors.max.actual }} is too old to use this app gramps!
+    </mat-error>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="agree" color="primary">Are you sure?</mat-checkbox>
+
+  <button mat-raised-button [disabled]="myForm.invalid" color="primary">Let's do it</button>
+
+</form>

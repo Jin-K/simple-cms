@@ -2,5 +2,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Configuration {
-  public Server = 'https://localhost:44385/';
+  public api_endpoint = 'https://localhost:44385/';
+  public app_endpoint = 'https://localhost:44300/';
 }

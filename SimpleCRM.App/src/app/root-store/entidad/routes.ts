@@ -34,4 +34,4 @@ const routes: Routes = [
   },
 ];
 
-export const EntidadRoutes = RouterModule.forChild(routes);
+export const entidadRoutes = RouterModule.forChild(routes);
