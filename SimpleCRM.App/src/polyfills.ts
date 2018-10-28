@@ -34,11 +34,13 @@ import 'core-js/es6/map';
 import 'core-js/es6/weak-map';
 import 'core-js/es6/set';
 
+import 'core-js/es7/array';
+
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
-// import 'classlist.js';  // Run `npm install --save classlist.js`.
+import 'classlist.js';  // Run `npm install --save classlist.js`.
 
 /** IE10 and IE11 requires the following for the Reflect API. */
-// import 'core-js/es6/reflect';
+import 'core-js/es6/reflect';
 
 
 /** Evergreen browsers require these. **/
@@ -51,7 +53,7 @@ import 'core-js/es7/reflect';
  * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.
  * Standard animation support in Angular DOES NOT require any polyfills (as of Angular 6.0).
  **/
-// import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
 /**
  * By default, zone.js will patch all possible macroTask and DomEvents
@@ -74,7 +76,22 @@ import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 
+/*****
+ * Some other IE-fixes (imports, polyfills)
+ */
+import 'isomorphic-fetch';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Add global to window, assigning the value of window itself.
+(window as any).global = window;
+
+/**
+ * Fix for ngx-chart to work on ie11
+ */
+if ( typeof SVGElement.prototype.contains === 'undefined' )
+{
+    SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
+}

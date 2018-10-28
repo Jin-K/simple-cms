@@ -9,6 +9,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const helpers = require('./webpack.helpers');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -35,7 +36,12 @@ module.exports = {
 
   resolve: {
     extensions: ['.ts', '.js', '.json'],
-    alias: rxPaths()
+    alias: rxPaths(),
+    plugins: [
+      new TsConfigPathsPlugin({
+        configFileName: './tsconfig.json'
+      })
+    ]
   },
 
   devServer: {
@@ -116,7 +122,7 @@ module.exports = {
 
     // new webpack.optimize.CommonsChunkPlugin({ name: ['vendor', 'polyfills'] }),
 
-    new CleanWebpackPlugin(['./wwwroot/dist', './wwwroot/assets', './wwwroot/images'], {
+    new CleanWebpackPlugin(['./wwwroot/dist', './wwwroot/assets'], {
       root: ROOT
     }),
 
@@ -139,7 +145,7 @@ module.exports = {
     }),
 
     new CopyWebpackPlugin([
-      { from: './src/images/*.*', to: 'images/', flatten: true }
+      { from: './src/assets', to: 'assets/', flatten: false }
     ])
   ]
 };

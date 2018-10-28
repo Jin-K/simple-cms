@@ -1,0 +1,71 @@
+<div id="dashboard-analytics" class="page-layout blank grey-100-bg">
+
+  <div class="content">
+
+    <div class="left mr-lg-32">
+
+      <div class="pb-24 font-size-18 font-weight-300">
+        API metrics
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start start">
+
+        <!-- Widget 2 -->
+        <div class="widget" fxFlex="100" fxFlex.gt-sm="33">
+
+          <div class="fuse-card">
+
+              <div class="p-16">
+                <div class="h1-font-weight-300">CPU & Memory</div>
+              </div>
+  
+              <div class="h-200">
+                <canvas baseChart
+                  [data]="widgets.widget2.data"
+                  [labels]="widgets.widget2.labels"
+                  [chartType]="'doughnut'"
+                  [options]="widgets.widget2.options">
+                </canvas>
+              </div>
+  
+              <div class="p-16" fxLayout="row" fxLayoutAlign="center center">
+  
+                <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
+                  
+                  <div class="h4 secondary-text">CPU</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets.widget2.values[0]}} %</div>
+                  
+                </div>
+  
+                <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
+                  
+                  <div class="h4 secondary-text">Memory</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets.widget2.values[1]}} MB</div>
+                  
+                </div>
+                
+              </div>
+              
+            </div>
+
+        </div>
+        <!-- / Widget 2 -->
+
+      </div>
+
+    </div>
+
+    <div class="right">
+
+      <div fxLayout="row wrap" fxLayout.gt-md="column">
+
+        <!-- Widget 7 -->
+        <!-- / Widget 7 -->
+        
+      </div>
+      
+    </div>
+    
+  </div>
+
+</div>

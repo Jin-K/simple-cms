@@ -1,5 +1,0 @@
-cd SimpleCRM.Data
-dotnet ef migrations add vX.X.X.[sqlserver|sqlite] -s ./../SimpleCRM.Api --context CrmContext
-dotnet ef migrations script -s ./../SimpleCRM.Api --context CrmContext -o ./Migrations/Scripts/vX.0.0.[sqlserver|sqlite].sql
-dotnet ef database update -s ./../SimpleCRM.Api --context CrmContext
-dotnet ef migrations remove -s ./../SimpleCRM.Api --context CrmContext

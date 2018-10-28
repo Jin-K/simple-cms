@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 44300 --ssl true",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-dev": "npm run webpack-dev",
     "build-production": "npm run webpack-production",
-    "start-with-ssl": "ng serve --port 44300 --ssl true",
+    "serve-without-ssl": "ng serve",
     "watch-webpack-dev": "webpack --env=dev --watch --color",
     "watch-webpack-production": "webpack --env=prod --watch --color",
     "webpack-dev": "webpack --env=dev",
@@ -27,6 +27,7 @@
     "@angular/forms": "^6.1.1",
     "@angular/http": "^6.1.1",
     "@angular/material": "^6.4.2",
+    "@angular/material-moment-adapter": "^6.4.7",
     "@angular/platform-browser": "^6.1.1",
     "@angular/platform-browser-dynamic": "^6.1.1",
     "@angular/platform-server": "^6.1.1",
@@ -37,17 +38,27 @@
     "@ngrx/router-store": "^6.1.0",
     "@ngrx/store": "^6.1.0",
     "@ngrx/store-devtools": "^6.1.0",
-    "angular-auth-oidc-client": "^6.0.5",
+    "@ngx-translate/core": "^10.0.2",
+    "@swimlane/ngx-charts": "^9.0.0",
+    "@swimlane/ngx-datatable": "^13.1.0",
+    "angular-auth-oidc-client": "^7.0.2",
     "circular-dependency-plugin": "^5.0.2",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.7",
     "es6-promise": "^4.2.4",
     "hammerjs": "^2.0.8",
     "ie-shim": "0.1.0",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "ng2-charts": "^1.6.0",
     "ngrx-store-freeze": "^0.2.4",
+    "ngx-cookie-service": "^1.0.10",
+    "perfect-scrollbar": "^1.4.0",
+    "prismjs": "^1.15.0",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.2.2",
+    "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -55,7 +66,6 @@
     "@angular/cli": "6.1.0-rc.2",
     "@angular/compiler-cli": "^6.1.0-rc.0",
     "@angular/language-service": "6.1.0-rc.0",
-    "@ngtools/webpack": "^6.1.2",
     "@types/isomorphic-fetch": "0.0.34",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
@@ -99,5 +109,9 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
   },
-  "-vs-binding": { "ProjectOpened": [ "start-with-ssl" ] }
+  "-vs-binding": {
+    "ProjectOpened": [
+      "start"
+    ]
+  }
 }

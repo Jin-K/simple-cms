@@ -3,43 +3,44 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimpleCRM.Business.Models;
-using SimpleCRM.Data.Contexts;
+using SimpleCRM.Data;
 using SimpleCRM.Data.Entities;
 
 namespace SimpleCRM.Business.Providers {
   public class NewsStore {
-    public NewsStore(NewsContext newsContext) {
-      _newsContext = newsContext;
+    readonly CrmContext _crmContext;
+
+    public NewsStore(CrmContext crmContext) {
+      _crmContext = crmContext;
     }
 
-    private readonly NewsContext _newsContext;
 
     public async Task AddGroup(string group) {
-      await _newsContext.NewsGroups.AddAsync(new NewsGroup {
+      await _crmContext.NewsGroups.AddAsync(new NewsGroup {
         Name = group
       });
-      await _newsContext.SaveChangesAsync();
+      await _crmContext.SaveChangesAsync();
     }
 
     public bool GroupExists(string group) {
-      return _newsContext.NewsGroups.Any(t => t.Name == group);
+      return _crmContext.NewsGroups.Any(t => t.Name == group);
     }
 
     public void CreateNewItem(NewsItem item) {
       if (GroupExists(item.NewsGroup)) {
-        _newsContext.NewsItemEntities.Add(new NewsItemEntity {
+        _crmContext.NewsItemEntities.Add(new NewsItemEntity {
           Header = item.Header,
           Author = item.Author,
           NewsGroup = item.NewsGroup,
           NewsText = item.NewsText
         });
-        _newsContext.SaveChanges();
+        _crmContext.SaveChanges();
       }
       else throw new System.Exception( "group does not exist" );
     }
 
     public IEnumerable<NewsItem> GetAllNewsItems(string group) {
-      return _newsContext.NewsItemEntities.Where( item => item.NewsGroup == group ).Select( 
+      return _crmContext.NewsItemEntities.Where( item => item.NewsGroup == group ).Select( 
         z => new NewsItem {
           Author = z.Author,
           Header = z.Header,
@@ -49,6 +50,6 @@ namespace SimpleCRM.Business.Providers {
       );
     }
 
-    public async Task<List<string>> GetAllGroups() => await _newsContext.NewsGroups.Select(t => t.Name).ToListAsync();
+    public async Task<List<string>> GetAllGroups() => await _crmContext.NewsGroups.Select(t => t.Name).ToListAsync();
   }
 }

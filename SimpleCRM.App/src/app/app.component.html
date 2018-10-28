@@ -1,23 +1,38 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<mat-drawer-container autosize fullscreen>
+<!-- PROGRESS BAR -->
+<fuse-progress-bar></fuse-progress-bar>
+<!-- / PROGRESS BAR -->
 
-  <mat-drawer #drawer mode="side">
+<!-- VERTICAL LAYOUT 1 -->
+<ng-container *ngIf="fuseConfig.layout.style === 'vertical-layout-1'">
+    <vertical-layout-1></vertical-layout-1>
+</ng-container>
+<!-- / VERTICAL LAYOUT 1 -->
 
-    <app-navigation></app-navigation>
+<!-- VERTICAL LAYOUT 2 -->
+<ng-container *ngIf="fuseConfig.layout.style === 'vertical-layout-2'">
+    <vertical-layout-2></vertical-layout-2>
+</ng-container>
+<!-- / VERTICAL LAYOUT 2 -->
 
-  </mat-drawer>
+<!-- VERTICAL LAYOUT 3 -->
+<ng-container *ngIf="fuseConfig.layout.style === 'vertical-layout-3'">
+    <vertical-layout-3></vertical-layout-3>
+</ng-container>
+<!-- / VERTICAL LAYOUT 3 -->
 
-  <div id="drawer-content">
+<!-- HORIZONTAL LAYOUT 1 -->
+<ng-container *ngIf="fuseConfig.layout.style === 'horizontal-layout-1'">
+    <horizontal-layout-1></horizontal-layout-1>
+</ng-container>
+<!-- / HORIZONTAL LAYOUT 1 -->
 
-    <app-topbar
-      [drawer]="drawer"
-      [isAuthorized]="isAuthorized"
-    ></app-topbar>
+<!-- THEME OPTIONS PANEL -->
+<!-- <button mat-icon-button class="mat-primary-bg mat-elevation-z2 theme-options-button"
+        (click)="toggleSidebarOpen('themeOptionsPanel')">
+    <mat-icon>settings</mat-icon>
+</button>
 
-    <div class="body-margin">
-      <router-outlet></router-outlet>
-    </div>
-
-  </div>
-
-</mat-drawer-container>
+<fuse-sidebar name="themeOptionsPanel" class="theme-options-sidebar" position="right" [invisibleOverlay]="true">
+    <fuse-theme-options></fuse-theme-options>
+</fuse-sidebar> -->
+<!-- / THEME OPTIONS PANEL -->

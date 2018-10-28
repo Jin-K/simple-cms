@@ -1,4 +1,8 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -9,15 +13,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+
 using Newtonsoft.Json.Serialization;
+using IdentityServer4.AccessTokenValidation;
 using Serilog;
+
 using SimpleCRM.Api.Hubs;
 using SimpleCRM.Business.Providers;
-using SimpleCRM.Data.Contexts;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Threading.Tasks;
+using SimpleCRM.Common.Extensions;
+using SimpleCRM.Data;
+using SimpleCRM.Common;
 
 namespace SimpleCRM.Api {
   public class Startup {
@@ -45,22 +50,15 @@ namespace SimpleCRM.Api {
     }
 
     public void ConfigureServices(IServiceCollection services) {
-      var sqliteConnectionString = Configuration.GetConnectionString("SqliteConnectionString");
       var defaultConnection = Configuration.GetConnectionString("DefaultConnection");
-      var defaultConnectionSQLite = Configuration.GetConnectionString("DefaultConnectionSQLite");
-      var secondConnection = Configuration.GetConnectionString("SecondConnection");
 
-      services.AddDbContext<DataEventRecordContext>(options => options.UseSqlite(sqliteConnectionString));
-
-      //services.AddDbContext<CrmContext>( options => options.UseSqlite( defaultConnectionSQLite ), ServiceLifetime.Singleton );
       services.AddDbContext<CrmContext>( options => options.UseSqlServer( defaultConnection ), ServiceLifetime.Singleton );
-
-      // used for the new items which belong to the signalr hub
-      services.AddDbContext<NewsContext>( options => options.UseSqlite( secondConnection ), ServiceLifetime.Singleton );
 
       services.AddSingleton<NewsStore>();
       services.AddSingleton<EntitiesStore>();
+      services.AddSingleton<WidgetsStore>();
       //services.AddSingleton<UserInfoInMemory>();
+      services.AddSingleton<IMetricsUtil>(MetricsUtil.Singleton);
 
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
       policy.Headers.Add("*");
@@ -91,6 +89,10 @@ namespace SimpleCRM.Api {
             options.Authority = "http://auth:50772/";
             options.RequireHttpsMetadata = false;
           }
+          else if (System.Environment.GetEnvironmentVariable( "DOTNET_RUNNING_IN_LINUX" ) == "true") {
+            options.Authority = "http://localhost:50772/";
+            options.RequireHttpsMetadata = false;
+          }
           else {
             options.Authority = "https://localhost:44321/";
           }
@@ -103,11 +105,7 @@ namespace SimpleCRM.Api {
           options.Events = new JwtBearerEvents {
             OnMessageReceived = context => {
               if (
-                (
-                  context.Request.Path.Value.StartsWith("/signalrhome")
-                  || context.Request.Path.Value.StartsWith("/message")
-                  || context.Request.Path.Value.StartsWith("/looney")
-                )
+                context.Request.Path.Value.StartsWithOneOf("/signalrhome", "/message", "/looney")
                 && context.Request.Query.TryGetValue("token", out StringValues token)
               ) context.Token = token;
 
@@ -123,7 +121,6 @@ namespace SimpleCRM.Api {
       services.AddAuthorization(options => { });
 
       services.AddSignalR();
-      //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
       services.AddMvc(options => { }).AddJsonOptions(options =>
         options.SerializerSettings.ContractResolver = new DefaultContractResolver()
       );
@@ -142,12 +139,13 @@ namespace SimpleCRM.Api {
 
       app.UseAuthentication();
 
-      // app.UseHttpsRedirection();
+      app.UseHttpsRedirection();
 
       app.UseSignalR( routes => {
         routes.MapHub<SignalRHomeHub>( "/signalrhome" );
         routes.MapHub<MessageHub>( "/message" );
         routes.MapHub<NewsHub>("/looney");
+        routes.MapHub<DashboardHub>( "/dashboard" );
       });
 
       app.UseMvc(routes => {

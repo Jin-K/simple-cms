@@ -1,73 +1,111 @@
+import { Component, Inject, OnDestroy, OnInit, Injector } from '@angular/core';
+import { DOCUMENT }                                       from '@angular/common';
+import { Platform }                                       from '@angular/cdk/platform';
+import { takeUntil }                                      from 'rxjs/operators';
+import { TranslateService }                               from '@ngx-translate/core';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
-import { Store }                        from '@ngrx/store';
-import { Subscription }                 from 'rxjs';
-import { OidcSecurityService }          from 'angular-auth-oidc-client';
-import { userActions }                  from './root-store/user';
+import { FuseConfigService }                              from '@fuse/services/config.service';
+import { FuseNavigationService }                          from '@fuse/components/navigation/navigation.service';
+import { FuseSplashScreenService }                        from '@fuse/services/splash-screen.service';
+import { FuseTranslationLoaderService }                   from '@fuse/services/translation-loader.service';
+
+import { AuthAppBase }                                    from '@core/auth';
+
+import { navigation }                                     from './navigation/navigation';
+import { locale as navigationEnglish }                    from './navigation/i18n/en';
+import { locale as navigationFrench }                     from './navigation/i18n/fr';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
-  isAuthorizedSubscription!: Subscription;
-  isAuthorized = false;
+export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
+  // Public
+  fuseConfig: any;
+  navigation: any;
 
-  hasAdminRole = false;
-  hasDataEventRecordsAdminRole = false;
-  userDataSubscription!: Subscription;
-  userData: any;
-
+  /**
+   * Constructor
+   *
+   * @param {DOCUMENT} document
+   * @param {FuseConfigService} _fuseConfigService
+   * @param {FuseNavigationService} _fuseNavigationService
+   * @param {FuseSplashScreenService} _fuseSplashScreenService A reference to this service is required even if it is not used in the component, the service's constructor needs to be executed
+   * @param {FuseTranslationLoaderService} _fuseTranslationLoaderService
+   * @param {Platform} _platform
+   * @param {TranslateService} _translateService
+   * @param {Injector} _injector required for AuthAppBase base class
+   */
   constructor(
-    private store: Store<any>,
-    private oidcSecurityService: OidcSecurityService,
-    private router: Router
+    @Inject(DOCUMENT) private document: any,
+    private _fuseConfigService: FuseConfigService,
+    private _fuseNavigationService: FuseNavigationService,
+    _fuseSplashScreenService: FuseSplashScreenService,
+    private _fuseTranslationLoaderService: FuseTranslationLoaderService,
+    private _translateService: TranslateService,
+    private _platform: Platform,
+    protected _injector: Injector
   ) {
-    if (this.oidcSecurityService.moduleSetup)
-      this.doCallbackLogicIfRequired();
-    else
-      this.oidcSecurityService.onModuleSetup.subscribe(() => this.doCallbackLogicIfRequired());
-  }
+    // call base constructor
+    super();
 
-  ngOnInit() {
-    this.isAuthorizedSubscription = this.oidcSecurityService.getIsAuthorized().subscribe(
-      isAuthorized => {
-        if (this.isAuthorized && !isAuthorized) this.router.navigate(['']);
-        this.isAuthorized = isAuthorized;
-      }
-    );
+    // Get default navigation
+    this.navigation = navigation;
 
-    this.userDataSubscription = this.oidcSecurityService.getUserData().subscribe(
-      userData => {
-        if (userData && userData !== '' && userData.role) {
-          this.store.dispatch(new userActions.AuthorizeComplete(userData.given_name));
+    // Register the navigation to the service
+    this._fuseNavigationService.register('main', this.navigation);
 
-          for (let i = 0; i < userData.role.length; i++) {
-            switch (userData.role[i]) {
-              case 'dataEventRecords.admin':
-                this.hasDataEventRecordsAdminRole = true;
-                break;
-              case 'admin':
-                this.hasAdminRole = true;
-                break;
-            }
-          }
-        }
-      }
-    );
-  }
+    // Set the main navigation as our current navigation
+    this._fuseNavigationService.setCurrentNavigation('main');
 
-  ngOnDestroy() {
-    if (this.isAuthorizedSubscription) this.isAuthorizedSubscription.unsubscribe();
-    if (this.userDataSubscription) this.userDataSubscription.unsubscribe();
-    this.oidcSecurityService.onModuleSetup.unsubscribe();
-  }
+    // Add languages
+    this._translateService.addLangs(['en', 'fr']);
 
-  doCallbackLogicIfRequired(): any {
-    if (window.location.hash) {
-      this.oidcSecurityService.authorizedCallback();
+    // Set the default language
+    this._translateService.setDefaultLang('fr');
+
+    // Set the navigation translations
+    this._fuseTranslationLoaderService.loadTranslations(navigationEnglish, navigationFrench);
+
+    // Use a language
+    this._translateService.use('fr');
+
+    // Add is-mobile class to the body if the platform is mobile
+    if (this._platform.ANDROID || this._platform.IOS) {
+      this.document.body.classList.add('is-mobile');
     }
+  }
+
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * On init
+   */
+  ngOnInit(): void {
+    // call base method
+    super.ngOnInit();
+
+    // Subscribe to config changes
+    this._fuseConfigService.config
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.fuseConfig = config;
+
+        if (this.fuseConfig.layout.width === 'boxed')
+          this.document.body.classList.add('boxed');
+        else
+          this.document.body.classList.remove('boxed');
+      });
+  }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    // call base method
+    super.ngOnDestroy();
   }
 }

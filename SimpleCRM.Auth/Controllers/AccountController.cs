@@ -11,15 +11,16 @@ using SimpleCRM.Auth.Extensions;
 using SimpleCRM.Auth.Models;
 using SimpleCRM.Auth.Models.AccountViewModels;
 using SimpleCRM.Auth.Services;
+using SimpleCRM.Data.Entities;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SimpleCRM.Auth.Controllers {
   public class AccountController : Controller {
-    readonly SignInManager<ApplicationUser> _signInManager;
+    readonly SignInManager<AppUser> _signInManager;
     readonly ILogger<AccountController> _logger;
-    readonly UserManager<ApplicationUser> _userManager;
+    readonly UserManager<AppUser> _userManager;
     readonly IEmailSender _emailSender;
 
     readonly IIdentityServerInteractionService _interaction;
@@ -29,8 +30,8 @@ namespace SimpleCRM.Auth.Controllers {
     public string ErrorMessage { get; set; }
 
     public AccountController(
-      UserManager<ApplicationUser> userManager,
-      SignInManager<ApplicationUser> signInManager,
+      UserManager<AppUser> userManager,
+      SignInManager<AppUser> signInManager,
       IEmailSender emailSender,
       ILogger<AccountController> logger,
       IPersistedGrantService persistedGrantService,
@@ -52,6 +53,7 @@ namespace SimpleCRM.Auth.Controllers {
       await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
       ViewData["ReturnUrl"] = returnUrl;
+      ViewData["ValidationErrors"] = new string[0];
       return View();
     }
 
@@ -76,6 +78,7 @@ namespace SimpleCRM.Auth.Controllers {
         }
         else {
           ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+          ViewData["ValidationErrors"] = new []{ "Invalid login attempt." };
           return View(model);
         }
       }
@@ -115,7 +118,7 @@ namespace SimpleCRM.Auth.Controllers {
     public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null) {
       ViewData["ReturnUrl"] = returnUrl;
       if (ModelState.IsValid) {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        var user = new AppUser { UserName = model.Email, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded) {
           _logger.LogInformation("User created a new account with password.");
@@ -259,7 +262,7 @@ namespace SimpleCRM.Auth.Controllers {
         if (info == null) {
           throw new ApplicationException("Error loading external login information during confirmation.");
         }
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        var user = new AppUser { UserName = model.Email, Email = model.Email };
         var result = await _userManager.CreateAsync(user);
         if (result.Succeeded) {
           result = await _userManager.AddLoginAsync(user, info);

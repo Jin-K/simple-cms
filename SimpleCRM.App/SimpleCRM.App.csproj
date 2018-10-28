@@ -8,42 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\app\core\**" />
     <Compile Remove="src\app\entity\**" />
+    <Compile Remove="src\app\root-store\**" />
+    <Compile Remove="src\app\shared\**" />
     <Compile Remove="src\app\user\**" />
+    <Content Remove="src\app\core\**" />
     <Content Remove="src\app\entity\**" />
+    <Content Remove="src\app\root-store\**" />
+    <Content Remove="src\app\shared\**" />
     <Content Remove="src\app\user\**" />
+    <EmbeddedResource Remove="src\app\core\**" />
     <EmbeddedResource Remove="src\app\entity\**" />
+    <EmbeddedResource Remove="src\app\root-store\**" />
+    <EmbeddedResource Remove="src\app\shared\**" />
     <EmbeddedResource Remove="src\app\user\**" />
+    <None Remove="src\app\core\**" />
     <None Remove="src\app\entity\**" />
+    <None Remove="src\app\root-store\**" />
+    <None Remove="src\app\shared\**" />
     <None Remove="src\app\user\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="src\app\app.constants.ts" />
-    <None Remove="src\app\core\components\index.ts" />
-    <None Remove="src\app\core\guards\index.ts" />
-    <None Remove="src\app\core\index.ts" />
-    <None Remove="src\app\core\models\index.ts" />
-    <None Remove="src\app\core\services\app-config.service.ts" />
-    <None Remove="src\app\core\services\index.ts" />
-    <None Remove="src\app\root-store\entidad\components\entity-base\entity-base.component.ts" />
-    <None Remove="src\app\core\core.module.ts" />
-    <None Remove="src\app\core\oop\classes\paginator-selection.class.ts" />
-    <None Remove="src\app\core\oop\enums\items-selection-state.enum.ts" />
-    <None Remove="src\app\core\guards\auth.guard.ts" />
-    <None Remove="src\app\core\guards\entidades-can-activate.guard.ts" />
-    <None Remove="src\app\core\guards\pagination.resolver.ts" />
-    <None Remove="src\app\core\oop\interfaces\paginator-options.interface.ts" />
-    <None Remove="src\app\core\models\pagination-items-list.type.ts" />
-    <None Remove="src\app\core\services\entity-pagination.settings.ts" />
-    <None Remove="src\app\core\services\pagination.service.ts" />
-    <None Remove="src\app\root-store\chat\routes.ts" />
-    <None Remove="src\app\root-store\entidad\components\index.ts" />
-    <None Remove="src\app\root-store\entidad\guards\index.ts" />
-    <None Remove="src\app\root-store\entidad\guards\item.resolver.ts" />
-    <None Remove="src\app\root-store\reducers.ts" />
-    <None Remove="src\app\root-store\user\index.ts" />
-    <None Remove="src\app\shared\material.components.ts" />
+    <None Remove="src\app\fuse-config\index.ts" />
     <None Remove="src\main-aot.webpack.ts" />
   </ItemGroup>
 
@@ -55,11 +44,8 @@
 
   <ItemGroup>
     <Folder Include="config\" />
-    <Folder Include="src\app\core\components\unauthorized\" />
-    <Folder Include="src\app\core\oop\classes\" />
-    <Folder Include="src\app\core\oop\enums\" />
-    <Folder Include="src\app\core\oop\interfaces\" />
-    <Folder Include="src\app\core\oop\" />
+    <Folder Include="src\assets\styles\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,38 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="src\app\app.constants.ts" />
-    <TypeScriptCompile Include="src\app\core\components\index.ts" />
-    <TypeScriptCompile Include="src\app\core\guards\index.ts" />
-    <TypeScriptCompile Include="src\app\core\index.ts" />
-    <TypeScriptCompile Include="src\app\core\models\index.ts" />
-    <TypeScriptCompile Include="src\app\core\services\app-config.service.ts" />
-    <TypeScriptCompile Include="src\app\core\services\index.ts" />
-    <TypeScriptCompile Include="src\app\root-store\entidad\components\entity-base\entity-base.component.ts" />
-    <TypeScriptCompile Include="src\app\core\core.module.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\paginator-selection.class.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\paginator\paginator.component.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\items-selection-state.enum.ts" />
-    <TypeScriptCompile Include="src\app\core\guards\auth.guard.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\pagination-items-list.type.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\pagination.service.ts" />
-    <TypeScriptCompile Include="src\app\root-store\entidad\components\index.ts" />
-    <TypeScriptCompile Include="src\app\root-store\entidad\guards\entidades-can-activate.guard.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\paginator-options.interface.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\pagination.model.ts" />
-    <TypeScriptCompile Include="src\app\core\modules\pagination\pagination-settings.class.ts" />
-    <TypeScriptCompile Include="src\app\core\models\action.ts" />
-    <TypeScriptCompile Include="src\app\core\models\company.ts" />
-    <TypeScriptCompile Include="src\app\core\models\contact.ts" />
-    <TypeScriptCompile Include="src\app\core\models\interfaces.ts" />
-    <TypeScriptCompile Include="src\app\core\models\item.ts" />
-    <TypeScriptCompile Include="src\app\root-store\chat\routes.ts" />
-    <TypeScriptCompile Include="src\app\root-store\entidad\guards\index.ts" />
-    <TypeScriptCompile Include="src\app\root-store\entidad\guards\item.resolver.ts" />
-    <TypeScriptCompile Include="src\app\root-store\reducers.ts" />
-    <TypeScriptCompile Include="src\app\core\services\entidad.service.ts" />
-    <TypeScriptCompile Include="src\app\root-store\user\index.ts" />
-    <TypeScriptCompile Include="src\app\shared\material.components.ts" />
+    <TypeScriptCompile Include="src\app\fuse-config\index.ts" />
     <TypeScriptCompile Include="src\main-aot.webpack.ts" />
   </ItemGroup>
 
