@@ -7,5 +7,6 @@ SimpleCRM.Common/obj/
 SimpleCRM.Common/bin/
 SimpleCRM.Data/obj/
 SimpleCRM.Data/bin/
+ssl/localhost.crt
 ssl/localhost.key
 ssl/localhost.pfx
