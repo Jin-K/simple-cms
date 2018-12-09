@@ -7,6 +7,9 @@ SimpleCRM.Common/obj/
 SimpleCRM.Common/bin/
 SimpleCRM.Data/obj/
 SimpleCRM.Data/bin/
+
+# To create locally (SimpleCRM.Data/database_upgrade.sh, ssl/howto.txt)
+SimpleCRM.Data/Migrations/**
 ssl/localhost.crt
 ssl/localhost.key
 ssl/localhost.pfx
