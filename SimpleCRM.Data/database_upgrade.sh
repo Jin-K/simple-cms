@@ -6,6 +6,8 @@
 # dotnet processes should be stopped before running this script
 # SimpleCRM.Auth and SimpleCRM.Data have to be be compilable
 #
+# NEEDS A 'chmod +x ./database_upgrade.sh' TO BECOME EXECUTABLE
+#
 ####################################
 
 # Drop the database (delete database, required to delete migrations)

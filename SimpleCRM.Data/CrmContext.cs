@@ -11,7 +11,7 @@ using Action = SimpleCRM.Data.Entities.Action;
 namespace SimpleCRM.Data {
   public class CrmContext : IdentityDbContext<AppUser, AppRole, int> {
 
-    public const string HC_CONNECTION_STRING = "Data Source=kali;Initial Catalog=SimpleCRM;Integrated Security=False;User ID=user1;Password=Password123";
+    public const string HC_CONNECTION_STRING = "Data Source=localhost;Initial Catalog=SimpleCRM;Integrated Security=False;User ID=user1;Password=Password123";
 
     readonly ContextType contextType;
 
