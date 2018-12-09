@@ -1,15 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.18" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\SimpleCRM.Data\SimpleCRM.Data.csproj" />
+    <ProjectReference Include="..\SimpleCRM.Data\SimpleCRM.Data.csproj"/>
   </ItemGroup>
-
 </Project>

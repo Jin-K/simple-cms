@@ -1,33 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0"/>
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="2.3.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1"/>
   </ItemGroup>
-
   <ItemGroup>
-    <Folder Include="Migrations\Scripts\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="Migrations\Scripts\"/>
+    <Folder Include="Repositories\"/>
   </ItemGroup>
-  
   <ItemGroup>
-    <Folder Include="Migrations\Entities\" />
-    <Folder Include="Migrations\IdentityServer\ConfigurationDb\" />
-    <Folder Include="Migrations\IdentityServer\PersistedGrantDb\" />
+    <Folder Include="Migrations\Entities\"/>
+    <Folder Include="Migrations\IdentityServer\ConfigurationDb\"/>
+    <Folder Include="Migrations\IdentityServer\PersistedGrantDb\"/>
   </ItemGroup>
-
 </Project>

@@ -3,7 +3,7 @@ GO
 SET IDENTITY_INSERT [auth].[ApiResources] ON
 
 GO
-INSERT [auth].[ApiResources] ([Id], [Description], [DisplayName], [Enabled], [Name]) VALUES (1, NULL, N'Scope for the dataEventRecords ApiResource', 1, N'dataEventRecords')
+INSERT [auth].[ApiResources] ([Id], [Description], [DisplayName], [Enabled], [Name], [Created], [NonEditable]) VALUES (1, NULL, N'Scope for the dataEventRecords ApiResource', 1, N'dataEventRecords', getdate(), 1)
 GO
 SET IDENTITY_INSERT [auth].[ApiResources] OFF
 GO
@@ -34,7 +34,7 @@ GO
 SET IDENTITY_INSERT [auth].[Clients] ON 
 
 GO
-INSERT [auth].[Clients] ( [Id], [AbsoluteRefreshTokenLifetime], [AccessTokenLifetime], [AccessTokenType], [AllowAccessTokensViaBrowser], [AllowOfflineAccess], [AllowPlainTextPkce], [AllowRememberConsent], [AlwaysIncludeUserClaimsInIdToken], [AlwaysSendClientClaims], [AuthorizationCodeLifetime], [BackChannelLogoutSessionRequired], [BackChannelLogoutUri], [ClientClaimsPrefix], [ClientId], [ClientName], [ClientUri], [ConsentLifetime], [Description], [EnableLocalLogin], [Enabled], [FrontChannelLogoutSessionRequired], [FrontChannelLogoutUri], [IdentityTokenLifetime], [IncludeJwtId], [LogoUri], [PairWiseSubjectSalt], [ProtocolType], [RefreshTokenExpiration], [RefreshTokenUsage], [RequireClientSecret], [RequireConsent], [RequirePkce], [SlidingRefreshTokenLifetime], [UpdateAccessTokenClaimsOnRefresh] ) VALUES ( 1, 2592000, 3600, 0, 1, 1, 0, 1,  1, 0, 300, 1,  NULL, NULL, N'simple-crm', N'Simple CRM', N'https://localhost:44300', NULL, NULL, 1, 1, 1, NULL, 3000, 0, NULL, NULL, N'oidc', 1, 1, 1, 1, 0, 1296000, 0 )
+INSERT [auth].[Clients] ( [Id], [AbsoluteRefreshTokenLifetime], [AccessTokenLifetime], [AccessTokenType], [AllowAccessTokensViaBrowser], [AllowOfflineAccess], [AllowPlainTextPkce], [AllowRememberConsent], [AlwaysIncludeUserClaimsInIdToken], [AlwaysSendClientClaims], [AuthorizationCodeLifetime], [BackChannelLogoutSessionRequired], [BackChannelLogoutUri], [ClientClaimsPrefix], [ClientId], [ClientName], [ClientUri], [ConsentLifetime], [Description], [EnableLocalLogin], [Enabled], [FrontChannelLogoutSessionRequired], [FrontChannelLogoutUri], [IdentityTokenLifetime], [IncludeJwtId], [LogoUri], [PairWiseSubjectSalt], [ProtocolType], [RefreshTokenExpiration], [RefreshTokenUsage], [RequireClientSecret], [RequireConsent], [RequirePkce], [SlidingRefreshTokenLifetime], [UpdateAccessTokenClaimsOnRefresh], [Created], [NonEditable], [DeviceCodeLifetime] ) VALUES ( 1, 2592000, 3600, 0, 1, 1, 0, 1,  1, 0, 300, 1,  NULL, NULL, N'simple-crm', N'Simple CRM', N'https://localhost:44300', NULL, NULL, 1, 1, 1, NULL, 3000, 0, NULL, NULL, N'oidc', 1, 1, 1, 1, 0, 1296000, 0, getdate(), 1, 300 )
 GO
 SET IDENTITY_INSERT [auth].[Clients] OFF
 GO
@@ -95,15 +95,15 @@ GO
 SET IDENTITY_INSERT [auth].[IdentityResources] ON 
 
 GO
-INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument]) VALUES (1, NULL, N'Your user identifier', 0, 1, N'openid', 1, 1)
+INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument], [Created], [NonEditable]) VALUES (1, NULL, N'Your user identifier', 0, 1, N'openid', 1, 1, getdate(), 1)
 GO
-INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument]) VALUES (2, N'Your user profile information (first name, last name, etc.)', N'User profile', 1, 1, N'profile', 0, 1)
+INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument], [Created], [NonEditable]) VALUES (2, N'Your user profile information (first name, last name, etc.)', N'User profile', 1, 1, N'profile', 0, 1, getdate(), 1)
 GO
-INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument]) VALUES (3, NULL, N'Your email address', 1, 1, N'email', 0, 1)
+INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument], [Created], [NonEditable]) VALUES (3, NULL, N'Your email address', 1, 1, N'email', 0, 1, getdate(), 1)
 GO
-INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument]) VALUES (4, NULL, N'dataeventrecordsscope', 0, 1, N'dataeventrecordsscope', 0, 1)
+INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument], [Created], [NonEditable]) VALUES (4, NULL, N'dataeventrecordsscope', 0, 1, N'dataeventrecordsscope', 0, 1, getdate(), 1)
 GO
-INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument]) VALUES (5, NULL, N'securedfilesscope', 0, 1, N'portal-api', 0, 1)
+INSERT [auth].[IdentityResources] ([Id], [Description], [DisplayName], [Emphasize], [Enabled], [Name], [Required], [ShowInDiscoveryDocument], [Created], [NonEditable]) VALUES (5, NULL, N'securedfilesscope', 0, 1, N'portal-api', 0, 1, getdate(), 1)
 GO
 SET IDENTITY_INSERT [auth].[IdentityResources] OFF
 GO

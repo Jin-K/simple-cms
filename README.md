@@ -8,7 +8,7 @@
 - **@aspnet/signalr**
 - **webpack**
 ### Server
-- **ASP.NET Core 2.1**
+- **ASP.NET Core 2.2**
 - **IdentityServer4**
 - **SignalR**
 
@@ -25,7 +25,7 @@ Following things should be installed:
 - Individual components
   - Cloud, database, and server --> IIS Express
 
-#### .NET core 2.1 SDK
+#### .NET core 2.2 SDK
 https://www.microsoft.com/net/download
 
 #### Node.js (min.10.6.0) & npm
