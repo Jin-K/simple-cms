@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using SimpleCRM.App.ViewModel;
 using System;
@@ -13,12 +12,12 @@ namespace SimpleCRM.App {
     public IConfigurationRoot Configuration { get; }
     public Startup(IHostingEnvironment env) {
       Log.Logger = new LoggerConfiguration()
-          .MinimumLevel.Verbose()
-          .Enrich.WithProperty("App", "SimpleCRM.App")
-          .Enrich.FromLogContext()
-          .WriteTo.Seq("http://localhost:5341")
-          .WriteTo.RollingFile("../Logs/App")
-          .CreateLogger();
+        .MinimumLevel.Verbose()
+        .Enrich.WithProperty("App", "SimpleCRM.App")
+        .Enrich.FromLogContext()
+        .WriteTo.Seq("http://localhost:5341")
+        .WriteTo.RollingFile("../Logs/App")
+        .CreateLogger();
 
       Configuration = new ConfigurationBuilder()
         .SetBasePath( env.ContentRootPath )
@@ -41,11 +40,7 @@ namespace SimpleCRM.App {
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
-      loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
-      loggerFactory.AddDebug();
-
-      loggerFactory.AddSerilog();
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
       var angularRoutes = new[] {
         "/entity",

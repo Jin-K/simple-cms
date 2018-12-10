@@ -1,19 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleCRM.Business.Models;
 using SimpleCRM.Data.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 using SimpleCRM.Business.Extensions;
-
-using _Action = SimpleCRM.Data.Entities.Action;
 using SimpleCRM.Data;
 
 namespace SimpleCRM.Business.Providers {
-  public class EntitiesStore {
+	public class EntitiesStore {
 
     readonly CrmContext _entitiesContext;
 

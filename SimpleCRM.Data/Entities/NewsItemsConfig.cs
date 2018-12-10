@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SimpleCRM.Data.Entities;
 
 namespace SimpleCRM.Data.Entities {
-  public class NewsItemsConfig : IEntityTypeConfiguration<NewsItemEntity> {
+	public class NewsItemsConfig : IEntityTypeConfiguration<NewsItemEntity> {
 		public void Configure(EntityTypeBuilder<NewsItemEntity> builder) {
       builder.HasData(
         new NewsItemEntity { Id = 1,  Author = "John",    Header = "hi",                      NewsGroup = "are",    NewsText = "1" },

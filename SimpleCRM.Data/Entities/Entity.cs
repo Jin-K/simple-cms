@@ -1,10 +1,9 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimpleCRM.Data.Entities {
 
-  [Table( "Entities" )]
+	[Table( "Entities" )]
   public class Entity {
 
     [Required, Key, DatabaseGenerated( DatabaseGeneratedOption.None )]

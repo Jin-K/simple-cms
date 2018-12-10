@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SimpleCRM.Data.Entities;
 
 namespace SimpleCRM.Business.Extensions {
 

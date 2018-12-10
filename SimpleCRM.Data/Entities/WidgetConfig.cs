@@ -1,7 +1,5 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SimpleCRM.Data.Entities;
 
 namespace SimpleCRM.Data.Entities {
 	public class WidgetConfig : IEntityTypeConfiguration<Widget> {

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using SimpleCRM.Business.Providers;
 using System.Threading.Tasks;
 

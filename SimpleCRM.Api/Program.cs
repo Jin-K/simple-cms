@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using SimpleCRM.Common.Extensions;
 
 namespace SimpleCRM.Api {
@@ -7,9 +9,16 @@ namespace SimpleCRM.Api {
     public static void Main(string[] args)
       => CreateWebHostBuilder(args).Build().Run();
 
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+    public static IWebHostBuilder CreateWebHostBuilder(string[] args) 
       => WebHost.CreateDefaultBuilder( args )
-                .Listen4Certificates()
-                .UseStartup<Startup>();
+          .Listen4Certificates()
+          .ConfigSerilog(BuildConfig().GetSection("Logging"))
+          .UseStartup<Startup>();
+
+    static IConfigurationRoot BuildConfig() 
+      => new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json")
+          .Build();
   }
 }

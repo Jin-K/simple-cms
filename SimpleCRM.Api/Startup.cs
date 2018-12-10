@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
@@ -127,12 +126,7 @@ namespace SimpleCRM.Api {
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
-
-      loggerFactory.AddConsole();
-      loggerFactory.AddDebug();
-
-      loggerFactory.AddSerilog();
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
       app.UseExceptionHandler("/Home/Error");
       app.UseCors("corsGlobalPolicy");

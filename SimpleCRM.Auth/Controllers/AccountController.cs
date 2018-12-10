@@ -1,4 +1,4 @@
-﻿using IdentityModel;
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SimpleCRM.Auth.Extensions;
-using SimpleCRM.Auth.Models;
 using SimpleCRM.Auth.Models.AccountViewModels;
 using SimpleCRM.Auth.Services;
 using SimpleCRM.Data.Entities;

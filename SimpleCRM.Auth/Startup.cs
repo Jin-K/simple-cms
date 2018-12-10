@@ -1,15 +1,13 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Serilog;
-using SimpleCRM.Auth.Models;
 using SimpleCRM.Auth.Services;
 using SimpleCRM.Data.Extensions;
 using SimpleCRM.Data;
@@ -35,14 +33,14 @@ namespace SimpleCRM.Auth {
         .WriteTo.RollingFile( "../Logs/Auth" )
         .CreateLogger();
 
+      _environment = env;
+
       var builder = new ConfigurationBuilder()
         .SetBasePath( env.ContentRootPath )
         .AddJsonFile( "appsettings.json", optional: true, reloadOnChange: true )
         .AddJsonFile( $"appsettings.{env.EnvironmentName}.json", optional: true );
 
       if (env.IsDevelopment()) builder.AddUserSecrets( "AspNetCoreID4External...." );
-
-      _environment = env;
 
       builder.AddEnvironmentVariables();
       Configuration = builder.Build();
@@ -104,11 +102,7 @@ namespace SimpleCRM.Auth {
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
-      loggerFactory.AddConsole( Configuration.GetSection( "Logging" ) );
-      loggerFactory.AddDebug();
-
-      loggerFactory.AddSerilog();
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
       if (env.IsDevelopment()) {
         app.UseDeveloperExceptionPage();

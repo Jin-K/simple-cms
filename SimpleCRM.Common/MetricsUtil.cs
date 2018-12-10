@@ -1,13 +1,10 @@
 using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace SimpleCRM.Common {
 
-  public delegate void ProcessorUsageChangedEventHandler(float cpu);
+	public delegate void ProcessorUsageChangedEventHandler(float cpu);
   public delegate void WorkingSet64ChangedEventHandler(long memory);
 
   public interface IMetricsUtil {
