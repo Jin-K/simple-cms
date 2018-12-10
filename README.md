@@ -17,7 +17,7 @@
 ## Linux (Debian / Ubuntu)
 ### Requirements
 - [Node.js (min v8) & npm](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-- [SQL Server 2017](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-2017) (Select the 'Express' Edition, and set up 'Mixed-Mode authentication' during config)
+- [SQL Server 2017 with command line tools (sqlcmd)](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-ubuntu?view=sql-server-2017) (Select the 'Express' Edition, and set up 'Mixed-Mode authentication' during config)
 - [.NET Core 2.2 / dotnet-sdk-2.2 (2.2.100)](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.2.100)
 
 ### Setup
