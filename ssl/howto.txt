@@ -6,3 +6,5 @@ Preferences -> Privacy & Security -> Security -> Certificates -> View certificat
 type : https://localhost:44300 or https://localhost:44321 or https://localhost:44385 and click on Get certificate
 check "Permanently store this exception" and click on "Confirm Security Exception"
 After you've done this for the 3 urls, you can click on the OK button of the "Certificate Manager" popup
+
+!!! USE "test" AS PASSWORD WHEN A NEW PASSWORD IS REQUIRED, OR USE YOURS AND ADAPT PASSWORDS IN FILES "appsettings.json" IN FOLDERS "SimpleCRM.Api/" AND "SimpleCRM.Auth" !!!
