@@ -104,16 +104,21 @@ namespace SimpleCRM.Data {
 
       builder.Entity<Contact>( contactBuilder => {
         contactBuilder.Property( c => c.Created ).HasDefaultValueSql( DefaultNowSql );
+        
+        contactBuilder.Property<string>( "PhonesCollection" ).HasField( "_phones" );
+        contactBuilder.Property<string>( "FaxesCollection" ).HasField( "_faxes" );
+        contactBuilder.Property<string>( "WebsitesCollection" ).HasField( "_websites" );
+        contactBuilder.Property<string>( "EmailsCollection" ).HasField( "_emails" );
         var i = 0;
         contactBuilder.HasData(
-          new Contact { Id = 1, FirstName = "Angel", LastName = "Muñoz", Created = "16/08/2018 12:30:05.237".ToDateTime() },
+          new Contact { Id = 1, FirstName = "Angel", LastName = "Muñoz", Created = "16/08/2018 12:30:05.237".ToDateTime(), Emails = new []{ "angelmnz@outlook.com", "angel.munoz@amma.be" } },
           new Contact { Id = 2, FirstName = "Pablo", LastName = "Muñoz", Created = "17/08/2018 09:00:00.000".ToDateTime() },
-          new Contact { Id = 3, FirstName = "qrqrg", LastName = "gqzgq", },
+          new Contact { Id = 3, FirstName = "qrqrg", LastName = "gqzgq" },
           new Contact { Id = 4, FirstName = "sgs", LastName = "rg er g", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
           new Contact { Id = 5, FirstName = "uuj", LastName = "yhy", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
           new Contact { Id = 6, FirstName = "ffdb ", LastName = "dfggg", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
           new Contact { Id = 7, FirstName = "uezbf", LastName = "pzgp", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
-          new Contact { Id = 8, FirstName = "test", LastName = "test", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
+          new Contact { Id = 8, FirstName = "test", LastName = "test", Created = DateTime.Now.AddMinutes( ++i * -25 ), Emails = new []{ "test@test.com" } },
           new Contact { Id = 9, FirstName = "testing", LastName = "Rivera", Created = DateTime.Now.AddMinutes( ++i * -25 ) },
           new Contact { Id = 10, FirstName = "zetest", LastName = "Kesako", Created =DateTime.Now.AddMinutes( ++i * -25 ) },
           new Contact { Id = 11, FirstName = "Super", LastName = "Mario", Created =DateTime.Now.AddMinutes( ++i * -25 ) },
@@ -133,6 +138,17 @@ namespace SimpleCRM.Data {
           new Company { Id = 2, Name = "Jin-K Empire" }
         );
       } );
+
+      builder.Entity<Address>( addressBuilder => {
+        addressBuilder.Property( c => c.Created ).HasDefaultValueSql( DefaultNowSql );
+        addressBuilder.Property( c => c.Main ).HasDefaultValue( false );
+        addressBuilder.HasData(
+          new Address { Id = 1, ContactId = 1, Street = "Avenue des Arts", Number = "4", Zip = "1040", City = "Brussels", Country = "BE" },
+          new Address { Id = 2, Name = "Planque", Main = true, ContactId = 1, Street = "Rue d'en dessous", Number = "11", Zip = "75000", City = "Paris", Country = "FR" },
+          new Address { Id = 3, Main = true, ContactId = 2, Street = "Chaussée des délires", Number = "357", Zip = "1337", City = "South Park", Country = "BE" },
+          new Address { Id = 4, Name = "QG", Main = true, CompanyId = 2, Street = "Place de la duchesse", Zip = "1080", City = "Brussels", Country = "BE" }
+        );
+      });
 
       builder.Entity<Action>( actionBuilder => {
         actionBuilder.Property( c => c.Created ).HasDefaultValueSql( DefaultNowSql );
