@@ -3,14 +3,14 @@
 > This repo is in development and is not supported ..
 
 ### Client
-- **@angular 6.1**
-- **@ngrx/platform 6**
-- **@aspnet/signalr**
+- **@angular 7 (7.1.x)**
+- **@ngrx/platform 7 (7.0.0-beta.1)**
+- **@aspnet/signalr (1.1.0)**
 
 ### Server
-- **ASP.NET Core 2.2**
-- **IdentityServer4**
-- **SignalR**
+- **ASP.NET Core 2.2 (2.2.100)**
+- **IdentityServer4 (2.3.0)**
+- **SignalR (1.1.0)**
 
 ------------
 
