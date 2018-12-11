@@ -7,8 +7,6 @@ import { MatMomentDateModule }                                      from '@angul
 import { MatButtonModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { TranslateModule }                                          from '@ngx-translate/core';
 
-import 'hammerjs';
-
 import {
   FuseProgressBarModule,
   FuseSidebarModule,

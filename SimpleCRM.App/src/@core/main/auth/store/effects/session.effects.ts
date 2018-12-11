@@ -1,5 +1,5 @@
 import { Injectable }                   from '@angular/core';
-import { Actions, Effect }              from '@ngrx/effects';
+import { Actions, Effect, ofType }      from '@ngrx/effects';
 import { Observable, of }               from 'rxjs';
 import { catchError, map }              from 'rxjs/operators';
 import { OidcSecurityService }          from 'angular-auth-oidc-client';
@@ -15,13 +15,15 @@ export class SessionEffect {
   ) {}
 
   @Effect()
-  authorized$: Observable<SessionActions.SessionStart> = this.actions$.ofType(UserActions.AUTHORIZATION_DONE).pipe(
+  authorized$: Observable<SessionActions.SessionStart> = this.actions$.pipe(
+    ofType(UserActions.AUTHORIZATION_DONE),
     map(_ => new SessionActions.SessionStart(this.oidcSecurityService.getToken())),
     catchError(error => of(error))
   );
 
   @Effect({dispatch: false})
-  sessionEnd$ = this.actions$.ofType(SessionActions.SESSION_END).pipe(
+  sessionEnd$ = this.actions$.pipe(
+    ofType(SessionActions.SESSION_END),
     map(_ => this.oidcSecurityService.logoff()),
     catchError(error => of(error))
   );

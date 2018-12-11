@@ -28,8 +28,7 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/pages"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
@@ -52,7 +51,14 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
@@ -89,7 +95,7 @@
             "assets": [
               "src/favicon.ico",
               "src/styles",
-              "src/images"
+              "src/assets"
             ]
           }
         },

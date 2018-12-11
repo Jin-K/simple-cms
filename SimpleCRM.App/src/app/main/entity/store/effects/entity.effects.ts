@@ -1,14 +1,15 @@
-import { Injectable }         from '@angular/core';
-import { Actions, Effect }    from '@ngrx/effects';
-import { of as observableOf } from 'rxjs';
+import { Injectable }               from '@angular/core';
+import { Actions, Effect, ofType }  from '@ngrx/effects';
+import { of as observableOf }       from 'rxjs';
 import {
   switchMap,
   map,
   catchError
-}                             from 'rxjs/operators';
-import { EntityService } from '../../entity.service';
-import * as entityActions from '../actions';
-import { IEntidad, IItem } from '../../../../models';
+}                                   from 'rxjs/operators';
+
+import { EntityService }            from '../../entity.service';
+import * as entityActions           from '../actions';
+import { IEntidad, IItem }          from '../../../../models';
 
 @Injectable()
 export class EntityEffects {
@@ -17,7 +18,8 @@ export class EntityEffects {
     private actions$: Actions
   ) { }
 
-  @Effect() getAllEntidades$ = this.actions$.ofType(entityActions.LOAD_ALL).pipe(
+  @Effect() getAllEntidades$ = this.actions$.pipe(
+    ofType(entityActions.LOAD_ALL),
     switchMap(
       () => this.entidadService.getAllEntities().pipe(
         map((data: IEntidad[]) => new entityActions.LoadAllComplete(data)),
@@ -26,7 +28,8 @@ export class EntityEffects {
     )
   );
 
-  @Effect() pagination$ = this.actions$.ofType(entityActions.PAGINATE).pipe(
+  @Effect() pagination$ = this.actions$.pipe(
+    ofType(entityActions.PAGINATE),
     switchMap((action: entityActions.Paginate) => this.entidadService.getAll(action.entity).pipe(
       map((response: any) => {
         const totalCount: number = JSON.parse(response.headers.get('X-Pagination')).totalCount;

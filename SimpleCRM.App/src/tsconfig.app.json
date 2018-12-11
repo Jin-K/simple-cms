@@ -1,13 +1,11 @@
 {
-  "extends": "../tsconfig.ngcli.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "module": "es2015",
-    "types": [ "node" ] // https://stackoverflow.com/a/39603502/7210166
+    "module": "es2015"
   },
   "exclude": [
-    "src/test.ts",
-    "**/*.spec.ts",
-    "**/main-aot.webpack.ts"
+    "test.ts",
+    "**/*.spec.ts"
   ]
 }
