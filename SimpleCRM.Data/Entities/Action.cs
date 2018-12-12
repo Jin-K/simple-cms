@@ -7,7 +7,10 @@ namespace SimpleCRM.Data.Entities {
     [Key]
     public int Id { get; set; }
 
+		public bool Active { get; set; } = true;
+
     [Required]
     public DateTime Created { get; set; } = System.DateTime.Now;
-  }
+    
+	}
 }

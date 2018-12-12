@@ -6,7 +6,7 @@ import { entitySelectors, entityActions }     from '../store';
 import { State }                              from 'app/store';
 
 @Injectable()
-export class EntitiesGuard implements CanActivate {
+export class EntitiesActivableGuard implements CanActivate {
 
   constructor(private store: Store<State>) { }
 

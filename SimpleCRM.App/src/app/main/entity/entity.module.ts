@@ -8,41 +8,83 @@ import { EntityEditComponent } from './edit/edit.component';
 import { ListDetailsComponent } from './list/list-details/list-details.component';
 import { EntityStoreModule } from './store/store.module';
 import { EntityService } from './entity.service';
-import { EntitiesGuard } from './guards/entities-can-activate.guard';
+import { EntitiesActivableGuard } from './guards/entities-can-activate.guard';
 import { PaginationModule } from '@core/pagination';
 import { ItemResolver } from './guards/item.resolver';
 import { EditDetailsComponent } from './edit/edit-details/edit-details.component';
 import { ConsultDetailsComponent } from './consult/consult-details/consult-details.component';
 
+/**
+ * Routes for the entity module
+ *
+ * @version 0.1
+ * @constant
+ * @type {Route[]}
+ */
 const routes: Route[] = [
-  { // if no matching route -> redirect to Contacts's items list
+
+  /**
+   * Base route, if no matching route -> redirect to Contacts's items list
+   * @name /entity
+   */
+  {
     path        : '',
     redirectTo  : 'Contacts',
     pathMatch   : 'full'
   },
-  { // entity's items list
+  /**
+   * @name /entity/:entity
+   * Entity's items list
+   * Could activate EntitiesActivableGuard to load entities
+   * @param {string} entity
+   */
+  {
     path        : ':entity',
     component   : EntityListComponent,
-    canActivate : [EntitiesGuard]
+    canActivate : [ EntitiesActivableGuard ]
   },
-  { // consult item
+  /**
+   * @name /entity/:entity/consult/:id
+   * Consult item.
+   * Could activate EntitiesActivableGuard to load entities
+   * Resolves data with ItemResolver
+   * @param {string} entity
+   * @param {string} id
+   */
+  {
     path        : ':entity/consult/:id',
     component   : EntityConsultComponent,
-    canActivate : [EntitiesGuard],
+    canActivate : [ EntitiesActivableGuard ],
     resolve     : { item: ItemResolver }
   },
-  { // edit item
+  /**
+   * @name /entity/:entity/edit/:id
+   * Edit item
+   * Could activate EntitiesActivableGuard to load entities
+   * Resolves data with ItemResolver
+   * @param {string} entity
+   * @param {string} id
+   */
+  {
     path        : ':entity/edit/:id',
     component   : EntityEditComponent,
-    canActivate : [EntitiesGuard],
+    canActivate : [ EntitiesActivableGuard ],
     resolve     : { item: ItemResolver }
   },
-  { // new item
+  /**
+   * @name /entity/:entity/edit
+   * New item
+   * Could activate EntitiesActivableGuard to load entities
+   * Resolves data with ItemResolver
+   * @param {string} entity
+   */
+  {
     path        : ':entity/edit',
     component   : EntityEditComponent,
-    canActivate : [EntitiesGuard],
+    canActivate : [ EntitiesActivableGuard ],
     resolve     : { item: ItemResolver }
   },
+
 ];
 
 @NgModule({
@@ -71,7 +113,7 @@ const routes: Route[] = [
     ConsultDetailsComponent
   ],
   providers: [
-    EntitiesGuard,
+    EntitiesActivableGuard,
     EntityService,
     ItemResolver
   ]

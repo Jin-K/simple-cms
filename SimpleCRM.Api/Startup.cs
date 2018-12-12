@@ -24,9 +24,13 @@ using SimpleCRM.Data;
 using SimpleCRM.Common;
 
 namespace SimpleCRM.Api {
+
+  /// <summary>
+  /// The main Startup class of SimpleCRM.Api
+  /// This method gets called by the runtime. Use this method to add services to the container
+  /// For more information on how to configure your application, visit <see href="https://go.microsoft.com/fwlink/?LinkID=398940" />
+  /// </summary>
   public class Startup {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
     public IConfigurationRoot Configuration { get; }
     IHostingEnvironment env { get; }
@@ -117,12 +121,9 @@ namespace SimpleCRM.Api {
           };
         });
 
-      services.AddAuthorization(options => { });
-
+      services.AddAuthorization();
       services.AddSignalR();
-      services.AddMvc(options => { }).AddJsonOptions(options =>
-        options.SerializerSettings.ContractResolver = new DefaultContractResolver()
-      );
+      services.AddMvc();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -150,4 +151,5 @@ namespace SimpleCRM.Api {
       });
     }
   }
+
 }
