@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SimpleCRM.Business.Models {
+namespace SimpleCRM.Api.Models {
   public class QueryParameters {
     const int MAX_PAGE_COUNT = 50;
 

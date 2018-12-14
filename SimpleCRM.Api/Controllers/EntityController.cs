@@ -1,13 +1,14 @@
-#region using statements
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SimpleCRM.Business.Models;
-using SimpleCRM.Business.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-#endregion
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+
+using SimpleCRM.Api.Models;
+using SimpleCRM.Business.Providers;
 
 namespace SimpleCRM.Api.Controllers {
 
@@ -54,11 +55,20 @@ namespace SimpleCRM.Api.Controllers {
     [Route( "all" )]
     public IActionResult GetAll([FromQuery] QueryParameters queryParameters) {
 
-      // get all items
-      List<Item> value = _entitiesStore.GetAll(queryParameters).ToList();
+      // pascal case of entity name
+      var entity = queryParameters.Query.ToUpperCaseFirst();
 
-      // count them
-      var allItemCount = _entitiesStore.Count(queryParameters.Query);
+      // get filtered and ordered items from store
+      List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetAll(
+        entity,
+        queryParameters.OrderBy,
+        queryParameters.Descending,
+        queryParameters.Page,
+        queryParameters.PageCount
+      ).ToList();
+
+      // count total existing items for an entity
+      var allItemCount = _entitiesStore.Count(entity);
 
       // create pagination meta json
       var paginationMetadata = new {
@@ -96,7 +106,7 @@ namespace SimpleCRM.Api.Controllers {
     public IActionResult GetItem([FromQuery] GetItemParameters getItemParameters) {
       
       // get item from store
-      var item = _entitiesStore.GetItemRaw(getItemParameters);
+      var item = _entitiesStore.GetItem(getItemParameters.Entity.ToUpperCaseFirst(), getItemParameters.Id);
 
       // return as json
       return Ok( item );

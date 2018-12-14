@@ -31,57 +31,39 @@ export interface EntitiesState extends EntityState<ItemsState> {
   current?: string;
 }
 
-/**
- * Entity adapter for items.
- *
- * @constant
- * @type {EntityAdapter<IItem>}
- * */
+// Entity adapter for items
 export const itemAdapter: EntityAdapter<IItem> = createEntityAdapter<IItem>();
 
-/**
- * Entity adapter for entities
- *
- * @constant
- * @type {EntityAdapter<ItemsState>}
- */
+// Entity adapter for entities
 export const entityAdapter: EntityAdapter<ItemsState> = createEntityAdapter<ItemsState>({
   selectId: entity => entity.name,
   sortComparer: false
 });
 
-/**
- * Initial entities state (state.entity)
- *
- * @constant
- * @type {EntitiesState}
- */
+// Initial entities state (state.entity)
 export const INITIAL_ENTITIES_STATE: EntitiesState = entityAdapter.getInitialState({
   loading: false,
   loaded: false
 });
 
 /**
- * Reducer for entities
+ * Reducer for entities (state.entity)
  *
  * @export
  * @param {EntitiesState} [state=INITIAL_ENTITIES_STATE] initial state.entity state before being reduced
  * @param {entityActions.EntityActions} action action to reduce (or not if not related to entities)
  * @returns {EntitiesState} reduced state.entity state
  */
-export function entityReducer(
-  state: EntitiesState = INITIAL_ENTITIES_STATE,
-  action: entityActions.EntityActions
-): EntitiesState {
+export function entityReducer(state: EntitiesState = INITIAL_ENTITIES_STATE, action: entityActions.EntityActions): EntitiesState {
 
   // check if it is an entity-related action
   switch (action.type) {
 
-    // All main entities loaded
+    /** LOAD_ALL_COMPLETE: All main entities loaded */
     case entityActions.LOAD_ALL_COMPLETE:
       return _addEntidades(state, action.entidades);
 
-    // paginated with success
+    /** PAGINATE_SUCCESS: paginated with success */
     case entityActions.PAGINATE_SUCCESS:
 
       // shallow copy of state.entities
@@ -107,7 +89,7 @@ export function entityReducer(
       // return deep copy of state.entity
       return Object.assign({}, state, { entities, current: action.entity });
 
-    // not related to entities
+    /** DEFAULT: not related to entities */
     default:
       return state;
 

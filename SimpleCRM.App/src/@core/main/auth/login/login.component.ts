@@ -14,19 +14,29 @@ import { AuthService }                                from '../auth.service';
 const APPLICATION_ORIGIN  = 'APPLICATION_ORIGIN_';
 const STS_ORIGIN          = 'STS_ORIGIN_';
 
+/**
+ * The main LoginComponent class
+ *
+ * @export
+ * @class LoginComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   animations: fuseAnimations
 })
 export class LoginComponent implements OnInit, OnDestroy {
+
   // Private
   private iFrame: HTMLIFrameElement;
   private popupWindow: {wnd: Window, external: string} = {wnd: null, external: ''};
   private _unsubscribeAll: Subject<any>;
   private progressBarBufferValue: number;
-  
+
   // Public
   loginForm: FormGroup;
 
@@ -83,13 +93,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       Password: ['', Validators.required],
       RememberMe: false
     });
-    
+
     // subscribe to the progress bar service Buffer value property
     this.fuseProgressBarService.bufferValue
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe(bufferValue => this.progressBarBufferValue = bufferValue);
   }
-  
+
   /**
    * On destroy
    */
@@ -102,7 +112,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods
   // -----------------------------------------------------------------------------------------------------
-  
+
   /**
    * Add an Iframe to body of the main window
    * ref: https://github.com/damienbod/angular-auth-oidc-client/blob/master/src/services/existing-iframe.service.ts
@@ -131,28 +141,29 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Login with form
    */
   login(): void {
+
     // show progress bar
     this.fuseProgressBarService.setMode('buffer');
     this.fuseProgressBarService.show();
-    
+
     // if not defined yet
     if (!this.iFrame) {
-      
+
       // create iframe
       this.iFrame = this.getOrCreateWindowBodyIframe();
-      
+
       // load content of login page in the iframe
       this.oidcSecurityService.authorize((url: string) => {
-      
+
         // clear buffered progress bar value the first time
         this.fuseProgressBarService.setBufferValue(0);
-        
+
         // load
         this.iFrame.src = url;
-        
+
         // on load
         this.iFrame.onload = () => {
-          
+
           // if onload of get request (in iframe)
           if (this.iFrame.contentDocument === null) {
 
@@ -165,16 +176,20 @@ export class LoginComponent implements OnInit, OnDestroy {
             // unsubscrive from onload
             this.iFrame.onload = null;
           }
-        }
+        };
       });
     }
     else {
+
       // request a login
       this.iFrame.contentWindow.postMessage({
         action: 'login',
         message: this.loginForm.value
       }, '*');
     }
+
+    return;
+
   }
 
   /**
@@ -185,15 +200,15 @@ export class LoginComponent implements OnInit, OnDestroy {
     // show progress bar
     this.fuseProgressBarService.setMode('indeterminate');
     this.fuseProgressBarService.show();
-    
+
     // load content of login page in a new popup window
     this.oidcSecurityService.authorize((url: string) => {
 
       // clear iFrame if one exists to create a new one if we try to log in via the basic form again, otherwise the token validation will fail
-      this.iFrame = null
+      this.iFrame = null;
 
       // open new window
-      const wnd = window.open(url, "_blank", "toolbar=0,location=0,menubar=0,width=640,height=480");
+      const wnd = window.open(url, '_blank', 'toolbar=0,location=0,menubar=0,width=640,height=480');
 
       // check regulary if closed (750 ms)
       const timer = setInterval(() => {
@@ -227,30 +242,32 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     // determine if it comes from one of the expected origins
     let origin_type: string;
+    // tslint:disable-next-line:no-bitwise
     if (~event.origin.indexOf('https://localhost:44300') || ~event.origin.indexOf('http://localhost:4200'))
       origin_type = APPLICATION_ORIGIN;
+    // tslint:disable-next-line:no-bitwise
     else if (~event.origin.indexOf('https://localhost:44321') || ~event.origin.indexOf('http://localhost:50772'))
       origin_type = STS_ORIGIN;
     else return;
 
     // react to the type of action
-    switch(origin_type + event.data.action) {
-      
+    switch (origin_type + event.data.action) {
+
       // if coming from same origin (auth_callback.html)
       case `${APPLICATION_ORIGIN}hash`:
 
         // reset angular-auth-oidc-client configuration with new returnUrl ...
-        const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl']
+        const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'];
         if (returnUrl) this.authService.resetPostLoginRoute(returnUrl);
 
         // run callback for authorization with received token
         this.oidcSecurityService.authorizedCallback(event.data.message);
 
         // handle progress bar if trying to login via iFrame
-        if (this.iFrame !== null && this.progressBarBufferValue === 2/3 * 100) {
+        if (this.iFrame !== null && this.progressBarBufferValue === 2 / 3 * 100) {
 
           // complete progress bar
-          this.fuseProgressBarService.setBufferValue(3/3 * 100);
+          this.fuseProgressBarService.setBufferValue(3 / 3 * 100);
 
           // hide it after 750ms
           const timer = setTimeout(() => {
@@ -270,19 +287,19 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
 
         return;
-      
+
       // if coming from sts server and says a page loaded
       case `${STS_ORIGIN}loaded`:
 
         // if iframe exists, increment progress bar buffer if required
         if (this.iFrame) {
-          switch(this.progressBarBufferValue) {
-            
+          switch (this.progressBarBufferValue) {
+
             // if first load
-            case 0          : this.fuseProgressBarService.setBufferValue(1/3 * 100); break;
+            case 0          : this.fuseProgressBarService.setBufferValue(1 / 3 * 100); break;
 
             // later loads (post requests, login attempts)
-            case 1/3 * 100  : this.fuseProgressBarService.setBufferValue(2/3 * 100); break;
+            case 1 / 3 * 100  : this.fuseProgressBarService.setBufferValue(2 / 3 * 100); break;
           }
         }
 
@@ -297,16 +314,16 @@ export class LoginComponent implements OnInit, OnDestroy {
 
       // if coming from sts server and enumerates the validation errors
       case `${STS_ORIGIN}validation_errors`:
-        
+
         // add error to the form validation controls
         this.loginForm.controls['Password'].setErrors({'message': event.data.message[0]});
 
         // hide progress bar and reset buffer to 1/3 because the iframe is already loaded
         this.fuseProgressBarService.hide();
-        this.fuseProgressBarService.setBufferValue(1/3 * 100);
+        this.fuseProgressBarService.setBufferValue(1 / 3 * 100);
 
         return;
-        
+
     }
   }
 }

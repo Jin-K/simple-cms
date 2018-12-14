@@ -1,15 +1,11 @@
-﻿#region using statements
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SimpleCRM.Business.Models;
+using SimpleCRM.Data;
 using SimpleCRM.Data.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-
-using SimpleCRM.Business.Extensions;
-using SimpleCRM.Data;
-#endregion
 
 namespace SimpleCRM.Business.Providers {
 
@@ -25,7 +21,7 @@ namespace SimpleCRM.Business.Providers {
     /// <seealso cref="EntitiesStore.EntitiesStore(CrmContext)" />
     /// </summary>
     readonly CrmContext _crmContext;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -61,58 +57,78 @@ namespace SimpleCRM.Business.Providers {
     /// <param name="entity">entity name</param>
     /// <returns>Returns the count</returns>
     public int Count(string entity)
-    => _crmContext.AsGenericQueryableSet<object>(entity.UppercaseFirst()).Count();
+    => _crmContext.AsQueryable<object>( entity ).Count();
 
     /// <summary>
     /// Get all entity items filtered by <paramref name="queryParameters"/>
     /// </summary>
-    /// <param name="queryParameters">query and filter parameters</param>
+    /// <param name="entity">Entity name for items</param>
+    /// <param name="orderBy">Column name for ordering</param>
+    /// <param name="descending">True if ordered descending</param>
+    /// <param name="page">Page number</param>
+    /// <param name="pageCount">Items amount to take</param>
     /// <returns>Returns an ordered chunk of items as a generic <see cref="IEnumerable" /> of <see cref="Item" /></returns>
-    public IEnumerable<Item> GetAll(QueryParameters queryParameters) {
+    public IEnumerable<Item> GetAll(string entity, string orderBy, bool descending, int page, int pageCount) {
 
-      // store entity in variable
-      string entity = queryParameters.Query;
-
-      // call special reflection method to get all items of desired table (one of CrmContext's DbSet<> properties)
-      IQueryable<IEntidad> _allItems = _crmContext.AsGenericQueryableSet<IEntidad>(entity);
+			// call special reflection method to get all items of desired table (one of CrmContext's DbSet<> properties)
+      IQueryable<IEntidad> _allItems = _crmContext.AsQueryable<IEntidad>( entity );
 
       // if not trying to order on column "active" (I think this column had an issue with ordering)
-      if (!queryParameters.OrderBy.StartsWith("active")) {
+      if (!orderBy.StartsWith("active")) {
 
         // order by desired column, descending or not
-        _allItems = _allItems.OrderBy( queryParameters.OrderBy, queryParameters.Descending );
+        _allItems = _allItems.OrderBy( orderBy, descending );
       }
 
       // return all items starting from ordered query of IEntidad objects
       return _allItems
 
         // skip calculated amount depending on PageCount and Page
-        .Skip( queryParameters.PageCount * ( queryParameters.Page - 1 ) )
+        .Skip( pageCount * ( page - 1 ) )
 
         // take amount depending on PageCount
-        .Take( queryParameters.PageCount )
+        .Take( pageCount )
 
         // cast IEntidad object to Item object
         .Select( Item.FromEntidad );
+
     }
 
     /// <summary>
-    /// Gets an entity item depending on <paramref name="getItemParameters" />.
-    /// 
-    /// TODO: Recursively delete everything (Item.FromEntidad, ...) from here if it is not usefull
+    /// Gets an entity item depending on <paramref name="entityName" /> and <paramref name="id" />
     /// </summary>
-    /// <param name="getItemParameters">query and find parameters</param>
-    /// <returns>Returns a <see cref="Item" /></returns>
-    public Item GetItem(GetItemParameters getItemParameters)
-    => Item.FromEntidad(_crmContext.FindById<IEntidad>( getItemParameters.Id, getItemParameters.Entity.UppercaseFirst()));
-
-    /// <summary>
-    /// Gets an entity item depending on <paramref name="getItemParameters" />
-    /// </summary>
-    /// <param name="getItemParameters">query and find parameters</param>
+    /// <param name="entityName">Entity name for items</param>
+    /// <param name="id">Id of item</param>
+    /// <param name="loadRelatedData">Do we need to load related data ?</param>
     /// <returns>Returns a raw <see cref="IEntidad" /> object</returns>
-    public IEntidad GetItemRaw(GetItemParameters getItemParameters)
-    => _crmContext.FindById<IEntidad>( getItemParameters.Id, getItemParameters.Entity.UppercaseFirst());
+    public IEntidad GetItem(string entityName, int id, bool loadRelatedData = false) {;
+
+      // prepare query
+      var query = $"select * from dbo.{entityName} where dbo.{entityName}.id = {id}";
+
+      // get type of entity (deprecated: type result is not cached)
+      var entityType = _crmContext.GetEntityType(entityName);
+
+      // get appropriate DbSet<TEntity> as IQueryable<TEntity>
+      var set = _crmContext.Query<IEntidad>(entityType);
+
+      // filter on id
+      set = set.FromSql( query );
+
+      // search for properties with "InversePropertyAttribute" in entity type ==> they are includable
+      var allLoadablePropertyNames = entityType.AllLoadablePropertyNames();
+
+      // iterate over entityType's properties and search for properties with "InversePropertyAttribute"
+      foreach(var propertyName in allLoadablePropertyNames) { 
+
+        // include that property
+        set = set.Include( propertyName );
+      }
+      
+      // return item
+      return set.FirstOrDefault();
+
+    }    
 
   }
 

@@ -7,5 +7,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimpleCRM.Data\SimpleCRM.Data.csproj"/>
+    <ProjectReference Include="..\SimpleCRM.Common\SimpleCRM.Common.csproj"/>
   </ItemGroup>
 </Project>

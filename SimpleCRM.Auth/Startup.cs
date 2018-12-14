@@ -1,4 +1,5 @@
 using System.Reflection;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,6 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Serilog;
 using SimpleCRM.Auth.Services;
-using SimpleCRM.Data.Extensions;
 using SimpleCRM.Data;
 using SimpleCRM.Auth.Stores;
 using SimpleCRM.Auth.Configuration;
@@ -18,7 +18,7 @@ using SimpleCRM.Auth.Extensions;
 using SimpleCRM.Common;
 
 namespace SimpleCRM.Auth {
-  public class Startup {
+	public class Startup {
     public IConfigurationRoot Configuration { get; }
     readonly IHostingEnvironment _environment;
     string _clientId = "";
