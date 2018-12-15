@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, Renderer2, RendererStyleFlags2, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output, Renderer2, ViewEncapsulation
+} from '@angular/core';
 import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Subject } from 'rxjs';
@@ -172,7 +174,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
             this._renderer.setStyle(this._elementRef.nativeElement, 'max-width', styleValue);
 
             // Set the style and class
-            this._renderer.setStyle(sibling, styleRule, styleValue, RendererStyleFlags2.Important + RendererStyleFlags2.DashCase);
+            this._renderer.setStyle(sibling, styleRule, styleValue);
             this._renderer.addClass(this._elementRef.nativeElement, 'folded');
         }
         // If unfolded...
@@ -433,7 +435,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
         this._renderer.setStyle(this._elementRef.nativeElement, 'max-width', styleValue);
 
         // Set the style and class
-        this._renderer.setStyle(sibling, styleRule, styleValue, RendererStyleFlags2.Important + RendererStyleFlags2.DashCase);
+        this._renderer.setStyle(sibling, styleRule, styleValue);
         this._renderer.addClass(this._elementRef.nativeElement, 'folded');
     }
 

@@ -36,6 +36,9 @@ fuse-sidebar {
 
                         .user {
                             padding: 12px 0;
+                            height: 64px;
+                            min-height: 64px;
+                            max-height: 64px;
 
                             .avatar-container {
                                 position: relative;
@@ -57,7 +60,20 @@ fuse-sidebar {
                         }
 
                         .navbar-content {
-                            margin-top: 0;
+                            padding-top: 0;
+
+                            // Material 2 specific style
+                            .material2 {
+
+                                .nav-item {
+
+                                    .nav-link {
+                                        border-radius: 20px;
+                                        margin: 0 12px;
+                                        padding: 0 12px;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -134,6 +150,9 @@ navbar {
         }
 
         .navbar-scroll-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
 
@@ -150,6 +169,9 @@ navbar {
                 align-items: center;
                 justify-content: flex-start;
                 width: 100%;
+                height: 136px;
+                min-height: 136px;
+                max-height: 136px;
                 padding: 24px 0 64px 0;
 
                 .avatar-container {
@@ -170,7 +192,7 @@ navbar {
 
             .navbar-content {
                 flex: 1 1 auto;
-                margin-top: 32px;
+                padding-top: 32px;
             }
         }
     }

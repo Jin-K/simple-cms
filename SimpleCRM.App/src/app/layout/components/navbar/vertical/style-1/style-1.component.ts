@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router }                                      from '@angular/router';
 import { Subject, Observable }                                        from 'rxjs';
-import { filter, take, takeUntil }                                    from 'rxjs/operators';
+import { filter, take, takeUntil, delay }                             from 'rxjs/operators';
 import { Store }                                                      from '@ngrx/store';
 
 import { FuseConfigService }                                          from '@fuse/services/config.service';
@@ -19,6 +19,7 @@ import { AuthState, UserSelectors }                                   from '@cor
   encapsulation: ViewEncapsulation.None
 })
 export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
+
   // Public
   fuseConfig: any;
   fusePerfectScrollbarUpdateTimeout: any;
@@ -67,11 +68,12 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
 
     // Update the scrollbar on collapsable item toggle
     this._fuseNavigationService.onItemCollapseToggled
-        .pipe(takeUntil(this._unsubscribeAll))
+        .pipe(
+          delay(500),
+          takeUntil(this._unsubscribeAll)
+        )
         .subscribe(() => {
-          this.fusePerfectScrollbarUpdateTimeout = setTimeout(() => {
             this._fusePerfectScrollbar.update();
-          }, 310);
         });
 
     // Scroll to the active item position
@@ -136,10 +138,6 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
    * On destroy
    */
   ngOnDestroy(): void {
-    if (this.fusePerfectScrollbarUpdateTimeout) {
-      clearTimeout(this.fusePerfectScrollbarUpdateTimeout);
-    }
-
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();

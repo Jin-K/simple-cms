@@ -51,7 +51,7 @@ export const INITIAL_ENTITIES_STATE: EntitiesState = entityAdapter.getInitialSta
  *
  * @export
  * @param {EntitiesState} [state=INITIAL_ENTITIES_STATE] initial state.entity state before being reduced
- * @param {entityActions.EntityActions} action action to reduce (or not if not related to entities)
+ * @param {EntityActions} action action to reduce (or not if not related to entities)
  * @returns {EntitiesState} reduced state.entity state
  */
 export function entityReducer(state: EntitiesState = INITIAL_ENTITIES_STATE, action: entityActions.EntityActions): EntitiesState {

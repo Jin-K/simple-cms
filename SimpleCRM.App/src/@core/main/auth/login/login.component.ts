@@ -1,15 +1,15 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators }         from '@angular/forms';
-import { ActivatedRoute }                             from '@angular/router';
-import { Subject }                                    from 'rxjs';
-import { takeUntil }                                  from 'rxjs/operators';
-import { OidcSecurityService }                        from 'angular-auth-oidc-client';
+import { Component, OnInit, HostListener, OnDestroy, ViewEncapsulation }  from '@angular/core';
+import { FormBuilder, FormGroup, Validators }                             from '@angular/forms';
+import { ActivatedRoute }                                                 from '@angular/router';
+import { Subject }                                                        from 'rxjs';
+import { takeUntil }                                                      from 'rxjs/operators';
+import { OidcSecurityService }                                            from 'angular-auth-oidc-client';
 
-import { fuseAnimations }                             from '@fuse/animations';
-import { FuseProgressBarService }                     from '@fuse/components/progress-bar/progress-bar.service';
-import { FuseConfigService }                          from '@fuse/services/config.service';
+import { fuseAnimations }                                                 from '@fuse/animations';
+import { FuseProgressBarService }                                         from '@fuse/components/progress-bar/progress-bar.service';
+import { FuseConfigService }                                              from '@fuse/services/config.service';
 
-import { AuthService }                                from '../auth.service';
+import { AuthService }                                                    from '../auth.service';
 
 const APPLICATION_ORIGIN  = 'APPLICATION_ORIGIN_';
 const STS_ORIGIN          = 'STS_ORIGIN_';
@@ -27,6 +27,7 @@ const STS_ORIGIN          = 'STS_ORIGIN_';
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 export class LoginComponent implements OnInit, OnDestroy {

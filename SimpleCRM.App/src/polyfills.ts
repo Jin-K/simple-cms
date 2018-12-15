@@ -11,7 +11,7 @@
  * automatically update themselves. This includes Safari >= 10, Chrome >= 55 (including Opera),
  * Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
  *
- * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
+ * Learn more in https://angular.io/guide/browser-support
  */
 
 /***************************************************************************************************
@@ -34,6 +34,11 @@ import 'core-js/es6/map';
 import 'core-js/es6/weak-map';
 import 'core-js/es6/set';
 
+/**
+ * If the application will be indexed by Google Search, the following is required.
+ * Googlebot uses a renderer based on Chrome 41.
+ * https://developers.google.com/search/docs/guides/rendering
+ **/
 import 'core-js/es7/array';
 
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
@@ -76,11 +81,6 @@ import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 import 'zone.js/dist/zone';  // Included with Angular CLI.
 
 
-/*****
- * Some other IE-fixes (imports, polyfills)
- */
-import 'isomorphic-fetch';
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
@@ -95,3 +95,8 @@ if ( typeof SVGElement.prototype.contains === 'undefined' )
 {
     SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
 }
+
+/**
+ * Some other IE-fixes (imports, polyfills)
+ */
+import 'isomorphic-fetch';

@@ -1,6 +1,6 @@
 @import "src/@fuse/scss/fuse";
 
-:host {
+toolbar {
     position: relative;
     display: flex;
     flex: 0 0 auto;
@@ -12,8 +12,8 @@
 
     .mat-toolbar {
         position: relative;
-        background: inherit;
-        color: inherit;
+        background: inherit !important;
+        color: inherit !important;
     }
 
     .logo {
@@ -33,7 +33,7 @@
         min-width: 64px;
         height: 64px;
 
-        @include media-breakpoint-down('xs') {
+        @include media-breakpoint('xs') {
             height: 56px;
         }
     }
@@ -46,9 +46,8 @@
     .toolbar-separator {
         height: 64px;
         width: 1px;
-        background: rgba(0, 0, 0, .12);
 
-        @include media-breakpoint-down('xs') {
+        @include media-breakpoint('xs') {
             height: 56px;
         }
     }

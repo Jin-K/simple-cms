@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { delay, filter, take, takeUntil } from 'rxjs/operators';
 
+import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
@@ -15,7 +16,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 })
 export class NavbarVerticalStyle2Component implements OnInit, OnDestroy
 {
-    fusePerfectScrollbarUpdateTimeout: any;
+    fuseConfig: any;
     navigation: any;
 
     // Private
@@ -25,11 +26,13 @@ export class NavbarVerticalStyle2Component implements OnInit, OnDestroy
     /**
      * Constructor
      *
+     * @param {FuseConfigService} _fuseConfigService
      * @param {FuseNavigationService} _fuseNavigationService
      * @param {FuseSidebarService} _fuseSidebarService
      * @param {Router} _router
      */
     constructor(
+        private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService,
         private _router: Router
@@ -56,11 +59,12 @@ export class NavbarVerticalStyle2Component implements OnInit, OnDestroy
 
         // Update the scrollbar on collapsable item toggle
         this._fuseNavigationService.onItemCollapseToggled
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(
+                delay(500),
+                takeUntil(this._unsubscribeAll)
+            )
             .subscribe(() => {
-                this.fusePerfectScrollbarUpdateTimeout = setTimeout(() => {
-                    this._fusePerfectScrollbar.update();
-                }, 310);
+                this._fusePerfectScrollbar.update();
             });
 
         // Scroll to the active item position
@@ -117,6 +121,13 @@ export class NavbarVerticalStyle2Component implements OnInit, OnDestroy
             .subscribe(() => {
                 this.navigation = this._fuseNavigationService.getCurrentNavigation();
             });
+
+        // Subscribe to the config changes
+        this._fuseConfigService.config
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+                this.fuseConfig = config;
+            });
     }
 
     /**
@@ -124,11 +135,6 @@ export class NavbarVerticalStyle2Component implements OnInit, OnDestroy
      */
     ngOnDestroy(): void
     {
-        if ( this.fusePerfectScrollbarUpdateTimeout )
-        {
-            clearTimeout(this.fusePerfectScrollbarUpdateTimeout);
-        }
-
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

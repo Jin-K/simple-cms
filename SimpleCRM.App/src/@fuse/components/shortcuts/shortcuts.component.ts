@@ -70,9 +70,7 @@ export class FuseShortcutsComponent implements OnInit, OnDestroy
         // Get the navigation items and flatten them
         this.filteredNavigationItems = this.navigationItems = this._fuseNavigationService.getFlatNavigation(this.navigation);
 
-        const cookieExists = this._cookieService.check('FUSE2.shortcuts');
-
-        if ( cookieExists )
+        if ( this._cookieService.check('FUSE2.shortcuts') )
         {
             this.shortcutItems = JSON.parse(this._cookieService.get('FUSE2.shortcuts'));
         }
@@ -107,6 +105,7 @@ export class FuseShortcutsComponent implements OnInit, OnDestroy
             ];
         }
 
+        // Subscribe to media changes
         this._fuseMatchMediaService.onMediaChange
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() => {

@@ -1,6 +1,7 @@
 import { MediaChange, ObservableMedia } from '@angular/flex-layout';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +39,11 @@ export class FuseMatchMediaService
      */
     private _init(): void
     {
-        this._observableMedia
+        this._observableMedia.asObservable()
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged()
+            )
             .subscribe((change: MediaChange) => {
                 if ( this.activeMediaQuery !== change.mqAlias )
                 {

@@ -1,20 +1,15 @@
 {
   "name": "simple-crm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 44300 --ssl true",
+    "serve-without-ssl": "ng serve",
     "build": "ng build",
+
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build-dev": "npm run webpack-dev",
-    "build-production": "npm run webpack-production",
-    "serve-without-ssl": "ng serve",
-    "watch-webpack-dev": "webpack --env=dev --watch --color",
-    "watch-webpack-production": "webpack --env=prod --watch --color",
-    "webpack-dev": "webpack --env=dev",
-    "webpack-production": "webpack --env=prod"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -45,11 +40,11 @@
     "core-js": "^2.6.0",
     "hammerjs": "^2.0.8",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.10",
+    "lodash": "4.17.11",
     "moment": "^2.22.2",
     "ng2-charts": "^1.6.0",
     "ngrx-store-freeze": "^0.2.4",
-    "ngx-cookie-service": "^1.0.10",
+    "ngx-cookie-service": "2.0.0",
     "perfect-scrollbar": "^1.4.0",
     "prismjs": "^1.15.0",
     "rxjs": "^6.3.3",
@@ -78,7 +73,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "protractor": "^5.4.1",
     "rxjs-tslint": "^0.1.6",
-    "ts-node": "^7.0.0",
+    "ts-node": "7.0.1",
     "tslint": "^5.11.0",
     "typescript": "3.1.6"
   },

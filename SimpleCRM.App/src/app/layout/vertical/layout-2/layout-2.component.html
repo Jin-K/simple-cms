@@ -96,14 +96,16 @@
 <!-- TOOLBAR -->
 <ng-template #toolbar>
     <toolbar *ngIf="!fuseConfig.layout.toolbar.hidden"
-             [ngClass]="[fuseConfig.layout.toolbar.position, fuseConfig.layout.toolbar.background]"></toolbar>
+             [ngClass]="fuseConfig.layout.toolbar.customBackgroundColor === true ? fuseConfig.layout.toolbar.position + ' ' + fuseConfig.layout.toolbar.background : fuseConfig.layout.toolbar.position">
+    </toolbar>
 </ng-template>
 <!-- / TOOLBAR -->
 
 <!-- FOOTER -->
 <ng-template #footer>
     <footer *ngIf="!fuseConfig.layout.footer.hidden"
-            [ngClass]="[fuseConfig.layout.footer.position, fuseConfig.layout.footer.background]"></footer>
+            [ngClass]="fuseConfig.layout.footer.customBackgroundColor === true ? fuseConfig.layout.footer.position + ' ' + fuseConfig.layout.footer.background : fuseConfig.layout.footer.position">
+    </footer>
 </ng-template>
 <!-- / FOOTER -->
 
@@ -113,8 +115,7 @@
                   [folded]="fuseConfig.layout.navbar.folded"
                   lockedOpen="gt-md"
                   *ngIf="!fuseConfig.layout.navbar.hidden">
-        <navbar [variant]="fuseConfig.layout.navbar.variant"
-                class="left-navbar" [ngClass]="fuseConfig.layout.navbar.background"></navbar>
+        <navbar [variant]="fuseConfig.layout.navbar.variant" class="left-navbar"></navbar>
     </fuse-sidebar>
 </ng-template>
 <!-- / LEFT NAVBAR -->
@@ -125,8 +126,7 @@
                   [folded]="fuseConfig.layout.navbar.folded"
                   lockedOpen="gt-md"
                   *ngIf="!fuseConfig.layout.navbar.hidden">
-        <navbar [variant]="fuseConfig.layout.navbar.variant"
-                class="right-navbar" [ngClass]="fuseConfig.layout.navbar.background"></navbar>
+        <navbar [variant]="fuseConfig.layout.navbar.variant" class="right-navbar"></navbar>
     </fuse-sidebar>
 </ng-template>
 <!-- / RIGHT NAVBAR -->

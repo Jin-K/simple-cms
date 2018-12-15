@@ -1,14 +1,91 @@
-// Page Layouts
+// -----------------------------------------------------------------------------------------------------
+// @ Theming
+// -----------------------------------------------------------------------------------------------------
+@mixin page-layouts-theme($theme) {
+
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    .page-layout {
+
+        // Carded layout
+        &.carded {
+
+            // Fullwidth
+            &.fullwidth {
+
+                > .center {
+
+                    > .content-card {
+                        background: map-get($background, card);
+                        border-radius: 8px 8px 0 0;
+
+                        > .toolbar {
+                            border-bottom-color: map-get($foreground, divider);
+                        }
+                    }
+                }
+            }
+
+            // Left / Right sidebar
+            &.left-sidebar,
+            &.right-sidebar {
+
+                > .center {
+
+                    > .content-card {
+                        background: map-get($background, card);
+                        border-radius: 8px 8px 0 0;
+
+                        > .toolbar {
+                            border-bottom-color: map-get($foreground, divider);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Simple layout
+        &.simple {
+
+            // Left / Right sidebar
+            &.left-sidebar,
+            &.right-sidebar {
+
+                > .center {
+
+                    > .content {
+                        background: map-get($background, card);
+                    }
+                }
+
+                // Inner sidebar
+                &.inner-sidebar {
+
+                    > .content {
+
+                        > .center {
+
+                            > .content {
+                                background: map-get($background, card);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Page Layouts
+// -----------------------------------------------------------------------------------------------------
 $carded-header-height: 200px !default;
-$carded-header-height-sm: 160px !default;
 $carded-toolbar-height: 64px !default;
-
 $header-height: 120px !default;
-$header-height-sm: 100px !default;
 
-// Calculate toolbarless header height
+// Calculate toolbar-less carded header height
 $carded-header-height-without-toolbar: $carded-header-height - $carded-toolbar-height;
-$carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-toolbar-height;
 
 .page-layout {
     position: relative;
@@ -30,10 +107,6 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
             right: 0;
             left: 0;
             height: $carded-header-height;
-
-            @include media-breakpoint-down('sm') {
-                height: $carded-header-height-sm;
-            }
         }
 
         // Fullwidth
@@ -50,18 +123,13 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                 width: 100%;
                 min-width: 0;
                 max-width: 100%;
+                height: 100%;
                 max-height: 100%;
 
                 > .header {
                     height: $carded-header-height-without-toolbar !important;
                     min-height: $carded-header-height-without-toolbar !important;
                     max-height: $carded-header-height-without-toolbar !important;
-
-                    @include media-breakpoint-down('sm') {
-                        height: $carded-header-height-without-toolbar-sm !important;
-                        min-height: $carded-header-height-without-toolbar-sm !important;
-                        max-height: $carded-header-height-without-toolbar-sm !important;
-                    }
                 }
 
                 > .content-card {
@@ -69,13 +137,13 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                     flex-direction: column;
                     flex: 1 0 auto;
                     overflow: hidden;
-                    @include mat-elevation(7);
+                    @include mat-elevation(1);
 
                     > .toolbar {
                         display: flex;
                         justify-content: flex-start;
                         align-items: center;
-                        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                        border-bottom: 1px solid;
                         height: $carded-toolbar-height;
                         min-height: $carded-toolbar-height;
                         max-height: $carded-toolbar-height;
@@ -223,12 +291,6 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                     height: $carded-header-height;
                     min-height: $carded-header-height;
                     max-height: $carded-header-height;
-
-                    @include media-breakpoint-down('sm') {
-                        height: $carded-header-height-sm;
-                        min-height: $carded-header-height-sm;
-                        max-height: $carded-header-height-sm;
-                    }
                 }
 
                 .content {
@@ -246,6 +308,7 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                 z-index: 3;
                 margin-left: 32px;
                 margin-right: 32px;
+                width: 100%;
                 min-width: 0;
 
                 > .header {
@@ -253,12 +316,6 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                     height: $carded-header-height-without-toolbar;
                     min-height: $carded-header-height-without-toolbar;
                     max-height: $carded-header-height-without-toolbar;
-
-                    @include media-breakpoint-down('sm') {
-                        height: $carded-header-height-without-toolbar-sm;
-                        min-height: $carded-header-height-without-toolbar-sm;
-                        max-height: $carded-header-height-without-toolbar-sm;
-                    }
                 }
 
                 > .content-card {
@@ -266,14 +323,14 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                     flex-direction: column;
                     flex: 1 1 auto;
                     overflow: hidden;
-                    @include mat-elevation(7);
+                    @include mat-elevation(1);
 
                     > .toolbar {
                         display: flex;
                         justify-content: flex-start;
                         align-items: center;
                         flex: 1 1 auto;
-                        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                        border-bottom: 1px solid;
                         height: $carded-toolbar-height;
                         min-height: $carded-toolbar-height;
                         max-height: $carded-toolbar-height;
@@ -298,7 +355,7 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                     width: calc(100% - 32px);
                     min-width: 0;
 
-                    @include media-breakpoint-down('md') {
+                    @include media-breakpoint('lt-lg') {
                         width: calc(100% - 64px);
                     }
 
@@ -484,7 +541,8 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                 flex: 1 1 auto;
                 z-index: 3;
                 min-width: 0;
-                @include mat-elevation(7);
+                width: 100%;
+                @include mat-elevation(1);
 
                 > .header {
                     height: $header-height;
@@ -516,7 +574,7 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                 }
             }
 
-            // Inner Sidebar
+            // Inner sidebar
             &.inner-sidebar {
                 flex-direction: column;
                 overflow: hidden;
@@ -543,6 +601,11 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
                         flex: 1 1 auto;
                         overflow: auto;
                         -webkit-overflow-scrolling: touch;
+
+                        > .content {
+                            border-radius: 8px;
+                            @include mat-elevation(1);
+                        }
                     }
                 }
             }
@@ -603,7 +666,7 @@ $carded-header-height-without-toolbar-sm: $carded-header-height-sm - $carded-too
         min-height: 100%;
     }
 
-    @include media-breakpoint-down('xs') {
+    @include media-breakpoint('xs') {
 
         // Smaller margins
         &.carded {

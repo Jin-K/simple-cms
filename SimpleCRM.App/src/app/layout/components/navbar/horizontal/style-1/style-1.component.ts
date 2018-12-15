@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
@@ -13,6 +14,7 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 })
 export class NavbarHorizontalStyle1Component implements OnInit, OnDestroy
 {
+    fuseConfig: any;
     navigation: any;
 
     // Private
@@ -21,10 +23,12 @@ export class NavbarHorizontalStyle1Component implements OnInit, OnDestroy
     /**
      * Constructor
      *
+     * @param {FuseConfigService} _fuseConfigService
      * @param {FuseNavigationService} _fuseNavigationService
      * @param {FuseSidebarService} _fuseSidebarService
      */
     constructor(
+        private _fuseConfigService: FuseConfigService,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseSidebarService: FuseSidebarService
     )
@@ -50,6 +54,13 @@ export class NavbarHorizontalStyle1Component implements OnInit, OnDestroy
             )
             .subscribe(() => {
                 this.navigation = this._fuseNavigationService.getCurrentNavigation();
+            });
+
+        // Subscribe to the config changes
+        this._fuseConfigService.config
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+                this.fuseConfig = config;
             });
     }
 

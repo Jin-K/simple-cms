@@ -1,3 +1,76 @@
+// -----------------------------------------------------------------------------------------------------
+// @ Theming
+// -----------------------------------------------------------------------------------------------------
+@mixin ngx-datatable-theme($theme) {
+
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    ngx-datatable {
+
+        &.material {
+            background: map-get($background, card);
+            color: map-get($foreground, text);
+
+            .datatable-header {
+
+                .datatable-header-cell {
+                    color: map-get($foreground, secondary-text);
+                }
+            }
+
+            .datatable-body {
+
+                .datatable-row-wrapper {
+                    border-bottom-color: map-get($foreground, divider);
+
+                    &:first-child {
+                        border-top-color: map-get($foreground, divider);
+                    }
+
+                    .datatable-body-row {
+
+                        .datatable-body-cell {
+                            color: map-get($foreground, text);
+                        }
+                    }
+                }
+            }
+
+            .datatable-footer {
+                color: map-get($foreground, secondary-text);
+
+                .datatable-pager {
+
+                    a {
+                        color: map-get($foreground, secondary-text);
+                    }
+                }
+            }
+
+            &:not(.cell-selection) {
+
+                .datatable-body {
+
+                    .datatable-row-wrapper {
+
+                        .datatable-body-row {
+
+                            &:hover {
+                                background-color: map-get($background, hover);
+
+                                .datatable-row-group {
+                                    background-color: map-get($background, hover);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .ngx-datatable {
 
     &.material {
@@ -42,12 +115,11 @@
             }
 
             .datatable-row-wrapper {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                border-bottom: 1px solid;
 
                 &:first-child {
-                    border-top: 1px solid rgba(0, 0, 0, 0.12);
+                    border-top: 1px solid;
                 }
-
                 .datatable-body-cell {
                     display: inline-flex;
                     align-items: center;
@@ -118,48 +190,63 @@
 .datatable-icon-filter:before {
     content: "filter_list";
 }
+
 .datatable-icon-collapse:before {
     content: "unfold_less";
 }
+
 .datatable-icon-expand:before {
     content: "unfold_more";
 }
+
 .datatable-icon-close:before {
     content: "close";
 }
+
 .datatable-icon-up:before {
     content: "keyboard_arrow_up";
 }
+
 .datatable-icon-down:before {
     content: "keyboard_arrow_down";
 }
+
 .datatable-icon-sort:before {
     content: "sort";
 }
+
 .datatable-icon-done:before {
     content: "done";
 }
+
 .datatable-icon-done-all:before {
     content: "done_all";
 }
+
 .datatable-icon-search:before {
     content: "search";
 }
+
 .datatable-icon-pin:before {
     content: "lock";
 }
+
 .datatable-icon-add:before {
     content: "add";
 }
+
 .datatable-icon-left:before {
     content: "chevron_left";
 }
+
 .datatable-icon-right:before {
     content: "chevron_right";
 }
+
 .datatable-icon-skip:before {
     content: "skip_next";
 }
+
 .datatable-icon-prev:before {
     content: "skip_previous";
 }

@@ -7,11 +7,11 @@ mat-icon {
     min-height: 24px;
     line-height: 24px;
 
-    @each $breakpoint in map-keys($grid-breakpoints) {
+    @each $breakpoint, $materialBreakpoint in $helper-breakpoints {
 
-        @include media-breakpoint-up($breakpoint) {
+        @include media-breakpoint($materialBreakpoint) {
 
-            $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+            $infix: if($materialBreakpoint == null, "", "-#{$breakpoint}");
 
             @for $size from 2 through 128 {
 

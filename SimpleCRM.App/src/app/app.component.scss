@@ -23,6 +23,17 @@
         opacity: .90;
         z-index: 998;
 
+        &.right-side-panel {
+
+            @include media-breakpoint('gt-md') {
+                right: 70px;
+            }
+        }
+
+        &.side-panel-hidden {
+            right: 0 !important;
+        }
+
         mat-icon {
             animation: rotating 3s linear infinite;
         }

@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="px-8 px-mat-16">
+            <div class="px-8 px-md-16">
                 <fuse-shortcuts [navigation]="navigation"></fuse-shortcuts>
             </div>
 
@@ -29,7 +29,6 @@
                     class="user-button">
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <img class="avatar mr-0 mr-sm-16" src="assets/images/avatars/Garcia.jpg">
-                    <!-- <span class="username mr-12" fxHide fxShow.gt-sm>Angel Muñoz</span> -->
                     <span class="username mr-12" fxHide fxShow.gt-sm>{{given_name$ | async}}</span>
                     <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
                 </div>
@@ -69,7 +68,7 @@
                     class="language-button"
                     [matMenuTriggerFor]="languageMenu">
                 <div fxLayout="row" fxLayoutAlign="center center">
-                    <img class="flag mr-8" [src]="'assets/images/flags/'+selectedLanguage.flag+'.png'">
+                    <img class="flag mr-8" [src]="'assets/icons/flags/'+selectedLanguage.flag+'.png'">
                     <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
                 </div>
             </button>
@@ -78,7 +77,7 @@
 
                 <button mat-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
                     <span fxLayout="row" fxLayoutAlign="start center">
-                        <img class="flag mr-16" [src]="'assets/images/flags/'+lang.flag+'.png'">
+                        <img class="flag mr-16" [src]="'assets/icons/flags/'+lang.flag+'.png'">
                         <span class="iso">{{lang.title}}</span>
                     </span>
                 </button>
@@ -91,7 +90,7 @@
                     class="quick-panel-toggle-button"
                     (click)="toggleSidebarOpen('quickPanel')"
                     aria-label="Toggle quick panel">
-                <mat-icon class="icon">format_list_bulleted</mat-icon>
+                <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
             </button>
 
             <div class="toolbar-separator" *ngIf="!hiddenNavbar && rightNavbar" fxHide fxShow.gt-xs></div>

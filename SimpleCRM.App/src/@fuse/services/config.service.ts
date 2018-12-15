@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
 import { Platform } from '@angular/cdk/platform';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -93,15 +93,18 @@ export class FuseConfigService
         // Set the config from the default config
         this._configSubject = new BehaviorSubject(_.cloneDeep(this._defaultConfig));
 
-        // Reload the default config on every navigation start if
-        // the current config is different from the default one
+        // Reload the default layout config on every RoutesRecognized event
+        // if the current layout config is different from the default one
         this._router.events
-            .pipe(filter(event => event instanceof NavigationStart))
+            .pipe(filter(event => event instanceof RoutesRecognized))
             .subscribe(() => {
-                if ( !_.isEqual(this._configSubject.getValue(), this._defaultConfig) )
+                if ( !_.isEqual(this._configSubject.getValue().layout, this._defaultConfig.layout) )
                 {
-                    // Clone the default config
-                    const config = _.cloneDeep(this._defaultConfig);
+                    // Clone the current config
+                    const config = _.cloneDeep(this._configSubject.getValue());
+
+                    // Reset the layout from the default config
+                    config.layout = _.cloneDeep(this._defaultConfig.layout);
 
                     // Set the config
                     this._configSubject.next(config);

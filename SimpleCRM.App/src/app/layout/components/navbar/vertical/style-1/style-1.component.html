@@ -1,4 +1,4 @@
-<div class="navbar-top mat-indigo-700-bg">
+<div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
 
     <div class="logo">
         <img class="logo-icon" src="assets/images/logos/fuse.svg">
@@ -22,20 +22,21 @@
 </div>
 
 
-<div class="navbar-scroll-container" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
+<div class="navbar-scroll-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground"
+     fusePerfectScrollbar [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
 
-    <div class="user mat-indigo-700-bg" fxLayout="column">
+    <div class="user" fxLayout="column" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
 
         <div class="h3 username">{{ given_name$ | async }}</div>
         <div class="h5 email hint-text mt-8">{{ email$ | async }}</div>
-        <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.background">
+        <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground">
             <img class="avatar" src="assets/images/avatars/Garcia.jpg">
         </div>
 
     </div>
 
     <div class="navbar-content">
-        <fuse-navigation layout="vertical"></fuse-navigation>
+        <fuse-navigation class="material2" layout="vertical"></fuse-navigation>
     </div>
 
 </div>

@@ -1,23 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store }                        from '@ngrx/store';
-import { TranslateService }             from '@ngx-translate/core';
-import { Subject, Observable }          from 'rxjs';
-import { takeUntil }                    from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Store }                                           from '@ngrx/store';
+import { TranslateService }                                from '@ngx-translate/core';
+import { Subject, Observable }                             from 'rxjs';
+import { takeUntil }                                       from 'rxjs/operators';
 
-import { FuseConfigService }            from '@fuse/services/config.service';
-import { FuseSidebarService }           from '@fuse/components/sidebar/sidebar.service';
+import { FuseConfigService }                               from '@fuse/services/config.service';
+import { FuseSidebarService }                              from '@fuse/components/sidebar/sidebar.service';
 
-import * as fromAuthStore               from '@core/auth';
+import * as fromAuthStore                                  from '@core/auth';
 
-import { navigation }                   from 'app/navigation/navigation';
-import * as fromStore                   from 'app/store';
+import { navigation }                                      from 'app/navigation/navigation';
+import * as fromStore                                      from 'app/store';
 
-import * as _                           from 'lodash';
+import * as _                                              from 'lodash';
 
 @Component({
-    selector   : 'toolbar',
-    templateUrl: './toolbar.component.html',
-    styleUrls  : ['./toolbar.component.scss']
+    selector     : 'toolbar',
+    templateUrl  : './toolbar.component.html',
+    styleUrls    : ['./toolbar.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class ToolbarComponent implements OnInit, OnDestroy

@@ -1,11 +1,11 @@
-// ######################
-// POSITION HELPERS
-// ######################
-@each $breakpoint in map-keys($grid-breakpoints) {
+// -----------------------------------------------------------------------------------------------------
+// @ Position helpers
+// -----------------------------------------------------------------------------------------------------
+@each $breakpoint, $materialBreakpoint in $helper-breakpoints {
 
-    @include media-breakpoint-up($breakpoint) {
+    @include media-breakpoint($materialBreakpoint) {
 
-        $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+        $infix: if($materialBreakpoint == null, "", "-#{$breakpoint}");
 
         .position#{$infix}-relative {
             position: relative;
@@ -21,14 +21,14 @@
     }
 }
 
-// ####################################
-// ABSOLUTE POSITION ALIGNMENT HELPERS
-// ####################################
-@each $breakpoint in map-keys($grid-breakpoints) {
+// -----------------------------------------------------------------------------------------------------
+// @ Absolute position alignment helpers
+// -----------------------------------------------------------------------------------------------------
+@each $breakpoint, $materialBreakpoint in $helper-breakpoints {
 
-    @include media-breakpoint-up($breakpoint) {
+    @include media-breakpoint($materialBreakpoint) {
 
-        $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+        $infix: if($materialBreakpoint == null, "", "-#{$breakpoint}");
 
         .align#{$infix}-top {
             top: 0;
@@ -48,9 +48,9 @@
     }
 }
 
-// ######################
-// SIZE HELPERS
-// ######################
+// -----------------------------------------------------------------------------------------------------
+// @ Size helpers
+// -----------------------------------------------------------------------------------------------------
 @each $prop, $abbrev in (height: h, width: w) {
 
     @for $index from 0 through 180 {
@@ -75,14 +75,14 @@
     }
 }
 
-// ######################
-// SPACING HELPERS
-// ######################
-@each $breakpoint in map-keys($grid-breakpoints) {
+// -----------------------------------------------------------------------------------------------------
+// @ Spacing helpers
+// -----------------------------------------------------------------------------------------------------
+@each $breakpoint, $materialBreakpoint in $helper-breakpoints {
 
-    @include media-breakpoint-up($breakpoint) {
+    @include media-breakpoint($materialBreakpoint) {
 
-        $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+        $infix: if($materialBreakpoint == null, "", "-#{$breakpoint}");
 
         @each $prop, $abbrev in (margin: m, padding: p) {
 
@@ -168,9 +168,9 @@
     }
 }
 
-// ######################
-// BORDER HELPERS
-// ######################
+// -----------------------------------------------------------------------------------------------------
+// @ Border helpers
+// -----------------------------------------------------------------------------------------------------
 $border-style: 1px solid rgba(0, 0, 0, 0.12);
 
 .border,
@@ -199,7 +199,7 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .border-horizontal,
-.b-x {
+.bx {
     border-left: $border-style;
     border-right: $border-style;
 }
@@ -210,9 +210,9 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
     border-bottom: $border-style;
 }
 
-// ######################
-// BORDER RADIUS HELPERS
-// ######################
+// -----------------------------------------------------------------------------------------------------
+// @ Border radius helpers
+// -----------------------------------------------------------------------------------------------------
 .border-radius-100 {
     border-radius: 100%;
 }
@@ -233,9 +233,9 @@ $border-style: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 16px;
 }
 
-// ######################
-// CURSOR HELPERS
-// ######################
+// -----------------------------------------------------------------------------------------------------
+// @ Cursor helpers
+// -----------------------------------------------------------------------------------------------------
 .cursor-pointer {
     cursor: pointer;
 }

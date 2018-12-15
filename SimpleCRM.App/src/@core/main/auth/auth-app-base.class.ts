@@ -40,5 +40,4 @@ export abstract class AuthAppBase implements OnInit, OnDestroy {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
-  
 }

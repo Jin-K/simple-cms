@@ -1,5 +1,5 @@
 .fuse-material-color-picker-menu {
-    width: 208px;
+    width: 245px;
 
     .mat-menu-content {
         padding: 0;
@@ -7,44 +7,29 @@
         .views {
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            min-height: 258px;
-            height: 308px;
-            background-color: #F7F7F7;
+            min-height: 165px;
 
             .view {
-                position: absolute;
-                width: 208px;
-                height: 100%;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                top: 0;
+                overflow: hidden;
 
                 .colors {
-                    position: relative;
-                    padding: 4px;
+                    padding: 1px 0 0 0;
+                    margin-left: -1px;
 
                     .color {
-                        position: relative;
-                        width: 46px;
-                        height: 46px;
-                        margin: 2px;
+                        width: 40px;
+                        height: 40px;
+                        margin: 0 0 1px 1px;
                         border-radius: 0;
                         cursor: pointer;
+                        transition: border-radius .4s cubic-bezier(.25, .8, .25, 1);
 
-                        .label {
-                            padding: 2px;
-                            font-size: 10px;
+                        &:hover {
+                            border-radius: 20%;
                         }
 
-                        mat-icon {
-                            position: absolute;
-                            top: 2px;
-                            right: 2px;
-                            font-size: 16px;
-                            opacity: 0.7;
+                        &.selected {
+                            border-radius: 50% !important;
                         }
                     }
                 }

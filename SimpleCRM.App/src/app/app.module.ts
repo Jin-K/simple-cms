@@ -1,27 +1,27 @@
-import { NgModule }                                                 from '@angular/core';
-import { BrowserModule }                                            from '@angular/platform-browser';
-import { HttpClientModule }                                         from '@angular/common/http';
-import { BrowserAnimationsModule }                                  from '@angular/platform-browser/animations';
-import { RouterModule, Routes }                                     from '@angular/router';
-import { MatMomentDateModule }                                      from '@angular/material-moment-adapter';
-import { MatButtonModule, MatIconModule, MatProgressSpinnerModule } from '@angular/material';
-import { TranslateModule }                                          from '@ngx-translate/core';
+import { NgModule }                       from '@angular/core';
+import { BrowserModule }                  from '@angular/platform-browser';
+import { HttpClientModule }               from '@angular/common/http';
+import { BrowserAnimationsModule }        from '@angular/platform-browser/animations';
+import { RouterModule, Routes }           from '@angular/router';
+import { MatMomentDateModule }            from '@angular/material-moment-adapter';
+import { MatButtonModule, MatIconModule } from '@angular/material';
+import { TranslateModule }                from '@ngx-translate/core';
 
 import {
   FuseProgressBarModule,
   FuseSidebarModule,
   FuseThemeOptionsModule
-}                                                                   from '@fuse/components';
-import { FuseSharedModule }                                         from '@fuse/shared.module';
-import { FuseModule }                                               from '@fuse/fuse.module';
+}                                         from '@fuse/components';
+import { FuseSharedModule }               from '@fuse/shared.module';
+import { FuseModule }                     from '@fuse/fuse.module';
 
-import { CoreModule }                                               from '@core/core.module';
-import { AuthGuard }                                                from '@core/guards';
+import { CoreModule }                     from '@core/core.module';
+import { AuthGuard }                      from '@core/guards';
 
-import { fuseConfig, coreConfig }                                   from './config';
-import { AppComponent }                                             from './app.component';
-import { LayoutModule }                                             from './layout/layout.module';
-import { AppStoreModule }                                           from './store/store.module';
+import { fuseConfig, coreConfig }         from './config';
+import { AppComponent }                   from './app.component';
+import { LayoutModule }                   from './layout/layout.module';
+import { AppStoreModule }                 from './store/store.module';
 
 const appRoutes: Routes = [
   {
@@ -57,7 +57,6 @@ const appRoutes: Routes = [
     // Material
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
 
     // Fuse modules
     FuseModule.forRoot(fuseConfig),
@@ -78,6 +77,4 @@ const appRoutes: Routes = [
     AppComponent
   ]
 })
-export class AppModule {
-  constructor() { console.log('APP INITIALIZED'); }
-}
+export class AppModule { }

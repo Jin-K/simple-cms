@@ -3,6 +3,8 @@ import { DOCUMENT } from '@angular/common';
 import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
 import { NavigationEnd, Router } from '@angular/router';
 
+import { filter, take } from 'rxjs/operators';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -46,19 +48,16 @@ export class FuseSplashScreenService
         if ( this.splashScreenEl )
         {
             // Hide it on the first NavigationEnd event
-            const hideOnLoad = this._router.events.subscribe((event) => {
-                    if ( event instanceof NavigationEnd )
-                    {
-                        setTimeout(() => {
-                            this.hide();
-
-                            // Unsubscribe from this event so it
-                            // won't get triggered again
-                            hideOnLoad.unsubscribe();
-                        }, 0);
-                    }
-                }
-            );
+            this._router.events
+                .pipe(
+                    filter((event => event instanceof NavigationEnd)),
+                    take(1)
+                )
+                .subscribe(() => {
+                    setTimeout(() => {
+                        this.hide();
+                    });
+                });
         }
     }
 

@@ -1,55 +1,40 @@
-import { Component, EventEmitter, Input, OnChanges, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, Output, ViewEncapsulation } from '@angular/core';
 
 import { fuseAnimations } from '@fuse/animations';
 import { MatColors } from '@fuse/mat-colors';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+export const FUSE_MATERIAL_COLOR_PICKER_VALUE_ACCESSOR: any = {
+    provide    : NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => FuseMaterialColorPickerComponent),
+    multi      : true
+};
 
 @Component({
     selector     : 'fuse-material-color-picker',
     templateUrl  : './material-color-picker.component.html',
     styleUrls    : ['./material-color-picker.component.scss'],
     animations   : fuseAnimations,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers    : [FUSE_MATERIAL_COLOR_PICKER_VALUE_ACCESSOR]
 })
-export class FuseMaterialColorPickerComponent implements OnChanges
+export class FuseMaterialColorPickerComponent implements ControlValueAccessor
 {
     colors: any;
     hues: string[];
-    selectedColor: any;
     view: string;
-
-    @Input()
+    selectedColor: any;
     selectedPalette: string;
-
-    @Input()
     selectedHue: string;
 
-    @Input()
-    selectedFg: string;
-
-    @Input()
-    value: any;
-
+    // Color changed
     @Output()
-    onValueChange: EventEmitter<any>;
-
-    @Output()
-    selectedPaletteChange: EventEmitter<any>;
-
-    @Output()
-    selectedHueChange: EventEmitter<any>;
-
-    @Output()
-    selectedClassChange: EventEmitter<any>;
-
-    @Output()
-    selectedBgChange: EventEmitter<any>;
-
-    @Output()
-    selectedFgChange: EventEmitter<any>;
+    colorChanged: EventEmitter<any>;
 
     // Private
-    _selectedClass: string;
-    _selectedBg: string;
+    private _color: string;
+    private _modelChange: (value: any) => void;
+    private _modelTouched: (value: any) => void;
 
     /**
      * Constructor
@@ -57,23 +42,18 @@ export class FuseMaterialColorPickerComponent implements OnChanges
     constructor()
     {
         // Set the defaults
+        this.colorChanged = new EventEmitter();
         this.colors = MatColors.all;
         this.hues = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700'];
-        this.selectedFg = '';
-        this.selectedHue = '';
-        this.selectedPalette = '';
+        this.selectedHue = '500';
         this.view = 'palettes';
 
-        this.onValueChange = new EventEmitter();
-        this.selectedPaletteChange = new EventEmitter();
-        this.selectedHueChange = new EventEmitter();
-        this.selectedClassChange = new EventEmitter();
-        this.selectedBgChange = new EventEmitter();
-        this.selectedFgChange = new EventEmitter();
-
         // Set the private defaults
-        this._selectedClass = '';
-        this._selectedBg = '';
+        this._color = '';
+        this._modelChange = () => {
+        };
+        this._modelTouched = () => {
+        };
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -86,88 +66,76 @@ export class FuseMaterialColorPickerComponent implements OnChanges
      * @param value
      */
     @Input()
-    set selectedClass(value)
+    set color(value)
     {
-        if ( value && value !== '' && this._selectedClass !== value )
+        if ( !value || value === '' || this._color === value )
         {
-            const color = value.split('-');
-            if ( color.length >= 5 )
-            {
-                this.selectedPalette = color[1] + '-' + color[2];
-                this.selectedHue = color[3];
-            }
-            else
-            {
-                this.selectedPalette = color[1];
-                this.selectedHue = color[2];
-            }
-        }
-        this._selectedClass = value;
-    }
-
-    get selectedClass(): string
-    {
-        return this._selectedClass;
-    }
-
-    /**
-     * Selected bg
-     *
-     * @param value
-     */
-    @Input()
-    set selectedBg(value)
-    {
-        if ( value && value !== '' && this._selectedBg !== value )
-        {
-            for ( const palette in this.colors )
-            {
-                if ( !this.colors.hasOwnProperty(palette) )
-                {
-                    continue;
-                }
-
-                for ( const hue of this.hues )
-                {
-                    if ( this.colors[palette][hue] === value )
-                    {
-                        this.selectedPalette = palette;
-                        this.selectedHue = hue;
-                        break;
-                    }
-                }
-            }
-        }
-        this._selectedBg = value;
-    }
-
-    get selectedBg(): string
-    {
-        return this._selectedBg;
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On changes
-     *
-     * @param changes
-     */
-    ngOnChanges(changes: any): void
-    {
-        if ( changes.selectedBg && changes.selectedBg.currentValue === '' ||
-            changes.selectedClass && changes.selectedClass.currentValue === '' ||
-            changes.selectedPalette && changes.selectedPalette.currentValue === '' )
-        {
-            this.removeColor();
             return;
         }
-        if ( changes.selectedPalette || changes.selectedHue || changes.selectedClass || changes.selectedBg )
+
+        // Split the color value (red-400, blue-500, fuse-navy-700 etc.)
+        const colorParts = value.split('-');
+
+        // Take the very last part as the selected hue value
+        this.selectedHue = colorParts[colorParts.length - 1];
+
+        // Remove the last part
+        colorParts.pop();
+
+        // Rejoin the remaining parts as the selected palette name
+        this.selectedPalette = colorParts.join('-');
+
+        // Store the color value
+        this._color = value;
+    }
+
+    get color(): string
+    {
+        return this._color;
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Control Value Accessor implementation
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Register on change function
+     *
+     * @param fn
+     */
+    registerOnChange(fn: any): void
+    {
+        this._modelChange = fn;
+    }
+
+    /**
+     * Register on touched function
+     *
+     * @param fn
+     */
+    registerOnTouched(fn: any): void
+    {
+        this._modelTouched = fn;
+    }
+
+    /**
+     * Write value to the view from model
+     *
+     * @param color
+     */
+    writeValue(color: any): void
+    {
+        // Return if null
+        if ( !color )
         {
-            this.updateSelectedColor();
+            return;
         }
+
+        // Set the color
+        this.color = color;
+
+        // Update the selected color
+        this.updateSelectedColor();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -177,35 +145,61 @@ export class FuseMaterialColorPickerComponent implements OnChanges
     /**
      * Select palette
      *
+     * @param event
      * @param palette
      */
-    selectPalette(palette): void
+    selectPalette(event, palette): void
     {
-        this.selectedPalette = palette;
-        this.updateSelectedColor();
+        // Stop propagation
+        event.stopPropagation();
+
+        // Go to 'hues' view
         this.view = 'hues';
+
+        // Update the selected palette
+        this.selectedPalette = palette;
+
+        // Update the selected color
+        this.updateSelectedColor();
     }
 
     /**
      * Select hue
      *
+     * @param event
      * @param hue
      */
-    selectHue(hue): void
+    selectHue(event, hue): void
     {
+        // Stop propagation
+        event.stopPropagation();
+
+        // Update the selected huse
         this.selectedHue = hue;
+
+        // Update the selected color
         this.updateSelectedColor();
     }
 
     /**
      * Remove color
+     *
+     * @param event
      */
-    removeColor(): void
+    removeColor(event): void
     {
+        // Stop propagation
+        event.stopPropagation();
+
+        // Return to the 'palettes' view
+        this.view = 'palettes';
+
+        // Clear the selected palette and hue
         this.selectedPalette = '';
         this.selectedHue = '';
+
+        // Update the selected color
         this.updateSelectedColor();
-        this.view = 'palettes';
     }
 
     /**
@@ -213,49 +207,40 @@ export class FuseMaterialColorPickerComponent implements OnChanges
      */
     updateSelectedColor(): void
     {
-        setTimeout(() => {
+        if ( this.selectedColor && this.selectedColor.palette === this.selectedPalette && this.selectedColor.hue === this.selectedHue )
+        {
+            return;
+        }
 
-            if ( this.selectedColor && this.selectedPalette === this.selectedColor.palette && this.selectedHue === this.selectedColor.hue )
-            {
-                return;
-            }
+        // Set the selected color object
+        this.selectedColor = {
+            palette: this.selectedPalette,
+            hue    : this.selectedHue,
+            class  : this.selectedPalette + '-' + this.selectedHue,
+            bg     : this.selectedPalette === '' ? '' : MatColors.getColor(this.selectedPalette)[this.selectedHue],
+            fg     : this.selectedPalette === '' ? '' : MatColors.getColor(this.selectedPalette).contrast[this.selectedHue]
+        };
 
-            if ( this.selectedPalette !== '' && this.selectedHue !== '' )
-            {
-                this.selectedBg = MatColors.getColor(this.selectedPalette)[this.selectedHue];
-                this.selectedFg = MatColors.getColor(this.selectedPalette).contrast[this.selectedHue];
-                this.selectedClass = 'mat-' + this.selectedPalette + '-' + this.selectedHue + '-bg';
-            }
-            else
-            {
-                this.selectedBg = '';
-                this.selectedFg = '';
-            }
+        // Emit the color changed event
+        this.colorChanged.emit(this.selectedColor);
 
-            this.selectedColor = {
-                palette: this.selectedPalette,
-                hue    : this.selectedHue,
-                class  : this.selectedClass,
-                bg     : this.selectedBg,
-                fg     : this.selectedFg
-            };
+        // Mark the model as touched
+        this._modelTouched(this.selectedColor.class);
 
-            this.selectedPaletteChange.emit(this.selectedPalette);
-            this.selectedHueChange.emit(this.selectedHue);
-            this.selectedClassChange.emit(this.selectedClass);
-            this.selectedBgChange.emit(this.selectedBg);
-            this.selectedFgChange.emit(this.selectedFg);
-
-            this.value = this.selectedColor;
-            this.onValueChange.emit(this.selectedColor);
-        });
+        // Update the model
+        this._modelChange(this.selectedColor.class);
     }
 
     /**
-     * Go back to palette selection
+     * Go to palettes view
+     *
+     * @param event
      */
-    backToPaletteSelection(): void
+    goToPalettesView(event): void
     {
+        // Stop propagation
+        event.stopPropagation();
+
         this.view = 'palettes';
     }
 

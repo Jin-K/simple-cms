@@ -15,7 +15,7 @@ export class FusePerfectScrollbarDirective implements AfterViewInit, OnDestroy
 {
     isInitialized: boolean;
     isMobile: boolean;
-    ps: PerfectScrollbar;
+    ps: PerfectScrollbar | any;
 
     // Private
     private _enabled: boolean | '';
@@ -199,6 +199,19 @@ export class FusePerfectScrollbarDirective implements AfterViewInit, OnDestroy
         // Initialize the perfect-scrollbar
         this.ps = new PerfectScrollbar(this.elementRef.nativeElement, {
             ...this.fusePerfectScrollbarOptions
+        });
+
+        // Unbind 'keydown' events of PerfectScrollbar since it causes an extremely
+        // high CPU usage on Angular Material inputs.
+        // Loop through all the event elements of this PerfectScrollbar instance
+        this.ps.event.eventElements.forEach((eventElement) => {
+
+            // If we hit to the element with a 'keydown' event...
+            if ( typeof eventElement.handlers['keydown'] !== 'undefined' )
+            {
+                // Unbind it
+                eventElement.element.removeEventListener('keydown', eventElement.handlers['keydown'][0]);
+            }
         });
     }
 

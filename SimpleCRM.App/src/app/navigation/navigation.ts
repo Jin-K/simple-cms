@@ -60,14 +60,15 @@ export const navigation: FuseNavigation[] = [
             title    : 'News',
             translate: 'NAV.NEWS',
             type     : 'item',
+            // TODO Change ?
             // icon     : 'import_contacts',
             // icon     : 'library_books',
             // icon     : 'receipt',
             icon     : 'subject',
             url      : '/apps/news',
             badge    : {
-              title: '13',
-              bg   : '#09d261',
+              title: '25',
+              bg   : '#F44336',
               fg   : '#FFFFFF'
             }
           },

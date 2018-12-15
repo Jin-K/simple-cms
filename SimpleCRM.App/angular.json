@@ -94,7 +94,6 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/styles",
               "src/assets"
             ]
           }

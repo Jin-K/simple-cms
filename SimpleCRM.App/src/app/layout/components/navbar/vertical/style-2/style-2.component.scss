@@ -22,6 +22,22 @@ fuse-sidebar {
                             }
                         }
                     }
+
+                    .navbar-content {
+
+                        // Material 2 specific style
+                        .material2 {
+
+                            .nav-item {
+
+                                .nav-link {
+                                    border-radius: 20px;
+                                    margin: 0 12px;
+                                    padding: 0 12px;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -62,7 +78,6 @@ navbar {
             min-height: 64px;
             padding: 0 16px 0 24px;
             transition: padding 200ms ease;
-            background-color: rgba(255, 255, 255, .05);
             @include mat-elevation(1);
 
             .logo {

@@ -1,6 +1,6 @@
 @import "src/@fuse/scss/fuse";
 
-:host {
+login {
 
   #login {
     width: 100%;
@@ -19,7 +19,6 @@
         width: 384px;
         max-width: 384px;
         padding: 32px;
-        background: #FFFFFF;
         text-align: center;
         @include mat-elevation(16);
 
@@ -60,7 +59,7 @@
 
             .forgot-password {
               font-size: 13px;
-              font-weight: 500;
+              font-weight: 600;
               margin-bottom: 16px
             }
           }
@@ -78,7 +77,7 @@
 
         .register {
           margin: 32px auto 24px auto;
-          font-weight: 500;
+          font-weight: 600;
 
           .text {
             margin-right: 8px;
@@ -92,7 +91,6 @@
           position: relative;
           overflow: hidden;
           width: 100px;
-          color: rgba(0, 0, 0, 0.54);
 
           .text {
             display: inline-flex;
@@ -106,7 +104,7 @@
               width: 30px;
               position: absolute;
               top: 10px;
-              border-top: 1px solid rgba(0, 0, 0, 0.12);
+              border-top: 1px solid;
             }
 
             &:before {
@@ -150,12 +148,5 @@
         }
       }
     }
-  }
-
-  iframe {
-    width: 0;
-    height: 0;
-    border: 0;
-    border: none;
   }
 }

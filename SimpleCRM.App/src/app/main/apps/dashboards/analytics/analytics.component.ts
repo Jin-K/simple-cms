@@ -43,14 +43,14 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
     };
     const widget7 = {
       scheme: {
-        domain: [ "#4867d2", "#5c84f1" ]
+        domain: [ '#4867d2', '#5c84f1' ]
       },
       devices: [
-        { name: "Other processes", value: 92.8, change: -0.6 },
-        { name: "CPU usage", value: 7.2, change: 0.8 }
+        { name: 'Other processes', value: 92.8, change: -0.6 },
+        { name: 'CPU usage', value: 7.2, change: 0.8 }
       ]
     };
-    this.widgets = { 
+    this.widgets = {
       widget1: {
         chartType: widget1.ChartType,
         colors: widget1.Colors,

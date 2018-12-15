@@ -20,11 +20,13 @@ fuse-widget {
         width: 100%;
         opacity: 1;
         z-index: 10;
-        border-radius: 2px;
+        border-radius: 8px;
         transition: transform 0.5s ease-out 0s, visibility 0s ease-in 0.2s, opacity 0s ease-in 0.2s;
         transform: rotateY(0deg);
         backface-visibility: hidden;
+        border: 1px solid;
     }
+
     > .fuse-widget-back {
         display: block;
         position: absolute;
@@ -36,9 +38,11 @@ fuse-widget {
         visibility: hidden;
         opacity: 0;
         z-index: 10;
+        border-radius: 8px;
         transition: transform 0.5s ease-out 0s, visibility 0s ease-in 0.2s, opacity 0s ease-in 0.2s;
         transform: rotateY(180deg);
         backface-visibility: hidden;
+        border: 1px solid;
 
         [fuseWidgetToggle] {
             position: absolute;

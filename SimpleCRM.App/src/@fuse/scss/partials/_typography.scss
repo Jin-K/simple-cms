@@ -1,6 +1,47 @@
+// -----------------------------------------------------------------------------------------------------
+// @ Theming
+// -----------------------------------------------------------------------------------------------------
+@mixin typography-theme($theme) {
+
+    $background: map-get($theme, background);
+    $accent: map-get($theme, accent);
+    $is-dark: map-get($theme, is-dark);
+
+    a {
+        color: map-get($accent, default);
+    }
+
+    code {
+
+        &:not(.highlight) {
+            background-color: map-get($background, app-bar);
+        }
+    }
+
+    .changelog {
+
+        .entry {
+            background-color: map-get($background, card);
+        }
+    }
+
+    .text-boxed {
+        @if ($is-dark) {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.54);
+        } @else {
+            background-color: rgba(0, 0, 0, 0.12);
+            color: rgba(0, 0, 0, 0.54);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
 html {
     font-size: 62.5%;
-    font-family: 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+    font-family: 'Muli', 'Helvetica Neue', 'Arial', sans-serif;
     line-height: 1.4 !important;
     letter-spacing: -0.1px !important;
 }
@@ -46,10 +87,9 @@ h6, .h6 {
 
 // Links
 a {
-    color: mat-color($accent);
     text-decoration: none;
 
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-icon-button) {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-fab):not(.mat-mini-fab) {
 
         &:hover, &:active {
             text-decoration: underline;
@@ -103,11 +143,10 @@ code {
     font-family: 'Monaco', 'Menlo', 'Consolas', 'Ubuntu Mono', monospace;;
 
     &:not(.highlight) {
-        background: rgba(0, 0, 0, 0.065);
         color: #106CC8;
-        margin: 0 1px;
         padding: 2px 3px;
         border-radius: 2px;
+        line-height: 1.7;
     }
 }
 
@@ -237,6 +276,7 @@ strong {
     line-height: 1.25;
 }
 
+.line-height-1\.5,
 .line-height-1\.50 {
     line-height: 1.5;
 }
@@ -245,22 +285,27 @@ strong {
     line-height: 1.75;
 }
 
+// Letter spacing helpers
+.letter-spacing-condensed {
+    letter-spacing: -0.02em;
+}
+
+.letter-spacing-normal {
+    letter-spacing: normal;
+}
+
+.letter-spacing-relaxed {
+    letter-spacing: 0.02em;
+}
+
 // Boxed text
 .text-boxed {
     border-radius: 2px;
     padding: 4px 8px;
     margin: 0 8px;
     font-size: 11px;
-    font-weight: 500;
-    color: rgba(0, 0, 0, 0.54);
-    background-color: rgba(0, 0, 0, 0.12);
+    font-weight: 600;
     white-space: nowrap;
-}
-
-// Boxed text light
-.text-boxed-light {
-    @extend .text-boxed;
-    background-color: rgba(255, 255, 255, 0.7);
 }
 
 // Truncate
@@ -280,7 +325,6 @@ strong {
 .changelog {
 
     .entry {
-        background: white;
         margin-bottom: 24px;
         padding: 24px 32px;
         @include mat-elevation(2);
@@ -355,6 +399,10 @@ strong {
                 li {
                     margin-bottom: 6px;
                     letter-spacing: 0.015em;
+
+                    ul {
+                        margin-top: 6px;
+                    }
                 }
             }
         }

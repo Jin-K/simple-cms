@@ -1,6 +1,169 @@
-/*----------------------------------------------------------------*/
-/*  Avatars
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Theming
+// -----------------------------------------------------------------------------------------------------
+@mixin material-theme($theme) {
+
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Avatar
+    // -----------------------------------------------------------------------------------------------------
+    .avatar {
+        color: map-get($foreground, text);
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Forms
+    // -----------------------------------------------------------------------------------------------------
+    .form-wrapper {
+        background-color: map-get($background, card);
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Navigation - Simple
+    // -----------------------------------------------------------------------------------------------------
+    .navigation-simple {
+
+        .item {
+
+            &.selected {
+                background-color: map-get($background, hover);
+            }
+        }
+
+        .subheader {
+            border-top: 1px solid map-get($foreground, divider);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Pagination - Simple
+    // -----------------------------------------------------------------------------------------------------
+    .simple-pagination {
+        background: map-get($background, card);
+
+        .pagination-item {
+            color: map-get($foreground, secondary-text);
+
+            &:hover {
+                color: map-get($foreground, text);
+            }
+
+            &.disabled {
+                color: map-get($foreground, disabled-text);
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Price tables
+    // -----------------------------------------------------------------------------------------------------
+    .price-tables {
+
+        .price-table {
+            background: map-get($background, card);
+
+            &.style-1 {
+
+                .price {
+
+                    .currency {
+                        color: map-get($foreground, secondary-text);
+                    }
+
+                    .period {
+                        color: map-get($foreground, secondary-text);
+                    }
+                }
+            }
+
+            &.style-2 {
+
+                .price {
+
+                    .currency {
+                        color: map-get($foreground, secondary-text);
+                    }
+
+                }
+
+                .period {
+                    color: map-get($foreground, secondary-text);
+                }
+            }
+
+            &.style-3 {
+
+                .package-type {
+
+                    .subtitle {
+                        color: map-get($foreground, secondary-text);
+                    }
+                }
+
+                .terms {
+                    color: map-get($foreground, secondary-text);
+                }
+
+                .note {
+                    color: map-get($foreground, secondary-text);
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+    // @ Table - Simple
+    // -------------------------------------------------------------------------------------------------
+    .simple-table-container {
+        background: map-get($background, card);
+    }
+
+    table {
+
+        &.simple {
+
+            thead {
+
+                tr {
+
+                    th {
+                        color: map-get($foreground, secondary-text);
+                        border-bottom: 1px solid map-get($foreground, divider);
+                    }
+                }
+            }
+
+            tbody {
+
+                tr {
+
+                    td {
+                        border-bottom: 1px solid map-get($foreground, divider);
+                    }
+                }
+            }
+
+            &.clickable {
+
+                tbody {
+
+                    tr {
+
+                        &:hover {
+                            background-color: map-get($background, hover);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Avatar
+// -----------------------------------------------------------------------------------------------------
 .avatar {
     width: 40px;
     min-width: 40px;
@@ -9,9 +172,8 @@
     margin: 0 8px 0 0;
     border-radius: 50%;
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 600;
     text-align: center;
-    color: #FFFFFF;
 
     &.square {
         border-radius: 0;
@@ -58,6 +220,7 @@ mat-icon.status {
 
     &.online {
         color: #4CAF50;
+
         &:before {
             content: "check_circle";
         }
@@ -65,14 +228,15 @@ mat-icon.status {
 
     &.do-not-disturb {
         color: #F44336;
+
         &:before {
-            content: "do_not_disturb_on";
+            content: "remove_circle_outline";
         }
     }
 
     &.away {
-        background-color: #FFC107;
-        color: #FFFFFF;
+        color: #FFC107;
+
         &:before {
             content: "access_time";
         }
@@ -80,18 +244,17 @@ mat-icon.status {
 
     &.offline {
         color: #646464;
-        background-color: #FFFFFF;
+
         &:before {
             content: "not_interested";
         }
     }
 }
 
-/*----------------------------------------------------------------*/
-/*  Forms
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Forms
+// -----------------------------------------------------------------------------------------------------
 .form-wrapper {
-    background: #FFFFFF;
     padding: 16px;
 
     .form-title {
@@ -100,9 +263,9 @@ mat-icon.status {
     }
 }
 
-/*----------------------------------------------------------------*/
-/*  Navigation - Simple
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Navigation - Simple
+// -----------------------------------------------------------------------------------------------------
 .navigation-simple {
 
     .item {
@@ -122,24 +285,15 @@ mat-icon.status {
 
         .title {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1;
-        }
-
-        &.selected {
-            background-color: rgba(0, 0, 0, 0.06);
         }
     }
 
     .subheader {
         font-size: 13px;
-        border-top: 1px solid rgba(0, 0, 0, 0.12);
-        font-weight: 500;
+        font-weight: 600;
         margin-top: 8px;
-
-        &.light {
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
     }
 
     mat-divider {
@@ -147,16 +301,16 @@ mat-icon.status {
     }
 }
 
-/*----------------------------------------------------------------*/
-/*  Pagination
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Pagination - Simple
+// -----------------------------------------------------------------------------------------------------
 .simple-pagination {
     position: relative;
     display: inline-flex;
     flex-direction: row;
-    @include mat-elevation(1);
-    background-color: #FFFFFF;
     padding: 0 8px;
+    border-radius: 4px;
+    @include mat-elevation(1);
 
     .pagination-item {
         display: flex;
@@ -168,32 +322,24 @@ mat-icon.status {
         border-radius: 0;
         margin: 0;
         font-weight: normal;
-        color: rgba(0, 0, 0, 0.54);
-
-        &:hover {
-            color: rgba(0, 0, 0, 0.87);
-        }
 
         &.active {
             cursor: default;
-            color: rgba(0, 0, 0, 0.87);
         }
 
         &.disabled {
             cursor: default;
-            color: rgba(0, 0, 0, 0.26);
         }
     }
 }
 
-/*----------------------------------------------------------------*/
-/*  Price Tables
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Price tables
+// -----------------------------------------------------------------------------------------------------
 .price-tables {
 
     .price-table {
         position: relative;
-        background-color: #FFFFFF;
         width: 280px;
         border-radius: 2px;
         margin: 12px;
@@ -217,8 +363,7 @@ mat-icon.status {
                 .currency {
                     padding-right: 4px;
                     font-size: 24px;
-                    font-weight: 500;
-                    color: rgba(0, 0, 0, 0.54);
+                    font-weight: 600;
                 }
 
                 .value {
@@ -230,7 +375,6 @@ mat-icon.status {
                 .period {
                     padding: 0 0 5px 4px;
                     font-size: 17px;
-                    color: rgba(0, 0, 0, 0.54);
                 }
             }
 
@@ -261,14 +405,14 @@ mat-icon.status {
                 left: 50%;
                 transform: translateX(-50%);
                 font-size: 11px;
-                font-weight: 500;
+                font-weight: 600;
                 padding: 6px 8px;
             }
 
             .package-type {
                 padding: 48px 32px 24px 32px;
                 font-size: 20px;
-                font-weight: 500;
+                font-weight: 600;
                 text-align: center;
             }
 
@@ -278,8 +422,7 @@ mat-icon.status {
                 .currency {
                     padding-right: 4px;
                     font-size: 24px;
-                    font-weight: 500;
-                    color: rgba(0, 0, 0, 0.54);
+                    font-weight: 600;
                 }
 
                 .value {
@@ -292,8 +435,7 @@ mat-icon.status {
             .period {
                 padding: 0 32px;
                 font-size: 15px;
-                font-weight: 500;
-                color: rgba(0, 0, 0, 0.54);
+                font-weight: 600;
                 text-align: center;
             }
 
@@ -328,8 +470,7 @@ mat-icon.status {
 
                 .subtitle {
                     font-size: 17px;
-                    color: rgba(0, 0, 0, 0.54);
-                    font-weight: 500;
+                    font-weight: 600;
                 }
             }
 
@@ -339,7 +480,7 @@ mat-icon.status {
                 .currency {
                     padding-right: 4px;
                     font-size: 15px;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
 
                 .value {
@@ -357,7 +498,6 @@ mat-icon.status {
             .terms {
                 margin: 32px;
                 font-size: 15px;
-                color: rgba(0, 0, 0, 0.54);
 
                 .term {
                     padding-bottom: 16px;
@@ -375,17 +515,15 @@ mat-icon.status {
             .note {
                 padding: 8px 32px 16px 32px;
                 text-align: center;
-                color: rgba(0, 0, 0, 0.54);
             }
         }
     }
 }
 
-/*----------------------------------------------------------------*/
-/*  Table - Simple
-/*----------------------------------------------------------------*/
+// -----------------------------------------------------------------------------------------------------
+// @ Table - Simple
+// -----------------------------------------------------------------------------------------------------
 .simple-table-container {
-    background: #FFFFFF;
 
     .table-title {
         font-size: 20px;
@@ -407,9 +545,7 @@ table {
 
                 th {
                     padding: 16px 8px;
-                    font-weight: 500;
-                    color: rgba(0, 0, 0, 0.54);
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+                    font-weight: 600;
                     white-space: nowrap;
 
                     &:first-child {
@@ -429,7 +565,6 @@ table {
 
                 td {
                     padding: 16px 8px;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
                     &:first-child {
                         padding-left: 24px;
@@ -455,10 +590,6 @@ table {
 
                 tr {
                     cursor: pointer;
-
-                    &:hover {
-                        background: rgba(0, 0, 0, 0.03);
-                    }
                 }
             }
         }
