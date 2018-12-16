@@ -32,8 +32,7 @@ export class CoreOidcConfigService {
       this.onConfigurationLoaded.emit();
     }
     catch (e) {
-      alert('Auth service is unavailable');
-      console.error('CoreOidcConfigService: load_using_stsServer', e);
+      console.error('CoreOidcConfigService - load_using_stsServer : auth service is unavailable', e);
     }
   }
 

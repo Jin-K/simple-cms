@@ -29,8 +29,12 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
   /**
    * On init
    */
-  ngOnInit() {
+  ngOnInit(): void {
+
+    if (!this.analyticsDashboardService.widgets.length) return;
+
     const widget1 = this.analyticsDashboardService.widgets[0];
+
     const widget2 = {
       data: [0, 10000],
       values: ['?', '?'],
@@ -41,6 +45,7 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
       },
 
     };
+
     const widget7 = {
       scheme: {
         domain: [ '#4867d2', '#5c84f1' ]
@@ -50,6 +55,7 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
         { name: 'CPU usage', value: 7.2, change: 0.8 }
       ]
     };
+
     this.widgets = {
       widget1: {
         chartType: widget1.ChartType,
@@ -62,21 +68,26 @@ export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
     };
 
     this.statsSubscription = this.dashboardService.statsSubj.subscribe(stat => {
+
       switch (stat.type) {
+
         case 'CPU':
           const raw = Math.round(stat.value * 100);
           this.widgets.widget2.data = [ raw, 10000 - raw ];
           this.widgets.widget2.values[0] = raw / 100;
           break;
+
         case 'Memory':
           this.widgets.widget2.values[1] = Math.round( (stat.value / (1024 * 1024)) * 100 ) / 100;
           break;
       }
-
     });
+
   }
 
   ngOnDestroy(): void {
+
+    // unsubscribe
     this.statsSubscription.unsubscribe();
     this.dashboardService.statsSubj.complete();
   }

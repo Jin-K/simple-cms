@@ -22,7 +22,6 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
 
   // Public
   fuseConfig: any;
-  fusePerfectScrollbarUpdateTimeout: any;
   navigation: any;
   given_name$: Observable<string>;
   email$: Observable<string>;

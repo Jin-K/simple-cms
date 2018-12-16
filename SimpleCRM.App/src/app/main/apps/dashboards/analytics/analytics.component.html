@@ -20,7 +20,7 @@
               </div>
   
               <div class="h-200">
-                <canvas baseChart
+                <canvas *ngIf="widgets" baseChart
                   [data]="widgets.widget2.data"
                   [labels]="widgets.widget2.labels"
                   [chartType]="'doughnut'"
@@ -33,14 +33,14 @@
                 <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
                   
                   <div class="h4 secondary-text">CPU</div>
-                  <div class="h2 font-weight-300 py-8">{{widgets.widget2.values[0]}} %</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets?.widget2.values[0] || '--'}} %</div>
                   
                 </div>
   
                 <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
                   
                   <div class="h4 secondary-text">Memory</div>
-                  <div class="h2 font-weight-300 py-8">{{widgets.widget2.values[1]}} MB</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets?.widget2.values[1] || '--'}} MB</div>
                   
                 </div>
                 

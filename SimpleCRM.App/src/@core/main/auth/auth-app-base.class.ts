@@ -23,13 +23,14 @@ export abstract class AuthAppBase implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+
     this._store = this._injector.get(Store);
     this._oidcSecurityService = this._injector.get(OidcSecurityService);
 
     this._oidcSecurityService.getIsAuthorized()
       .pipe(takeUntil(this._unsubscribeAll))
       .filter(isAuthorized => isAuthorized)
-      .subscribe(_ => this._store.dispatch(new UserActions.AuthorizationDone))
+      .subscribe(_ => this._store.dispatch(new UserActions.AuthorizationDone));
   }
 
   /**
@@ -40,4 +41,5 @@ export abstract class AuthAppBase implements OnInit, OnDestroy {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
+
 }

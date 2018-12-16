@@ -1,5 +1,3 @@
-// import './styles.scss'; // referenced in angular.json
-
 import { enableProdMode }         from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
