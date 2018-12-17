@@ -2,20 +2,17 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { fuseAnimations } from '@fuse/animations';
-
 import { ChatService } from 'app/main/apps/chat/chat.service';
 
 @Component({
-    selector     : 'chat',
-    templateUrl  : './chat.component.html',
-    styleUrls    : ['./chat.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    selector     : 'chat-contact-sidenav',
+    templateUrl  : './contact.component.html',
+    styleUrls    : ['./contact.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
-export class ChatComponent implements OnInit, OnDestroy
+export class ChatContactSidenavComponent implements OnInit, OnDestroy
 {
-    selectedChat: any;
+    contact: any;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -42,10 +39,10 @@ export class ChatComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this._chatService.onChatSelected
+        this._chatService.onContactSelected
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(chatData => {
-                this.selectedChat = chatData;
+            .subscribe(contact => {
+                this.contact = contact;
             });
     }
 

@@ -7,28 +7,26 @@ import { fuseAnimations } from '@fuse/animations';
 import { ChatService } from 'app/main/apps/chat/chat.service';
 
 @Component({
-    selector     : 'chat',
-    templateUrl  : './chat.component.html',
-    styleUrls    : ['./chat.component.scss'],
+    selector     : 'chat-right-sidenav',
+    templateUrl  : './right.component.html',
+    styleUrls    : ['./right.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class ChatComponent implements OnInit, OnDestroy
+export class ChatRightSidenavComponent implements OnInit, OnDestroy
 {
-    selectedChat: any;
+    view: string;
 
     // Private
     private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {ChatService} _chatService
-     */
     constructor(
         private _chatService: ChatService
     )
     {
+        // Set the defaults
+        this.view = 'contact';
+
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -42,10 +40,10 @@ export class ChatComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this._chatService.onChatSelected
+        this._chatService.onRightSidenavViewChanged
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(chatData => {
-                this.selectedChat = chatData;
+            .subscribe(view => {
+                this.view = view;
             });
     }
 
@@ -58,4 +56,5 @@ export class ChatComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
+
 }
