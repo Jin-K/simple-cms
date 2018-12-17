@@ -69,6 +69,9 @@ namespace SimpleCRM.Api {
 
       // store configuration object
       _configuration = builder.Build();
+
+      // TODELETE reset static fake db
+      Controllers.ChatController.fakeDB = null;
     }
 
     /// <summary>

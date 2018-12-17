@@ -1,12 +1,9 @@
-import { Injectable } from '@angular/core';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot
-} from '@angular/router';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { FuseUtils } from '@fuse/utils';
-import { HttpClient } from '@angular/common/http';
+import { Injectable }                                           from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { HttpClient }                                           from '@angular/common/http';
+import { Observable, BehaviorSubject, Subject }                 from 'rxjs';
+import { FuseUtils }                                            from '@fuse/utils';
+import { coreConfig }                                           from 'app/config';
 
 /**
  * The main ChatService class
@@ -96,8 +93,8 @@ export class ChatService implements Resolve<any> {
       return;
     }
 
-    return new Promise((resolve, reject) => {
-      this._httpClient.get('api/chat-chats/' + chatItem.id)
+    return new Promise((resolve, reject)  => {
+      this._httpClient.get( `${coreConfig.apiServer}/api/chat/chats/${chatItem.id}`)
         .subscribe((response: any) => {
           const chat = response;
 
@@ -151,11 +148,11 @@ export class ChatService implements Resolve<any> {
       this.user.chatList.push(chatListItem);
 
       // Post the created chat
-      this._httpClient.post('api/chat-chats', { ...chat })
+      this._httpClient.post( `${coreConfig.apiServer}/api/chat/chats`, { ...chat })
         .subscribe((response: any) => {
 
           // Post the new the user data
-          this._httpClient.post('api/chat-user/' + this.user.id, this.user)
+          this._httpClient.post( `${coreConfig.apiServer}/api/chat/user/${this.user.id}`, this.user)
             .subscribe(newUserData => {
 
               // Update the user data from server
@@ -192,11 +189,11 @@ export class ChatService implements Resolve<any> {
    * @param userData
    */
   updateUserData(userData): void {
-    this._httpClient.post('api/chat-user/' + this.user.id, userData)
+    this._httpClient.post( `${coreConfig.apiServer}/api/chat/user/${this.user.id}`, userData)
       .subscribe((response: any) => {
         this.user = userData;
       }
-      );
+    );
   }
 
   /**
@@ -214,7 +211,7 @@ export class ChatService implements Resolve<any> {
         dialog: dialog
       };
 
-      this._httpClient.post('api/chat-chats/' + chatId, newData)
+      this._httpClient.post( `${coreConfig.apiServer}/api/chat/chats/${chatId}`, newData)
         .subscribe(updatedChat => {
           resolve(updatedChat);
         }, reject);
@@ -228,7 +225,7 @@ export class ChatService implements Resolve<any> {
    */
   getContacts(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get('api/chat-contacts')
+      this._httpClient.get( `${coreConfig.apiServer}/api/chat/contacts` )
         .subscribe((response: any) => {
           resolve(response);
         }, reject);
@@ -242,7 +239,7 @@ export class ChatService implements Resolve<any> {
    */
   getChats(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get('api/chat-chats')
+      this._httpClient.get( `${coreConfig.apiServer}/api/chat/chats` )
         .subscribe((response: any) => {
           resolve(response);
         }, reject);
@@ -256,7 +253,7 @@ export class ChatService implements Resolve<any> {
    */
   getUser(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._httpClient.get('api/chat-user')
+      this._httpClient.get( `${coreConfig.apiServer}/api/chat/user` )
         .subscribe((response: any) => {
           resolve(response[0]);
         }, reject);
