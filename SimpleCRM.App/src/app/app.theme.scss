@@ -81,6 +81,8 @@ $typography: mat-typography-config(
 @import "src/app/layout/components/chat-panel/chat-panel.theme";
 @import "src/app/layout/components/toolbar/toolbar.theme";
 
+@import "src/app/main/apps/chat/chat.theme";
+
 @import "src/@core/main/auth/login/login.theme";
 
 // Define a mixin for easier access
@@ -89,6 +91,9 @@ $typography: mat-typography-config(
     // Layout components
     @include chat-panel-theme($theme);
     @include toolbar-theme($theme);
+
+    // Apps
+    @include chat-theme($theme);
 
     // Pages
     @include login-theme($theme);

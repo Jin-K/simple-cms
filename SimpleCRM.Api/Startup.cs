@@ -69,6 +69,9 @@ namespace SimpleCRM.Api {
 
       // store configuration object
       _configuration = builder.Build();
+
+      // TODELETE reset static fake db
+      Controllers.ChatController.fakeDB = null;
     }
 
     /// <summary>
@@ -148,8 +151,8 @@ namespace SimpleCRM.Api {
             // on message received
             OnMessageReceived = context => {
 
-              // for SignalR routes, extract token from url and give it to (MessageReceivedContext) context
-              if (context.Request.Path.Value.StartsWithOneOf("/signalrhome", "/message", "/looney") && context.Request.Query.TryGetValue("token", out StringValues token) )
+              // for SignalR routes (auth required), extract token from url and give it to (MessageReceivedContext) context
+              if (context.Request.Path.Value.StartsWithOneOf("/signalrhome", "/looney") && context.Request.Query.TryGetValue("token", out StringValues token) )
                 context.Token = token;
               
               // return
@@ -212,7 +215,6 @@ namespace SimpleCRM.Api {
       // define route that SignalR should use
       app.UseSignalR( routes => {
         routes.MapHub<SignalRHomeHub>( "/signalrhome" );
-        routes.MapHub<MessageHub>( "/message" );
         routes.MapHub<NewsHub>("/looney");
         routes.MapHub<DashboardHub>( "/dashboard" );
       });

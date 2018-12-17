@@ -18,9 +18,10 @@ namespace SimpleCRM.Api.Controllers {
   /// 
   /// Contains following routes:
   /// 
-  ///   GET api/entity/all      : <see cref="EntityController.GetAll(QueryParameters)"></see>
-  ///   GET api/entity/entities : <see cref="EntityController.GetMainEntities()"></see>
-  ///   GET api/entity/item     : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+  ///   GET entity/all      : <see cref="EntityController.GetAll(QueryParameters)"></see>
+  ///   GET entity/entities : <see cref="EntityController.GetMainEntities()"></see>
+  ///   GET entity/item     : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+  ///
   /// </summary>
   [Authorize( AuthenticationSchemes = "Bearer" )]
   [Route( "api/[controller]" )]
