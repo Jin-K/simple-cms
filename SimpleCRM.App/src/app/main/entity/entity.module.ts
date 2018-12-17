@@ -1,18 +1,38 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Route } from '@angular/router';
-import { MatProgressSpinnerModule, MatTableModule, MatCheckboxModule, MatIconModule, MatButtonModule } from '@angular/material';
-import { FuseSharedModule } from '@fuse/shared.module';
-import { EntityListComponent } from './list/list.component';
-import { EntityConsultComponent } from './consult/consult.component';
-import { EntityEditComponent } from './edit/edit.component';
-import { ListDetailsComponent } from './list/list-details/list-details.component';
-import { EntityStoreModule } from './store/store.module';
-import { EntityService } from './entity.service';
-import { EntitiesActivableGuard } from './guards/entities-can-activate.guard';
-import { PaginationModule } from '@core/pagination';
-import { ItemResolver } from './guards/item.resolver';
-import { EditDetailsComponent } from './edit/edit-details/edit-details.component';
-import { ConsultDetailsComponent } from './consult/consult-details/consult-details.component';
+import { NgModule }                                   from '@angular/core';
+import { RouterModule, Route }                        from '@angular/router';
+import {
+  MatProgressSpinnerModule,
+  MatTableModule,
+  MatCheckboxModule,
+  MatIconModule,
+  MatButtonModule,
+  MatMenuModule,
+  MatDialogModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatDatepickerModule,
+  MatRippleModule,
+  MatInputModule
+}                                                     from '@angular/material';
+
+import { FuseSidebarModule, FuseConfirmDialogModule } from '@fuse/components';
+import { FuseSharedModule }                           from '@fuse/shared.module';
+import { PaginationModule }                           from '@core/pagination';
+
+import { EntityStoreModule }                          from './store/store.module';
+import { EntityService }                              from './entity.service';
+import { EntitiesActivableGuard }                     from './guards/entities-can-activate.guard';
+import { ItemResolver }                               from './guards/item.resolver';
+import { EntityListComponent }                        from './list/list.component';
+import { ListDetailsComponent }                       from './list/list-details/list-details.component';
+import { EntityItemsListDetailsComponent }            from './list/entity-items-list-details/entity-items-list-details.component';
+import { EntityItemsListItemFormDialogComponent }     from './list/entity-items-list-item-form/entity-items-list-item-form.component';
+import { SelectedBarComponent }                       from './list/selected-bar/selected-bar.component';
+import { MainComponent }                              from './list/sidebars/main/main.component';
+import { EntityEditComponent }                        from './edit/edit.component';
+import { EditDetailsComponent }                       from './edit/edit-details/edit-details.component';
+import { EntityConsultComponent }                     from './consult/consult.component';
+import { ConsultDetailsComponent }                    from './consult/consult-details/consult-details.component';
 
 /**
  * Routes for the entity module
@@ -33,18 +53,20 @@ const routes: Route[] = [
     pathMatch   : 'full'
   },
   /**
-   * @name /entity/:entity
+   * @name /:entity
    * Entity's items list
    * Could activate EntitiesActivableGuard to load entities
+   * Resolves items with EntityService
    * @param {string} entity
    */
   {
     path        : ':entity',
     component   : EntityListComponent,
-    canActivate : [ EntitiesActivableGuard ]
+    canActivate : [ EntitiesActivableGuard ],
+    resolve     : { items: EntityService }
   },
   /**
-   * @name /entity/:entity/consult/:id
+   * @name /:entity/consult/:id
    * Consult item.
    * Could activate EntitiesActivableGuard to load entities
    * Resolves data with ItemResolver
@@ -58,7 +80,7 @@ const routes: Route[] = [
     resolve     : { item: ItemResolver }
   },
   /**
-   * @name /entity/:entity/edit/:id
+   * @name /:entity/edit/:id
    * Edit item
    * Could activate EntitiesActivableGuard to load entities
    * Resolves data with ItemResolver
@@ -72,7 +94,7 @@ const routes: Route[] = [
     resolve     : { item: ItemResolver }
   },
   /**
-   * @name /entity/:entity/edit
+   * @name /:entity/edit
    * New item
    * Could activate EntitiesActivableGuard to load entities
    * Resolves data with ItemResolver
@@ -98,15 +120,24 @@ const routes: Route[] = [
     RouterModule.forChild(routes),
 
     // Material modules
-    MatTableModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatRippleModule,
+    MatTableModule,
+    MatToolbarModule,
 
     PaginationModule,
 
     FuseSharedModule,
+    FuseConfirmDialogModule,
+    FuseSidebarModule,
 
     EntityStoreModule
   ],
@@ -116,12 +147,19 @@ const routes: Route[] = [
     EntityEditComponent,
     ListDetailsComponent,
     EditDetailsComponent,
-    ConsultDetailsComponent
+    ConsultDetailsComponent,
+    SelectedBarComponent,
+    MainComponent,
+    EntityItemsListDetailsComponent,
+    EntityItemsListItemFormDialogComponent
   ],
   providers: [
-    EntitiesActivableGuard,
     EntityService,
+    EntitiesActivableGuard,
     ItemResolver
+  ],
+  entryComponents: [
+    EntityItemsListItemFormDialogComponent
   ]
 })
 export class EntityModule { }

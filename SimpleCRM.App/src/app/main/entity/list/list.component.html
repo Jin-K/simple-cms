@@ -1,46 +1,73 @@
-<div class="page-layout simple fullwidth angular-material-elements">
+<div id="entity-list" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
 
   <!-- HEADER -->
-  <div class="header mat-accent-bg p-24 h-160" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row"
-    fxLayoutAlign.gt-xs="space-between center">
+  <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="start"
+       fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
 
-    <div fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="column" fxLayoutAlign.gt-xs="center start">
+    <!-- APP TITLE -->
+    <div fxLayout="row" fxLayoutAlign="start center">
 
-      <div class="black-fg" fxLayout="row" fxLayoutAlign="start center">
+      <button class="sidebar-toggle mr-12" mat-icon-button fxHide.gt-sm (click)="toggleSidebar('entity-items-list-main-sidebar')">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-        <mat-icon class="secondary-text s-18">home</mat-icon>
-        <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
-        <span class="secondary-text">Entities</span>
-        <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
-        <span class="secondary-text">List</span>
-        
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon class="logo-icon mr-16" 
+                  [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">account_box
+        </mat-icon>
+        <span class="logo-text h1" 
+              [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+            Items
+        </span>
       </div>
-
-      <div class="h2 mt-16">{{entity | titlecase}}</div>
       
     </div>
+    <!-- / APP TITLE -->
 
-    <a [routerLink]="['edit']" mat-raised-button class="mat-primary mt-16 mt-sm-0">
-      <!-- <mat-icon class="mr-8">link</mat-icon> -->
-      <span>ADD NEW ITEM</span>
-    </a>
-    
   </div>
   <!-- / HEADER -->
 
+  <!-- SELECTED BAR -->
+  <selected-bar class="accent-600" *ngIf="hasSelectedItems" [@slideInTop]></selected-bar>
+  <!-- / SELECTED BAR -->
+
   <!-- CONTENT -->
-  <div class="content p-24">
+  <div class="content">
 
-    <app-list-details 
-      (switchPage)="paginate()"
-      (changeSort)="paginate()"
-      (deleteRow)="onDelete($event)"
-      [paginationItems$]="paginationItems$">
-    </app-list-details>
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" name="entity-items-list-main-sidebar" position="left" lockedOpen="gt-sm">
 
+      <!-- SIDEBAR CONTENT -->
+      <div class="content" fusePerfectScrollbar>
+        <entity-items-list-main-sidebar [@animate]="{value:'*'}"></entity-items-list-main-sidebar>
+      </div>
+      <!-- / SIDEBAR CONTENT -->
+      
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <div class="center p-24 pb-56 pr-sm-92" fusePerfectScrollbar>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <entity-items-list-details></entity-items-list-details>
+      </div>
+      <!-- / CONTENT -->
+      
+    </div>
+    <!-- / CENTER -->
+    
   </div>
   <!-- / CONTENT -->
 
 </div>
+
+<!-- ADD CONTACT BUTTON -->
+<button mat-fab class="accent" id="add-item-button" (click)="newItem()" aria-label="add item"
+        [@animate]="{ value:'*', params: { delay: '300ms', scale: '.2' }}">
+  <mat-icon>person_add</mat-icon>
+</button>
+<!-- / ADD CONTACT BUTTON -->
 
 

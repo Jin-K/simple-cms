@@ -83,6 +83,8 @@ $typography: mat-typography-config(
 
 @import "src/app/main/apps/chat/chat.theme";
 
+@import "src/app/main/entity/entity.theme";
+
 @import "src/@core/main/auth/login/login.theme";
 
 // Define a mixin for easier access
@@ -94,6 +96,9 @@ $typography: mat-typography-config(
 
     // Apps
     @include chat-theme($theme);
+
+    // Entity
+    @include entity-theme($theme);
 
     // Pages
     @include login-theme($theme);

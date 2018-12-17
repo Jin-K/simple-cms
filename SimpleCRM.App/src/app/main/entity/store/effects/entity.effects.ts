@@ -30,7 +30,7 @@ export class EntityEffects {
 
   @Effect() pagination$ = this.actions$.pipe(
     ofType(entityActions.PAGINATE),
-    switchMap((action: entityActions.Paginate) => this.entidadService.getAll(action.entity).pipe(
+    switchMap((action: entityActions.Paginate) => this.entidadService.getItemsList(action.entity).pipe(
       map((response: any) => {
         const totalCount: number = JSON.parse(response.headers.get('X-Pagination')).totalCount;
         const dataSource: IItem[] = response.body.value;

@@ -18,10 +18,13 @@ namespace SimpleCRM.Api.Controllers {
   /// 
   /// Contains following routes:
   /// 
-  ///   GET entity/all      : <see cref="EntityController.GetAll(QueryParameters)"></see>
-  ///   GET entity/entities : <see cref="EntityController.GetMainEntities()"></see>
-  ///   GET entity/item     : <see cref="EntityController.GetItem(GetItemParameters)"></see>
-  ///
+  /// - GET   entity/items            : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
+  /// - GET   entity/entities         : <see cref="EntityController.GetMainEntities()"></see>
+  /// - GET   entity/item             : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+  /// - GET   entity/entity-items     : <see cref="EntityController.GetEntityItems()"></see>
+  /// - POST  entity/entity-items     : <see cref="EntityController.PostEntityItems(string)"></see>
+  /// - GET   entity/entity-items-user: <see cref="EntityController.GetUser()"></see>
+  /// 
   /// </summary>
   [Authorize( AuthenticationSchemes = "Bearer" )]
   [Route( "api/[controller]" )]
@@ -43,6 +46,8 @@ namespace SimpleCRM.Api.Controllers {
     /// <param name="entitiesStore">store for entities</param>
     public EntityController(EntitiesStore entitiesStore) => _entitiesStore = entitiesStore;
 
+    #region Endpoints
+
     /// <summary>
     /// Find items depending on <paramref name="queryParameters"/>
     /// Response has a HATEOAS-like structure, but is still not working.
@@ -52,15 +57,14 @@ namespace SimpleCRM.Api.Controllers {
     /// </remarks>
     /// <param name="queryParameters">query and filter parameters</param>
     /// <returns>Returns a HATEOAS-like json response with a chunk of item</returns>
-    [HttpGet( Name = nameof( GetAll ) )]
-    [Route( "all" )]
-    public IActionResult GetAll([FromQuery] QueryParameters queryParameters) {
+    [HttpGet( "items" )]
+    public IActionResult GetItemsList([FromQuery] QueryParameters queryParameters) {
 
       // pascal case of entity name
       var entity = queryParameters.Query.ToUpperCaseFirst();
 
       // get filtered and ordered items from store
-      List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetAll(
+      List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
         entity,
         queryParameters.OrderBy,
         queryParameters.Descending,
@@ -93,8 +97,7 @@ namespace SimpleCRM.Api.Controllers {
     /// Gets all main entities
     /// </summary>
     /// <returns>Returns a basic JSON response containing a list of all the main entities</returns>
-    [HttpGet( Name = nameof( GetMainEntities ) )]
-    [Route( "entities" )]
+    [HttpGet( "entities" )]
     public async Task<IActionResult> GetMainEntities() => Ok( await _entitiesStore.GetAllEntities() );
 
     /// <summary>
@@ -102,8 +105,7 @@ namespace SimpleCRM.Api.Controllers {
     /// </summary>
     /// <param name="getItemParameters">query and find parameters</param>
     /// <returns>Returns a json object of type <see cref="Item" /></returns>
-    [HttpGet( Name = nameof( GetItem ) )]
-    [Route( "item" )]
+    [HttpGet( "item" )]
     public IActionResult GetItem([FromQuery] GetItemParameters getItemParameters) {
       
       // get item from store
@@ -112,6 +114,37 @@ namespace SimpleCRM.Api.Controllers {
       // return as json
       return Ok( item );
     }
+
+    /// <summary>
+    /// TODELETE Get dummy entity items for tests
+    /// </summary>
+    /// <returns>Returns a json array of dummy items</returns>
+    [HttpGet( "entity-items" )]
+    public IActionResult GetEntityItems() => Ok( this._entitiesStore.GetItems() );
+
+    /// <summary>
+    /// TODELETE Post entity item data to fake db
+    /// </summary>
+    /// <param name="id">id of the item to push or replace</param>
+    /// <returns>Returns a <see cref="<see cref="Microsoft.AspNetCore.Http.StatusCodes.Status201Created" />" /></returns>
+    [HttpPost( "entity-items/{id}" )]
+    public IActionResult PostEntityItems(string id, [FromBody] dynamic rawContent) {
+
+      // post item
+      this._entitiesStore.PostItem(id, rawContent);
+
+      // returns 201 created
+      return Created( "entity-items", rawContent );
+    }
+    
+    /// <summary>
+    /// TODELETE Get dummy entity items user data
+    /// </summary>
+    /// <returns>Returns a json containing user data</returns>
+    [HttpGet( "entity-items-user" )]
+    public IActionResult GetEntityItemsUser() => Ok( this._entitiesStore.GetUserData() );
+
+    #endregion
 
     /// <summary>
     /// Is supposed to create HATEOAS links but returns an empty list.
