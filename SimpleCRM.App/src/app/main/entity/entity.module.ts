@@ -17,15 +17,15 @@ import { ConsultDetailsComponent } from './consult/consult-details/consult-detai
 /**
  * Routes for the entity module
  *
- * @version 0.1
+ * @version 0.0.1
  * @constant
  * @type {Route[]}
  */
 const routes: Route[] = [
 
   /**
-   * Base route, if no matching route -> redirect to Contacts's items list
    * @name /entity
+   * Base route, if no matching route -> redirect to Contacts's items list
    */
   {
     path        : '',
@@ -87,6 +87,12 @@ const routes: Route[] = [
 
 ];
 
+/**
+ * The main EntityModule class
+ *
+ * @export
+ * @class EntityModule
+ */
 @NgModule({
   imports: [
     RouterModule.forChild(routes),

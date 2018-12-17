@@ -4,14 +4,23 @@
     "directive-selector": [
         true,
         "attribute",
-        "app",
+        [
+          "simple-crm",
+          ""
+        ],
         "camelCase"
     ],
     "component-selector": [
         true,
         "element",
-        "app",
-        "kebab-case"
+        [
+          "simple-crm",
+          ""
+        ],
+        [
+          "kebab-case",
+          "camelCase"
+        ]
     ],
     "import-spacing": false,
     "no-debugger": false,
