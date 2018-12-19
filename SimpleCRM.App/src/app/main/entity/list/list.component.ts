@@ -1,18 +1,19 @@
-import { Component, OnInit, ViewEncapsulation }   from '@angular/core';
-import { FormGroup }                              from '@angular/forms';
-import { MatDialog }                              from '@angular/material';
-import { ActivatedRoute }                         from '@angular/router';
-import { Store }                                  from '@ngrx/store';
-import { Observable }                             from 'rxjs';
+import { Component, OnInit, ViewEncapsulation, OnDestroy }    from '@angular/core';
+import { FormGroup }                                          from '@angular/forms';
+import { MatDialog }                                          from '@angular/material';
+import { ActivatedRoute }                                     from '@angular/router';
+import { Store }                                              from '@ngrx/store';
+import { Observable, Subject }                                from 'rxjs';
+import { takeUntil }                                          from 'rxjs/operators';
 
-import { fuseAnimations }                         from '@fuse/animations';
-import { FuseSidebarService }                     from '@fuse/components/sidebar/sidebar.service';
-import { PaginationItemList }                     from '@core/pagination';
+import { fuseAnimations }                                     from '@fuse/animations';
+import { FuseSidebarService }                                 from '@fuse/components/sidebar/sidebar.service';
+import { PaginationItemList }                                 from '@core/pagination';
 
-import { IItem }                                  from 'app/models';
-import { entityActions, entitySelectors }         from '../store';
-import { EntityService }                          from '../entity.service';
-import { EntityItemsListItemFormDialogComponent } from './entity-items-list-item-form/entity-items-list-item-form.component';
+import { IItem }                                              from 'app/models';
+import { entityActions, entitySelectors }                     from '../store';
+import { EntityService }                                      from '../entity.service';
+import { EntityItemsListItemFormDialogComponent }             from './entity-items-list-item-form/entity-items-list-item-form.component';
 
 /**
  * The main component to display an entity's list of items
@@ -28,7 +29,7 @@ import { EntityItemsListItemFormDialogComponent } from './entity-items-list-item
   encapsulation : ViewEncapsulation.None,
   animations    : fuseAnimations
 })
-export class EntityListComponent implements OnInit {
+export class EntityListComponent implements OnInit, OnDestroy {
 
   /**
    * Name of the entity
@@ -61,6 +62,15 @@ export class EntityListComponent implements OnInit {
    * @memberof EntityListComponent
    */
   hasSelectedItems: boolean;
+
+  /**
+   * TODELETE subject to attach to all subscriptions
+   *
+   * @private
+   * @type {Subject<any>}
+   * @memberof EntityListComponent
+   */
+  private _unsubscribeAll: Subject<any> = new Subject();
 
   /**
    * Creates an instance of EntityListComponent
@@ -99,6 +109,23 @@ export class EntityListComponent implements OnInit {
 
     // observe store to get pagination items to display
     this.paginationItems$ = this.store.select(entitySelectors.selectCurrentItems);
+
+    this.entityService.onSelectedItemsChanged
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(selectedItems => {
+            this.hasSelectedItems = selectedItems.length > 0;
+        });
+  }
+
+  /**
+   * On destroy
+   *
+   * @memberof EntityListComponent
+   */
+  ngOnDestroy(): void {
+      // Unsubscribe from all subscriptions
+      this._unsubscribeAll.next();
+      this._unsubscribeAll.complete();
   }
 
   /**

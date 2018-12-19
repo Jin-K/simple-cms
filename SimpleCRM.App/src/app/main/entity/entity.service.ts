@@ -31,12 +31,7 @@ export class EntityService implements Resolve<any> {
   private actionUrl = `${coreConfig.apiServer}/api/entity`;
   private headers: HttpHeaders = new HttpHeaders();
 
-  /**
-   * ----------------------------------------------------------------------------------------------------
-   * TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE
-   * Everything below
-   * ----------------------------------------------------------------------------------------------------
-   */
+  /** TO DELETE BELOW */
 
   items: Item[];
   user: any;
@@ -50,12 +45,7 @@ export class EntityService implements Resolve<any> {
   onSelectedItemsChanged: BehaviorSubject<any>;
   onSearchTextChanged: Subject<any>;
 
-  /**
-* ----------------------------------------------------------------------------------------------------
-* TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END
-* Everything above
-* ----------------------------------------------------------------------------------------------------
-*/
+  /** TO DELETE ABOVE */
 
   /**
    * Creates an instance of EntityService.
@@ -72,12 +62,7 @@ export class EntityService implements Resolve<any> {
     // set headers to use json
     this.headers = this.headers.set('Content-Type', APPLICATION_JSON);
 
-    /**
-     * ----------------------------------------------------------------------------------------------------
-     * TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE
-     * Everything below
-     * ----------------------------------------------------------------------------------------------------
-     */
+    /** TO DELETE BELOW */
 
     // Set the defaults
     this.onItemsChanged = new BehaviorSubject([]);
@@ -86,12 +71,7 @@ export class EntityService implements Resolve<any> {
     this.onSearchTextChanged = new Subject();
     this.onFilterChanged = new Subject();
 
-    /**
-  * ----------------------------------------------------------------------------------------------------
-  * TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END
-  * Everything above
-  * ----------------------------------------------------------------------------------------------------
-  */
+    /** TO DELETE ABOVE */
   }
 
   /**
@@ -147,12 +127,7 @@ export class EntityService implements Resolve<any> {
     return this.http.get<IItem>(requestUrl, { headers: this.headers });
   }
 
-  /**
-   * ----------------------------------------------------------------------------------------------------
-   * TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE TO DELETE OR CHANGE
-   * Everything below
-   * ----------------------------------------------------------------------------------------------------
-   */
+  /** TO DELETE BELOW */
 
   /**
    * Resolver
@@ -433,11 +408,6 @@ export class EntityService implements Resolve<any> {
     this.deselectItems();
   }
 
-  /**
-* ----------------------------------------------------------------------------------------------------
-* TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END OR CHANGE END TO DELETE END
-* Everything above
-* ----------------------------------------------------------------------------------------------------
-*/
+  /** TO DELETE ABOVE */
 
 }
