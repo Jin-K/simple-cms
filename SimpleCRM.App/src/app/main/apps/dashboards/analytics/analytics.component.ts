@@ -1,10 +1,23 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation }  from '@angular/core';
-import { Subscription }                                     from 'rxjs';
+import { TranslateService, LangChangeEvent }                from '@ngx-translate/core';
+import { Subject }                                          from 'rxjs';
+import { takeUntil }                                        from 'rxjs/operators';
+
 import { fuseAnimations }                                   from '@fuse/animations';
+import { FuseTranslationLoaderService }                     from '@fuse/services/translation-loader.service';
 
 import { DashboardService }                                 from '../dashboard.service';
-import { AnalyticsDashboardService }                        from './analytics.service';
+import { locale as english }                                from './i18n/en';
+import { locale as french }                                 from './i18n/fr';
 
+/**
+ * The main AnalyticsDashboardComponent class
+ *
+ * @export
+ * @class AnalyticsDashboardComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
@@ -14,82 +27,141 @@ import { AnalyticsDashboardService }                        from './analytics.se
 })
 export class AnalyticsDashboardComponent implements OnInit, OnDestroy {
 
-  widgets: any;
-  statsSubscription: Subscription;
-
-  constructor(
-    private dashboardService: DashboardService,
-    private analyticsDashboardService: AnalyticsDashboardService
-  ) { }
-
-  // -----------------------------------------------------------------------------------------------------
-  // @ Lifecycle hooks
-  // -----------------------------------------------------------------------------------------------------
+  /**
+   * Subject to unsubscribe from existing subscriptions.
+   *
+   * @protected
+   * @type {Subject<any>}
+   * @memberof AuthAppBase
+   */
+  protected _unsubscribeAll: Subject<any> = new Subject();
 
   /**
-   * On init
+   * Widgets object
+   *
+   * @type {*}
+   * @memberof AnalyticsDashboardComponent
+   */
+  widgets: any;
+
+  /**
+   * Constructor
+   *
+   * @param {DashboardService} dashboardService service to get server statistics
+   * @param {FuseTranslationLoaderService} fuseTranslationLoaderService fuse service for translations
+   * @param {TranslateService} translateService core service for translations
+   * @memberof AnalyticsDashboardComponent
+   */
+  constructor(
+    private dashboardService: DashboardService,
+    private fuseTranslationLoaderService: FuseTranslationLoaderService,
+    private translateService: TranslateService
+  ) {
+
+    // load translations with fuse
+    this.fuseTranslationLoaderService.loadTranslations(english, french);
+  }
+
+  /**
+   * The main ngOnInit method
+   *
+   * @memberof AnalyticsDashboardComponent
    */
   ngOnInit(): void {
 
-    if (!this.analyticsDashboardService.widgets.length) return;
+    // wait for translated labels
+    this.translateService.get( 'WIDGET1' )
 
-    const widget1 = this.analyticsDashboardService.widgets[0];
+      // attach unsubscriber
+      .pipe(takeUntil(this._unsubscribeAll))
 
-    const widget2 = {
-      data: [0, 10000],
-      values: ['?', '?'],
-      labels: [ 'CPU usage', 'Other processes' ],
-      options: {
-        tooltips: {enabled: false},
-        hover: {mode: null}
-      },
+      // subscribe
+      .subscribe( (translations: any) => {
 
-    };
+        // build widget1
+        const widget1 = {
+          data: [0, 10000],
+          values: ['?', '?'],
+          labels: [ translations.COLOR_LABELS.API, translations.COLOR_LABELS.OTHER ],
+          options: {
+            tooltips: {enabled: false},
+            hover: {mode: null}
+          },
+        };
 
-    const widget7 = {
-      scheme: {
-        domain: [ '#4867d2', '#5c84f1' ]
-      },
-      devices: [
-        { name: 'Other processes', value: 92.8, change: -0.6 },
-        { name: 'CPU usage', value: 7.2, change: 0.8 }
-      ]
-    };
+        // build widgets
+        this.widgets = {
+          widget1
+        };
 
-    this.widgets = {
-      widget1: {
-        chartType: widget1.ChartType,
-        colors: widget1.Colors,
-        labels: widget1.Labels,
-        options: widget1.Options
-      },
-      widget2,
-      widget7
-    };
-
-    this.statsSubscription = this.dashboardService.statsSubj.subscribe(stat => {
-
-      switch (stat.type) {
-
-        case 'CPU':
-          const raw = Math.round(stat.value * 100);
-          this.widgets.widget2.data = [ raw, 10000 - raw ];
-          this.widgets.widget2.values[0] = raw / 100;
-          break;
-
-        case 'Memory':
-          this.widgets.widget2.values[1] = Math.round( (stat.value / (1024 * 1024)) * 100 ) / 100;
-          break;
       }
-    });
+    );
+
+    // on lang change
+    this.translateService.onLangChange
+
+      // attach unsubscriber
+      .pipe(takeUntil(this._unsubscribeAll))
+
+      // subscribe
+      .subscribe((langChangeEvent: LangChangeEvent) => {
+
+        // get translations for widget 1
+        const translations = langChangeEvent.translations.WIDGET1;
+
+        // change labels of widget 1
+        this.widgets.widget1.labels = [translations.COLOR_LABELS.API, translations.COLOR_LABELS.OTHER ];
+
+      }
+    );
+
+    // subscribe to metric changes from dashboard service
+    this.dashboardService.statsSubj
+
+      // attach unsubscriber
+      .pipe(takeUntil(this._unsubscribeAll))
+
+      // subscribe
+      .subscribe(stat => {
+
+        // filter on incoming data type
+        switch (stat.type) {
+
+          case 'CPU':
+
+            // get raw percentage
+            const raw = Math.round(stat.value * 100);
+
+            // set cpu values on widget 1
+            this.widgets.widget1.data = [ raw, 10000 - raw ];
+            this.widgets.widget1.values[0] = raw / 100;
+
+            break;
+
+          case 'Memory':
+
+            // set memory value on widget 1
+            this.widgets.widget1.values[1] = Math.round( (stat.value / (1024 * 1024)) * 100 ) / 100;
+
+            break;
+        }
+
+      }
+    );
 
   }
 
+  /**
+   * The main ngOnDestroy method
+   *
+   * @memberof AnalyticsDashboardComponent
+   */
   ngOnDestroy(): void {
 
-    // unsubscribe
-    this.statsSubscription.unsubscribe();
-    this.dashboardService.statsSubj.complete();
+    // unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+
   }
 
 }

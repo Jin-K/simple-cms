@@ -5,26 +5,26 @@
     <div class="left mr-lg-32">
 
       <div class="pb-24 font-size-18 font-weight-300">
-        API metrics
+        {{ 'WIDGET1.TITLE' | translate }}
       </div>
 
       <div fxLayout="row" fxLayoutAlign="start" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="start start">
 
-        <!-- Widget 2 -->
+        <!-- Widget 1 -->
         <div class="widget" fxFlex="100" fxFlex.gt-sm="33">
 
           <div class="fuse-card">
 
               <div class="p-16">
-                <div class="h1-font-weight-300">CPU & Memory</div>
+                <div class="h1-font-weight-300">{{ 'WIDGET1.BELOW_TITLE' | translate }}</div>
               </div>
   
               <div class="h-200">
-                <canvas *ngIf="widgets" baseChart
-                  [data]="widgets.widget2.data"
-                  [labels]="widgets.widget2.labels"
+                <canvas baseChart
+                  [data]="widgets.widget1.data"
+                  [labels]="widgets.widget1.labels"
                   [chartType]="'doughnut'"
-                  [options]="widgets.widget2.options">
+                  [options]="widgets.widget1.options">
                 </canvas>
               </div>
   
@@ -32,15 +32,15 @@
   
                 <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
                   
-                  <div class="h4 secondary-text">CPU</div>
-                  <div class="h2 font-weight-300 py-8">{{widgets?.widget2.values[0] || '--'}} %</div>
+                  <div class="h4 secondary-text">{{ 'WIDGET1.MEASURE_LABELS.CPU' | translate }}</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets?.widget1.values[0] || '--'}} %</div>
                   
                 </div>
   
                 <div class="px-16" fxLayout="column" fxLayoutAlign="start center">
                   
-                  <div class="h4 secondary-text">Memory</div>
-                  <div class="h2 font-weight-300 py-8">{{widgets?.widget2.values[1] || '--'}} MB</div>
+                  <div class="h4 secondary-text">{{ 'WIDGET1.MEASURE_LABELS.MEMORY' | translate }}</div>
+                  <div class="h2 font-weight-300 py-8">{{widgets?.widget1.values[1] || '--'}} MB</div>
                   
                 </div>
                 
@@ -49,7 +49,7 @@
             </div>
 
         </div>
-        <!-- / Widget 2 -->
+        <!-- / Widget 1 -->
 
       </div>
 

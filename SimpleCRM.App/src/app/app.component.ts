@@ -34,6 +34,15 @@ import { locale as navigationFrench }                     from './navigation/i18
 export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
 
   /**
+   * Available languages for the application
+   *
+   * @type {string[]}
+   * @readonly
+   * @memberof AppComponent
+   */
+  readonly langs: string[] = ['en', 'fr'];
+
+  /**
    * Configuration object for Fuse
    *
    * @type {*}
@@ -78,31 +87,25 @@ export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
     // call base constructor
     super();
 
-    // Get default navigation
+    // get default navigation
     this.navigation = navigation;
 
-    // Register the navigation to the service
+    // register the navigation to the service
     this._fuseNavigationService.register('main', this.navigation);
 
-    // Set the main navigation as our current navigation
+    // set the main navigation as our current navigation
     this._fuseNavigationService.setCurrentNavigation('main');
 
-    // Add languages
-    this._translateService.addLangs(['en', 'fr']);
+    // add languages
+    this._translateService.addLangs(this.langs);
 
-    // Set the default language
-    setTimeout(() => {
-      this._translateService.setDefaultLang('en');
-      this._translateService.setDefaultLang('fr');
-    });
-
-    // Set the navigation translations
+    // set the navigation translations
     this._fuseTranslationLoaderService.loadTranslations(navigationEnglish, navigationFrench);
 
-    // Use a language
-    this._translateService.use('fr');
+    // set and use default language
+    this.setAndUseLang('fr');
 
-    // Add is-mobile class to the body if the platform is mobile
+    // add is-mobile class to the body if the platform is mobile
     if (this._platform.ANDROID || this._platform.IOS) {
       this.document.body.classList.add('is-mobile');
     }
@@ -159,6 +162,27 @@ export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
 
     // call base method
     super.ngOnDestroy();
+
+  }
+
+  private setAndUseLang(language: string) {
+
+    // if multiple languages set the default language
+    if (this.langs.length > 1) {
+
+      // with workaround
+      setTimeout(() => {
+
+        // get other language
+        const otherLanguage = this.langs.find(l => l !== language);
+
+        this._translateService.setDefaultLang(otherLanguage);
+        this._translateService.setDefaultLang(language);
+      });
+    }
+
+    // Use a language
+    this._translateService.use(language);
 
   }
 

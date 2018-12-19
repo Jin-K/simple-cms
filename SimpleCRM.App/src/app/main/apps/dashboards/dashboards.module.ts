@@ -1,5 +1,6 @@
 import { NgModule }                     from '@angular/core';
 import { Routes, RouterModule }         from '@angular/router';
+import { TranslateModule }              from '@ngx-translate/core';
 import { ChartsModule }                 from 'ng2-charts';
 
 import { FuseSharedModule }             from '@fuse/shared.module';
@@ -45,6 +46,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
 
     ChartsModule,
+    TranslateModule,
 
     FuseSharedModule
   ],

@@ -3,7 +3,10 @@ export const locale = {
   data: {
     'NAV': {
       'APPLICATIONS': 'Applications',
-      'DASHBOARDS': 'Tableaux de bord',
+      'DASHBOARDS': {
+        'TITLE': 'Tableaux de bord',
+        'ANALYTICS': 'Analytique'
+      },
       'CHAT'        : 'Chat',
       'ENTITIES': {
         'TITLE': 'Entitées',

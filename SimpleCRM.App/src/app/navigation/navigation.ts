@@ -10,13 +10,14 @@ export const navigation: FuseNavigation[] = [
       {
         id: 'dashboards',
         title: 'Dashboards',
-        translate: 'NAV.DASHBOARDS',
+        translate: 'NAV.DASHBOARDS.TITLE',
         type: 'collapsable',
         icon: 'dashboard',
         children: [
           {
             id: 'analytics',
             title: 'Analytics',
+            translate: 'NAV.DASHBOARDS.ANALYTICS',
             type: 'item',
             url: '/apps/dashboards/analytics'
           }

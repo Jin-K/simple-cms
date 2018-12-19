@@ -1,192 +1,228 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Store }                                           from '@ngrx/store';
-import { TranslateService }                                from '@ngx-translate/core';
-import { Subject, Observable }                             from 'rxjs';
-import { takeUntil }                                       from 'rxjs/operators';
+import { Component, OnDestroy, OnInit, ViewEncapsulation }  from '@angular/core';
+import { Store }                                            from '@ngrx/store';
+import { TranslateService }                                 from '@ngx-translate/core';
+import { Subject, Observable }                              from 'rxjs';
+import { takeUntil }                                        from 'rxjs/operators';
 
-import { FuseConfigService }                               from '@fuse/services/config.service';
-import { FuseSidebarService }                              from '@fuse/components/sidebar/sidebar.service';
+import { FuseSidebarService }                               from '@fuse/components/sidebar/sidebar.service';
+import { FuseConfigService }                                from '@fuse/services/config.service';
+import { FuseTranslationLoaderService }                     from '@fuse/services/translation-loader.service';
+import * as fromAuthStore                                   from '@core/auth';
 
-import * as fromAuthStore                                  from '@core/auth';
+import * as fromStore                                       from 'app/store';
+import { navigation }                                       from 'app/navigation/navigation';
+import { locale as english }                                from './i18n/en';
+import { locale as french }                                 from './i18n/fr';
 
-import { navigation }                                      from 'app/navigation/navigation';
-import * as fromStore                                      from 'app/store';
-
-import * as _                                              from 'lodash';
+import * as _                                               from 'lodash';
 
 @Component({
-    selector     : 'toolbar',
-    templateUrl  : './toolbar.component.html',
-    styleUrls    : ['./toolbar.component.scss'],
-    encapsulation: ViewEncapsulation.None
+  selector: 'toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
-export class ToolbarComponent implements OnInit, OnDestroy
-{
-    horizontalNavbar: boolean;
-    rightNavbar: boolean;
-    hiddenNavbar: boolean;
-    languages: any;
-    navigation: any;
-    selectedLanguage: any;
-    userStatusOptions: any[];
-    given_name$: Observable<string>;
-    isAuthorized$: Observable<boolean>;
+export class ToolbarComponent implements OnInit, OnDestroy {
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
+  // public
+  horizontalNavbar: boolean;
+  rightNavbar: boolean;
+  hiddenNavbar: boolean;
+  languages: any;
+  navigation: any;
+  selectedLanguage: any;
+  userStatusOptions: any[];
+  given_name$: Observable<string>;
+  isAuthorized$: Observable<boolean>;
 
-    /**
-     * Constructor
-     *
-     * @param {FuseConfigService} _fuseConfigService
-     * @param {FuseSidebarService} _fuseSidebarService
-     * @param {TranslateService} _translateService
-     * @param {Store<fromAuthStore.AuthState>} _store
-     */
-    constructor(
-        private _fuseConfigService: FuseConfigService,
-        private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService,
-        private _store: Store<fromAuthStore.AuthState>
-    )
-    {
-        // Set the defaults
-        this.userStatusOptions = [
-            {
-                'title': 'Online',
-                'icon' : 'icon-checkbox-marked-circle',
-                'color': '#4CAF50'
-            },
-            {
-                'title': 'Away',
-                'icon' : 'icon-clock',
-                'color': '#FFC107'
-            },
-            {
-                'title': 'Do not Disturb',
-                'icon' : 'icon-minus-circle',
-                'color': '#F44336'
-            },
-            {
-                'title': 'Invisible',
-                'icon' : 'icon-checkbox-blank-circle-outline',
-                'color': '#BDBDBD'
-            },
-            {
-                'title': 'Offline',
-                'icon' : 'icon-checkbox-blank-circle-outline',
-                'color': '#616161'
-            }
-        ];
+  // private
+  private _unsubscribeAll: Subject<any>;
 
-        this.languages = [
-            {
-                id   : 'en',
-                title: 'English',
-                flag : 'us'
-            },
-            {
-                id   : 'fr',
-                title: 'Français',
-                flag : 'fr'
-            }
-        ];
+  /**
+   * Constructor
+   *
+   * @param {FuseConfigService} _fuseConfigService fuse config service
+   * @param {FuseSidebarService} _fuseSidebarService fuse sidebar service
+   * @param {FuseTranslationLoaderService} _fuseTranslationLoaderService fuse translation service
+   * @param {TranslateService} _translateService core translation service
+   * @param {Store<fromAuthStore.AuthState>} _store our auth store (store/auth)
+   */
+  constructor(
+    private _fuseConfigService: FuseConfigService,
+    private _fuseSidebarService: FuseSidebarService,
+    private _fuseTranslationLoaderService: FuseTranslationLoaderService,
+    private _translateService: TranslateService,
+    private _store: Store<fromAuthStore.AuthState>
+  ) {
 
-        this.navigation = navigation;
+    // set the defaults
+    this.userStatusOptions = [
+      {
+        'title': 'Online',
+        'icon': 'icon-checkbox-marked-circle',
+        'color': '#4CAF50'
+      },
+      {
+        'title': 'Away',
+        'icon': 'icon-clock',
+        'color': '#FFC107'
+      },
+      {
+        'title': 'Do not Disturb',
+        'icon': 'icon-minus-circle',
+        'color': '#F44336'
+      },
+      {
+        'title': 'Invisible',
+        'icon': 'icon-checkbox-blank-circle-outline',
+        'color': '#BDBDBD'
+      },
+      {
+        'title': 'Offline',
+        'icon': 'icon-checkbox-blank-circle-outline',
+        'color': '#616161'
+      }
+    ];
 
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
+    this.languages = [
+      {
+        id: 'en',
+        title: 'English',
+        flag: 'us'
+      },
+      {
+        id: 'fr',
+        title: 'Français',
+        flag: 'fr'
+      }
+    ];
 
-        // Get given name from store
-        this.given_name$ = this._store.select(fromAuthStore.UserSelectors.getUserGivenName);
+    // set navigation
+    this.navigation = navigation;
 
-        // Get "is authorized" from store
-        this.isAuthorized$ = this._store.select(fromAuthStore.UserSelectors.getUserIsAuthorized);
-    }
+    // set the private defaults
+    this._unsubscribeAll = new Subject();
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
+    // get given name from store
+    this.given_name$ = this._store.select(fromAuthStore.UserSelectors.getUserGivenName);
 
-    /**
-     * On init
-     */
-    ngOnInit(): void
-    {
-        // Subscribe to the config changes
-        this._fuseConfigService.config
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((settings) => {
-                this.horizontalNavbar = settings.layout.navbar.position === 'top';
-                this.rightNavbar = settings.layout.navbar.position === 'right';
-                this.hiddenNavbar = settings.layout.navbar.hidden === true;
-            });
+    // get "is authorized" from store
+    this.isAuthorized$ = this._store.select(fromAuthStore.UserSelectors.getUserIsAuthorized);
 
-        // Set the selected language from default languages
-        this.selectedLanguage = _.find(this.languages, {'id': this._translateService.currentLang});
-    }
+    // load translations
+    this._fuseTranslationLoaderService.loadTranslations(english, french);
+  }
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Toggle sidebar open
-     *
-     * @param key
-     */
-    toggleSidebarOpen(key): void
-    {
-        this._fuseSidebarService.getSidebar(key).toggleOpen();
-    }
+  /**
+   * On Init
+   *
+   * @memberof ToolbarComponent
+   */
+  ngOnInit(): void {
 
-    /**
-     * Search
-     *
-     * @param value
-     */
-    search(value): void
-    {
-        // Do your search here...
-        console.log(value);
-    }
+    // subscribe to the config changes
+    this._fuseConfigService.config
 
-    /**
-     * Set the language
-     *
-     * @param lang
-     */
-    setLanguage(lang): void
-    {
-        // Set the selected language for the toolbar
-        this.selectedLanguage = lang;
+      // attach unsubscriber
+      .pipe(takeUntil(this._unsubscribeAll))
 
-        // Use the selected language for translations
-        this._translateService.use(lang.id);
-    }
+      // subscribe
+      .subscribe((settings) => {
 
-    /**
-     * Log in
-     */
-    login(): void {
-      this._store.dispatch(new fromStore.Go({path: ['/auth/login']}));
-    }
+        // set local properties with values from fuse config settings
+        this.horizontalNavbar = settings.layout.navbar.position === 'top';
+        this.rightNavbar = settings.layout.navbar.position === 'right';
+        this.hiddenNavbar = settings.layout.navbar.hidden === true;
+      });
 
-    /**
-     * Log out
-     */
-    logout(): void {
-      this._store.dispatch(new fromAuthStore.SessionActions.SessionEnd());
-    }
+    // set the selected language from default languages
+    this.selectedLanguage = _.find(this.languages, { 'id': this._translateService.currentLang });
+
+  }
+
+  /**
+   * On destroy
+   *
+   * @memberof ToolbarComponent
+   */
+  ngOnDestroy(): void {
+
+    // unsubscribe from all subscriptions
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+
+  }
+
+  // -----------------------------------------------------------------------------------------------------
+  // @ Public methods
+  // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * Toggle sidebar open
+   *
+   * @param key
+   * @memberof ToolbarComponent
+   */
+  toggleSidebarOpen(key): void {
+    this._fuseSidebarService.getSidebar(key).toggleOpen();
+  }
+
+  /**
+   * Search
+   *
+   * @param value
+   */
+  search(value): void {
+
+    // do your search here...
+    console.log(value);
+
+  }
+
+  /**
+   * Set the language
+   *
+   * @param lang
+   * @memberof ToolbarComponent
+   */
+  setLanguage(lang): void {
+
+    // set the selected language for the toolbar
+    this.selectedLanguage = lang;
+
+    // use the selected language for translations
+    this._translateService.use(lang.id);
+
+  }
+
+  /**
+   * Log in
+   *
+   * @memberof ToolbarComponent
+   */
+  login(): void {
+
+    // dispatch navigation action
+    this._store.dispatch(new fromStore.Go({ path: ['/auth/login'] }));
+
+  }
+
+  /**
+   * Log out
+   *
+   * @memberof ToolbarComponent
+   */
+  logout(): void {
+
+    // dispatch navigation action
+    this._store.dispatch(new fromAuthStore.SessionActions.SessionEnd());
+
+  }
+
 }
