@@ -1,7 +1,13 @@
 import { Action } from '@ngrx/store';
 
-export const SESSION_START  = '[AUTH].[SESSION] SESSION START';
-export const SESSION_END    = '[AUTH].[SESSION] SESSION END';
+export const WNE_FETCH_TRY_DONE = '[AUTH].[SESSION] WNE_FETCH_TRY_DONE';
+export const SESSION_START      = '[AUTH].[SESSION] SESSION START';
+export const SESSION_END        = '[AUTH].[SESSION] SESSION END';
+
+export class WNEFetchTryDone implements Action {
+  readonly type = WNE_FETCH_TRY_DONE;
+  constructor(public reached: boolean) {}
+}
 
 /**
  * Session Start
@@ -20,5 +26,6 @@ export class SessionEnd implements Action {
 }
 
 export type SessionActionsAll
-    = SessionStart
+    = WNEFetchTryDone
+    | SessionStart
     | SessionStart;

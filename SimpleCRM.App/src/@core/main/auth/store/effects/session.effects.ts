@@ -6,9 +6,9 @@ import { OidcSecurityService }          from 'angular-auth-oidc-client';
 
 import { UserActions, SessionActions }  from '../actions';
 
-
 @Injectable()
 export class SessionEffect {
+
   constructor(
     private actions$: Actions,
     private oidcSecurityService: OidcSecurityService
@@ -22,7 +22,7 @@ export class SessionEffect {
   );
 
   @Effect({dispatch: false})
-  sessionEnd$ = this.actions$.pipe(
+  sessionEnd$: Observable<any> = this.actions$.pipe(
     ofType(SessionActions.SESSION_END),
     map(_ => this.oidcSecurityService.logoff()),
     catchError(error => of(error))

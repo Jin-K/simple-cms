@@ -17,7 +17,7 @@ import { AnalyticsDashboardService }    from './analytics/analytics.service';
 const routes: Routes = [
 
   /**
-   * @name /analytics
+   * @name /apps/analytics
    * Show analytics.
    * Is actually the default route for the application. @see AppModule routes
    */

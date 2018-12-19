@@ -26,6 +26,9 @@
     "no-debugger": false,
     "curly": false,
     "no-empty-interface": false,
-    "one-line": false
+    "one-line": false,
+    "no-output-on-prefix": false,
+    "typedef-whitespace": false,
+    "no-bitwise": false
   }
 }

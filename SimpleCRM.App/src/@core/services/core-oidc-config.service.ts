@@ -3,21 +3,56 @@ import { Injectable, Output, EventEmitter, Inject } from '@angular/core';
 import { CORE_CONFIG }                              from './config.service';
 import { CoreUtils }                                from '../utils';
 import { CoreConfig }                               from '../types';
+import { Store }                                    from '@ngrx/store';
+import { SessionActions }                           from '../main/auth/store/actions';
 
 
-/** ref: https://github.com/damienbod/angular-auth-oidc-client/issues/188 */
+/** ref:  */
+
+
+/**
+ * The main CoreOidcConfigService.
+ *
+ * @see [https://github.com/damienbod/angular-auth-oidc-client/issues/188](https://github.com/damienbod/angular-auth-oidc-client/issues/188)
+ * @export
+ * @class CoreOidcConfigService
+ */
 Injectable();
 export class CoreOidcConfigService {
+
+  /**
+   * Well known endpoints json object.
+   * Is retrieved from sts server
+   * 
+   * @description Contains informations about other endpoints of the sts server
+   * @private
+   * @type {*}
+   * @memberof CoreOidcConfigService
+   */
   private _wellKnownEndpoints: any;
+
+  /**
+   * Client configuration object for our application.
+   * Check {@link #getClientConfig()}
+   * 
+   * @private
+   * @type {*}
+   * @memberof CoreOidcConfigService
+   */
   private _clientConfiguration: any;
 
-  // tslint:disable-next-line:no-output-on-prefix
+  /**
+   * Event that is emitted when we obtain json response from sts server
+   *
+   * @see AuthModule
+   * @memberof CoreOidcConfigService
+   */
   @Output() onConfigurationLoaded = new EventEmitter<boolean>();
 
   public get clientConfiguration(): any { return this._clientConfiguration; }
   public get wellKnownEndpoints(): any { return this._wellKnownEndpoints; }
 
-  constructor( @Inject(CORE_CONFIG) private _config ) { }
+  constructor( @Inject(CORE_CONFIG) private _config, private _store: Store<any> ) { }
 
   async load() {
     if (!this._config.stsServer || !this._config.apiServer) return;
@@ -26,14 +61,27 @@ export class CoreOidcConfigService {
   }
 
   private async load_using_stsServer(stsServer: string) {
+
+    // prepare success variable
+    let success = false;
+
+    // try to reach sts server
     try {
+
+      // fetch well known endpoints
       const response = await fetch(`${stsServer}/.well-known/openid-configuration`);
       this._wellKnownEndpoints = await response.json();
+
+      // trigger the next event
       this.onConfigurationLoaded.emit();
+
+      // set success to true
+      success = true;
     }
-    catch (e) {
-      console.error('CoreOidcConfigService - load_using_stsServer : auth service is unavailable', e);
-    }
+    catch (_) { }
+
+    // dispatch a "well known endpoints fetch try done" action
+    this._store.dispatch(new SessionActions.WNEFetchTryDone(success));
   }
 
   /**

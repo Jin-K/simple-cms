@@ -1,4 +1,4 @@
-import { Injectable }             from '@angular/core';
+import { Injectable, }             from '@angular/core';
 import {
   OpenIDImplicitFlowConfiguration,
   AuthWellKnownEndpoints,
@@ -10,27 +10,38 @@ import { CoreOidcConfigService }  from './../../services';
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-  // Private
+  /**
+   * openID configuration instance, referenced as needed in resetPostLoginRoute(string)
+   *
+   * @private
+   * @memberof AuthService
+   */
   private readonly openIDImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
 
   /**
    * Constructor
-   * 
-   * @param {OidcSecurityService} oidcSecurityService 
-   * @param {CoreOidcConfigService} coreOidcConfigService 
+   *
+   * @param {OidcSecurityService} oidcSecurityService main oidc service of 'angular-auth-oidc-client'
+   * @param {CoreOidcConfigService} coreOidcConfigService main config service of 'angular-auth-oidc-client'
    */
   constructor(
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly coreOidcConfigService: CoreOidcConfigService,
     private authWellKnownEndpoints: AuthWellKnownEndpoints
   ) { }
-  
+
   /**
-   * Setup angular-auth-oidc-client module
+   * Setup main module of 'angular-auth-oidc-client' which is wrapped
+   *
+   * @memberof AuthService
    */
-  setupModule(): void {
+  setupRealAuthModuleModule(): void {
+    debugger;
+
+    // set well known endpoints from sts server
     this.authWellKnownEndpoints.setWellKnownEndpoints(this.coreOidcConfigService.wellKnownEndpoints);
-    
+
+    // copy property values
     this.openIDImplicitFlowConfiguration.stsServer                                   = this.coreOidcConfigService.clientConfiguration.stsServer;
     this.openIDImplicitFlowConfiguration.redirect_url                                = this.coreOidcConfigService.clientConfiguration.redirect_url;
     this.openIDImplicitFlowConfiguration.client_id                                   = this.coreOidcConfigService.clientConfiguration.client_id;
@@ -46,18 +57,25 @@ export class AuthService {
     this.openIDImplicitFlowConfiguration.log_console_debug_active                    = this.coreOidcConfigService.clientConfiguration.log_console_debug_active;
     this.openIDImplicitFlowConfiguration.max_id_token_iat_offset_allowed_in_seconds  = this.coreOidcConfigService.clientConfiguration.max_id_token_iat_offset_allowed_in_seconds;
 
+    // setup angular-auth-oidc-client module
     this.oidcSecurityService.setupModule(this.openIDImplicitFlowConfiguration, this.authWellKnownEndpoints);
+
   }
-  
+
   /**
-   * Set post_login_route in OidcSecurityService.authConfiguration (OpenIDImplicitFlowConfiguration) 
+   * Set post_login_route in OidcSecurityService.authConfiguration (OpenIDImplicitFlowConfiguration)
    * in a tricky way, and invoke OidcSecurityService.setupModule() again
-   * 
+   *
    * @param {string} returnUrl return path (route) that should be used by angular-auth-oidc-client to redirect on authorization callback
    */
   resetPostLoginRoute(returnUrl: string): void {
+
+    // set post_login_route
     this.openIDImplicitFlowConfiguration.post_login_route = returnUrl;
+
+    // setup angular-auth-oidc-client module
     this.oidcSecurityService.setupModule(this.openIDImplicitFlowConfiguration, this.authWellKnownEndpoints);
+
   }
 
 }

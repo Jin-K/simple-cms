@@ -8,6 +8,7 @@ import * as UserActions                             from '../actions/user.action
 
 @Injectable()
 export class UserEffect {
+
   constructor(
     private actions$: Actions,
     private oidcSecurityService: OidcSecurityService,
@@ -22,5 +23,5 @@ export class UserEffect {
       catchError(error => of(error))
     ))
   );
-  
+
 }

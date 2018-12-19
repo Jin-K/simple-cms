@@ -15,14 +15,39 @@ import { navigation }                                     from './navigation/nav
 import { locale as navigationEnglish }                    from './navigation/i18n/en';
 import { locale as navigationFrench }                     from './navigation/i18n/fr';
 
+
+/**
+ * The main AppComponent class.
+ * Main component: bootstrapped during initialization of the main app.module
+ *
+ * @export
+ * @class AppComponent
+ * @extends {AuthAppBase}
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 @Component({
   selector: 'app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
-  // Public
+
+  /**
+   * Configuration object for Fuse
+   *
+   * @type {*}
+   * @memberof AppComponent
+   */
   fuseConfig: any;
+
+
+  /**
+   * Navigation object for Fuse's side navigation bar
+   *
+   * @type {*}
+   * @memberof AppComponent
+   */
   navigation: any;
 
   /**
@@ -31,7 +56,9 @@ export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
    * @param {DOCUMENT} document
    * @param {FuseConfigService} _fuseConfigService
    * @param {FuseNavigationService} _fuseNavigationService
-   * @param {FuseSplashScreenService} _fuseSplashScreenService A reference to this service is required even if it is not used in the component, the service's constructor needs to be executed
+   * @param {FuseSplashScreenService} _fuseSplashScreenService A reference to this service is required
+   *                                                          even if it is not used in the component,
+   *                                                          the service's constructor needs to be executed
    * @param {FuseTranslationLoaderService} _fuseTranslationLoaderService
    * @param {Platform} _platform
    * @param {TranslateService} _translateService
@@ -47,6 +74,7 @@ export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
     private _platform: Platform,
     protected _injector: Injector
   ) {
+
     // call base constructor
     super();
 
@@ -78,52 +106,60 @@ export class AppComponent extends AuthAppBase implements OnInit, OnDestroy {
     if (this._platform.ANDROID || this._platform.IOS) {
       this.document.body.classList.add('is-mobile');
     }
+
   }
 
-  // -----------------------------------------------------------------------------------------------------
-  // @ Lifecycle hooks
-  // -----------------------------------------------------------------------------------------------------
-
   /**
-   * On init
+   * On initialisation
+   *
+   * @memberof AppComponent
    */
   ngOnInit(): void {
+
     // call base method
     super.ngOnInit();
 
-    // Subscribe to config changes
+    // subscribe to config changes
     this._fuseConfigService.config
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((config) => {
 
       this.fuseConfig = config;
 
-      // Boxed
-      if ( this.fuseConfig.layout.width === 'boxed' ) {
-        this.document.body.classList.add('boxed');
-      }
-      else {
-        this.document.body.classList.remove('boxed');
-      }
+      // boxed
+      if ( this.fuseConfig.layout.width === 'boxed' ) this.document.body.classList.add('boxed');
+      else                                            this.document.body.classList.remove('boxed');
 
-      // Color theme - Use normal for loop for IE11 compatibility
+      // color theme - Use normal for loop for IE11 compatibility
       for ( let i = 0; i < this.document.body.classList.length; i++ ) {
+
+        // get class name
         const className = this.document.body.classList[i];
 
+        // remove class if it starts with 'theme-'
         if ( className.startsWith('theme-') ) {
           this.document.body.classList.remove(className);
         }
+
       }
 
+      // add color theme class to body
       this.document.body.classList.add(this.fuseConfig.colorTheme);
     });
+
   }
+
 
   /**
    * On destroy
+   *
+   * @memberof AppComponent
    */
   ngOnDestroy(): void {
+
     // call base method
     super.ngOnDestroy();
+
   }
+
 }

@@ -4,6 +4,13 @@ import { CORE_CONFIG }                                        from './services';
 import { CoreConfig }                                         from './types';
 import { AuthModule }                                         from './main/auth';
 
+/**
+ * The main CoreModule class.
+ * Imports AuthModule
+ *
+ * @export
+ * @class CoreModule
+ */
 @NgModule({
   imports: [ AuthModule ]
 })

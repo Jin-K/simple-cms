@@ -23,22 +23,54 @@ import { AppComponent }                   from './app.component';
 import { LayoutModule }                   from './layout/layout.module';
 import { AppStoreModule }                 from './store/store.module';
 
+/**
+ * Routes for the main app module
+ *
+ * @version 0.0.1
+ * @constant
+ * @type {Route[]}
+ */
 const appRoutes: Routes = [
+
+  /**
+   * @name /apps
+   * Main route containing all apps
+   */
   {
     path          : 'apps',
     loadChildren  : './main/apps/apps.module#AppsModule'
   },
+  /**
+   * @name /entity
+   * Main route for entities and entity items (CRM)
+   * Needs authorisation from AuthGuard
+   */
   {
     path          : 'entity',
     loadChildren  : './main/entity/entity.module#EntityModule',
     canActivate   : [AuthGuard]
   },
+  /**
+   * @name /
+   * Main default route
+   * Any unmatching route in app matches to this one
+   */
   {
     path          : '**',
     redirectTo    : 'apps/dashboards/analytics'
   },
+
 ];
 
+/**
+ * The main AppModule class.
+ * 'FuseModule' and 'CoreModule' should be imported from here
+ * via 'forRoot' with their respective configuration objects
+ *
+ * @description main module of our app
+ * @export
+ * @class AppModule
+ */
 @NgModule({
   declarations: [
     AppComponent
