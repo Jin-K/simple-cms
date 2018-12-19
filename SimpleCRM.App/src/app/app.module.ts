@@ -51,6 +51,14 @@ const appRoutes: Routes = [
     canActivate   : [AuthGuard]
   },
   /**
+   * @name /errors
+   * Main route for error pages
+   */
+  {
+    path          : 'errors',
+    loadChildren  : './main/pages/errors/errors.module#ErrorsModule',
+  },
+  /**
    * @name /
    * Main default route
    * Any unmatching route in app matches to this one

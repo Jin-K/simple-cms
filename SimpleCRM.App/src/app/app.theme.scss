@@ -84,6 +84,7 @@ $typography: mat-typography-config(
 @import "src/app/main/apps/chat/chat.theme";
 
 @import "src/@core/main/auth/login/login.theme";
+@import "src/app/main/pages/errors/500/error-500.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
@@ -97,6 +98,7 @@ $typography: mat-typography-config(
 
     // Pages
     @include login-theme($theme);
+    @include error-500-theme($theme);
 }
 
 // -----------------------------------------------------------------------------------------------------

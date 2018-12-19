@@ -36,7 +36,6 @@ export class AuthService {
    * @memberof AuthService
    */
   setupRealAuthModuleModule(): void {
-    debugger;
 
     // set well known endpoints from sts server
     this.authWellKnownEndpoints.setWellKnownEndpoints(this.coreOidcConfigService.wellKnownEndpoints);
