@@ -19,8 +19,11 @@ const APPLICATION_JSON = 'application/json';
 
 /**
  * The main EntityService injectable class.
- * Service for entities and their items.
  *
+ * Using BehaviorSubject typed objects, check [this issue reponse](https://stackoverflow.com/a/43351340/7210166)
+ * to understeand the difference with regular Subject typed objects
+ *
+ * @description Service for entities and their items.
  * @export
  * @class EntityService
  */

@@ -51,9 +51,20 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <entity-items-list-details></entity-items-list-details>
+        <entity-items-list-details (changeSort)="onChangeSort($event)"></entity-items-list-details>
       </div>
       <!-- / CONTENT -->
+
+      <!-- APP PAGINATOR -->
+      <app-paginator showFirstLastButtons
+                    [length]="paginationSettings.length"
+                    [pageSize]="paginationSettings.pageSize"
+                    [pageSizeOptions]="paginationSettings.selectItemsPerPage"
+                    [pageIndex]="paginationSettings.pageIndex"
+                    [selectionLength]="paginationSettings.selectionLength"
+                    (page)="paginationSettings.changePage($event); paginate()">
+      </app-paginator>
+      <!-- / APP PAGINATOR -->
       
     </div>
     <!-- / CENTER -->

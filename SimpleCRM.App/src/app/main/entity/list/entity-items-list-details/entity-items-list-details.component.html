@@ -1,4 +1,6 @@
-<mat-table #table [dataSource]="dataSource"
+<mat-table [dataSource]="dataSource"
+          matSort matSortActive="name"
+          matSortDisableClear matSortDirection="asc"
            [@animateStagger]="{value:'50'}">
     <!-- Checkbox Column -->
     <ng-container matColumnDef="checkbox">
@@ -21,7 +23,7 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
         <mat-cell *matCellDef="let item">
             <p class="text-truncate font-weight-600">{{item.name}} {{item.lastName}}</p>
         </mat-cell>
@@ -29,7 +31,7 @@
 
     <!-- Email Column -->
     <ng-container matColumnDef="email">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Email</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm mat-sort-header>Email</mat-header-cell>
         <mat-cell *matCellDef="let item" fxHide fxShow.gt-sm>
             <p class="email text-truncate">
                 {{item.email}}
@@ -39,7 +41,7 @@
 
     <!-- Phone Column -->
     <ng-container matColumnDef="phone">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Phone</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md mat-sort-header>Phone</mat-header-cell>
         <mat-cell *matCellDef="let item" fxHide fxShow.gt-md>
             <p class="phone text-truncate">
                 {{item.phone}}
@@ -49,7 +51,7 @@
 
     <!-- Job Title Column -->
     <ng-container matColumnDef="jobTitle">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Job title</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg mat-sort-header>Job title</mat-header-cell>
         <mat-cell *matCellDef="let item" fxHide fxShow.gt-lg>
             <p class="job-title text-truncate">
                 {{item.jobTitle}}
@@ -59,7 +61,7 @@
 
     <!-- Company Column -->
     <ng-container matColumnDef="company">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg>Company</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg mat-sort-header>Company</mat-header-cell>
         <mat-cell *matCellDef="let item" fxHide fxShow.gt-lg>
             <p class="company text-truncate">
                 {{item.company}}
