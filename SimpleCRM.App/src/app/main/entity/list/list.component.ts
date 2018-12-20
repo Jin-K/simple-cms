@@ -157,7 +157,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Paginate using the store
+   * Paginate (entity-items) using the store
    *
    * @memberof EntityListComponent
    */

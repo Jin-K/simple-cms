@@ -21,7 +21,11 @@ const APPLICATION_JSON = 'application/json';
  * The main EntityService injectable class.
  *
  * Using BehaviorSubject typed objects, check [this issue reponse](https://stackoverflow.com/a/43351340/7210166)
- * to understeand the difference with regular Subject typed objects
+ * to understeand the difference(s) with regular Subject typed objects.
+ *
+ * I think it is used to be able to subscribe to it and get values from, even if we called .next() on it before.
+ * So if onItemsChanged is triggered before EntityItemsListDetailsComponent's ngOnInit() method and FilesDataSource initialization,
+ * the datasource of EntityItemsListDetailsComponent will still receive data
  *
  * @description Service for entities and their items.
  * @export
@@ -34,6 +38,9 @@ export class EntityService implements Resolve<any> {
   private actionUrl = `${coreConfig.apiServer}/api/entity`;
   private headers: HttpHeaders = new HttpHeaders();
 
+  // public
+  onItemsChanged = new BehaviorSubject<any>([]);
+
   /** TO DELETE BELOW */
 
   items: Item[];
@@ -42,7 +49,7 @@ export class EntityService implements Resolve<any> {
   searchText: string;
   filterBy: string;
 
-  onItemsChanged: BehaviorSubject<any>;
+  onItemsChanged2: BehaviorSubject<any>;
   onFilterChanged: Subject<any>;
   onUserDataChanged: BehaviorSubject<any>;
   onSelectedItemsChanged: BehaviorSubject<any>;
@@ -68,7 +75,7 @@ export class EntityService implements Resolve<any> {
     /** TO DELETE BELOW */
 
     // Set the defaults
-    this.onItemsChanged = new BehaviorSubject([]);
+    this.onItemsChanged2 = new BehaviorSubject([]);
     this.onSelectedItemsChanged = new BehaviorSubject([]);
     this.onUserDataChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
@@ -97,7 +104,7 @@ export class EntityService implements Resolve<any> {
    * @returns {Observable<HttpResponse<IItem[]>>} returns an observable of the array of entity items
    * @memberof EntityService
    */
-  getItemsList(entity: string): Observable<HttpResponse<IItem[]>> {
+  getItemsList(entity: string): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
     // get pagination settings from pagination service
     const paginationSettings = this.paginationService.getPaginationSettings(entity);
 
@@ -110,7 +117,10 @@ export class EntityService implements Resolve<any> {
       + `&orderBy=${paginationSettings.sort}&query=${entity}`;
 
     // return http observable of part of entity items
-    return this.http.get<IItem[]>(requestUrl, { observe: 'response', headers: this.headers });
+    return this.http.get<{links: any[], value: IItem[]}>(requestUrl, { observe: 'response', headers: this.headers })
+
+      // just trigger the next event of onItemsChanged also
+      .do(response => this.onItemsChanged.next(response.body.value));
   }
 
   /**
@@ -196,7 +206,7 @@ export class EntityService implements Resolve<any> {
 
           this.items = this.items.map(item => new Item(item));
 
-          this.onItemsChanged.next(this.items);
+          this.onItemsChanged2.next(this.items);
           resolve(this.items);
         }, reject);
     });
@@ -383,7 +393,7 @@ export class EntityService implements Resolve<any> {
     this.items.splice(itemIndex, 1);
 
     // trigger the next event
-    this.onItemsChanged.next(this.items);
+    this.onItemsChanged2.next(this.items);
   }
 
   /**
@@ -405,7 +415,7 @@ export class EntityService implements Resolve<any> {
     }
 
     // trigger the next event
-    this.onItemsChanged.next(this.items);
+    this.onItemsChanged2.next(this.items);
 
     // deselect all items
     this.deselectItems();

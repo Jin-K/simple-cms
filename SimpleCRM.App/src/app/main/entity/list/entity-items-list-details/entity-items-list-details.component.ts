@@ -19,6 +19,7 @@ import { FuseConfirmDialogComponent }             from '@fuse/components/confirm
 
 import { EntityService }                          from '../../entity.service';
 import { EntityItemsListItemFormDialogComponent } from '../entity-items-list-item-form/entity-items-list-item-form.component';
+import { IItem }                                  from 'app/models';
 
 @Component({
   selector: 'entity-items-list-details',
@@ -58,6 +59,7 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   items: any;
   user: any;
   dataSource: FilesDataSource | null;
+  dataSource2: FilesDataSource2 | null;
   displayedColumns = ['checkbox', 'avatar', 'name', 'email', 'phone', 'jobTitle', 'company', 'buttons'];
   selecteditems: any[];
   checkboxes: {};
@@ -93,9 +95,10 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
 
     // instantiate data source
     this.dataSource = new FilesDataSource(this._entityService);
+    this.dataSource2 = new FilesDataSource2(this._entityService);
 
     // listen to onItemsChanged
-    this._entityService.onItemsChanged
+    this._entityService.onItemsChanged2
 
       // attach unsubscriber
       .pipe(takeUntil(this._unsubscribeAll))
@@ -294,7 +297,40 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
 
 }
 
-export class FilesDataSource extends DataSource<any> {
+export class FilesDataSource extends DataSource<IItem> {
+
+  /**
+   * Constructor
+   *
+   * @param {EntityService} _entityService main service for entities and entity items
+   * @memberof FilesDataSource
+   */
+  constructor(
+    private _entityService: EntityService
+  ) {
+
+    // invoke base constructor
+    super();
+
+  }
+
+  connect(): Observable<IItem[]> {
+
+    // bind to onItemsChanged subject of our entities service
+    return this._entityService.onItemsChanged;
+
+  }
+
+  /**
+   * Disconnect implementation
+   *
+   * @memberof FilesDataSource
+   */
+  disconnect(): void { }
+
+}
+
+export class FilesDataSource2 extends DataSource<any> {
 
   /**
    * Constructor
@@ -305,7 +341,10 @@ export class FilesDataSource extends DataSource<any> {
   constructor(
     private _entityService: EntityService
   ) {
+
+    // invoke base constructor
     super();
+
   }
 
   /**
@@ -316,13 +355,13 @@ export class FilesDataSource extends DataSource<any> {
    */
   connect(): Observable<any[]> {
 
-    // bind to onItemsChanged subject of our entities service
-    return this._entityService.onItemsChanged;
+    // bind to onItemsChanged2 subject of our entities service
+    return this._entityService.onItemsChanged2;
   }
 
   /**
    *
-   * Disconnect
+   * Disconnect implementation
    *
    * @memberof FilesDataSource
    */
