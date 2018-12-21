@@ -1,10 +1,13 @@
 <mat-table [dataSource]="dataSource"
-          matSort matSortActive="name"
-          matSortDisableClear matSortDirection="asc"
+            matSort matSortActive="id"
+            matSortDisableClear matSortDirection="asc"
            [@animateStagger]="{value:'50'}">
+
     <!-- Checkbox Column -->
     <ng-container matColumnDef="checkbox">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? paginationSettings.toggleMasterSelection() : null"></mat-checkbox>
+        </mat-header-cell>
         <mat-cell *matCellDef="let item">
             <mat-checkbox [(ngModel)]="checkboxes[item.id]" (ngModelChange)="onSelectedChange(item.id)"
                           (click)="$event.stopPropagation()">
@@ -20,53 +23,39 @@
                  [src]="item.avatar"/>
         </mat-cell>
     </ng-container>
+    
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+      <mat-cell *matCellDef="let item">
+        <p class="font-weight-600">
+          {{item.id}}
+        </p>
+      </mat-cell>
+    </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
+    <!-- <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
         <mat-cell *matCellDef="let item">
             <p class="text-truncate font-weight-600">{{item.name}} {{item.lastName}}</p>
         </mat-cell>
+    </ng-container> -->
+    
+    <!-- Active Column -->
+    <ng-container matColumnDef="active">
+      <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm mat-sort-header>Active</mat-header-cell>
+      <mat-cell *matCellDef="let item" fxHide fxShow.gt-sm>
+        <p class="active">{{item.active}}</p>
+      </mat-cell>
     </ng-container>
-
-    <!-- Email Column -->
-    <ng-container matColumnDef="email">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm mat-sort-header>Email</mat-header-cell>
-        <mat-cell *matCellDef="let item" fxHide fxShow.gt-sm>
-            <p class="email text-truncate">
-                {{item.email}}
-            </p>
-        </mat-cell>
-    </ng-container>
-
-    <!-- Phone Column -->
-    <ng-container matColumnDef="phone">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md mat-sort-header>Phone</mat-header-cell>
-        <mat-cell *matCellDef="let item" fxHide fxShow.gt-md>
-            <p class="phone text-truncate">
-                {{item.phone}}
-            </p>
-        </mat-cell>
-    </ng-container>
-
-    <!-- Job Title Column -->
-    <ng-container matColumnDef="jobTitle">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg mat-sort-header>Job title</mat-header-cell>
-        <mat-cell *matCellDef="let item" fxHide fxShow.gt-lg>
-            <p class="job-title text-truncate">
-                {{item.jobTitle}}
-            </p>
-        </mat-cell>
-    </ng-container>
-
-    <!-- Company Column -->
-    <ng-container matColumnDef="company">
-        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-lg mat-sort-header>Company</mat-header-cell>
-        <mat-cell *matCellDef="let item" fxHide fxShow.gt-lg>
-            <p class="company text-truncate">
-                {{item.company}}
-            </p>
-        </mat-cell>
+    
+    <!-- Created Column -->
+    <ng-container matColumnDef="created">
+      <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md mat-sort-header>Created</mat-header-cell>
+      <mat-cell *matCellDef="let item" fxHide fxShow.gt-md>
+        <p class="created text-truncate">{{item.created}}</p>
+      </mat-cell>
     </ng-container>
 
     <!-- Buttons Column -->
@@ -85,10 +74,14 @@
                 </button>
 
                 <mat-menu #moreMenu="matMenu">
-                    <button mat-menu-item aria-label="remove" (click)="deleteItem(item)">
-                        <mat-icon>delete</mat-icon>
-                        <span>Remove</span>
-                    </button>
+                  <button mat-menu-item aria-label="edit" (click)="editItem(item)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit</span>
+                  </button>
+                  <button mat-menu-item aria-label="remove" (click)="deleteItem(item)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Remove</span>
+                  </button>
                 </mat-menu>
             </div>
 
@@ -98,7 +91,7 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let item; columns: displayedColumns;"
              class="item"
-             (click)="editItem(item)"
+             [routerLink]="['consult', item.id]"
              [ngClass]="{'accent-50':checkboxes[item.id]}"
              matRipple
              [@animate]="{value:'*',params:{y:'100%'}}">

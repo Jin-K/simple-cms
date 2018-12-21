@@ -60,7 +60,8 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   user: any;
   dataSource: FilesDataSource | null;
   dataSource2: FilesDataSource2 | null;
-  displayedColumns = ['checkbox', 'avatar', 'name', 'email', 'phone', 'jobTitle', 'company', 'buttons'];
+  // displayedColumns = ['checkbox', 'avatar', 'id', 'name', 'active', 'created', 'buttons'];
+  displayedColumns = ['checkbox', 'avatar', 'id', 'active', 'created', 'buttons'];
   selecteditems: any[];
   checkboxes: {};
   dialogRef: any;
@@ -143,12 +144,8 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
       // attach unsubscriber
       .pipe(takeUntil(this._unsubscribeAll))
 
-      // subscribe
-      .subscribe(user => {
-
-        // save user
-        this.user = user;
-      });
+      // subscribe to save user
+      .subscribe(user => this.user = user);
 
     // listen to onFilterChanged
     this._entityService.onFilterChanged
@@ -157,7 +154,8 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
 
       // subscribe to deselect all items of signal
-      .subscribe(() => this._entityService.deselectItems());
+      // .subscribe(() => this._entityService.deselectItems());
+      .subscribe(this._entityService.deselectItems.bind(this._entityService));
 
     // listen to sort changes of the mat-table
     this.sort.sortChange
@@ -195,7 +193,7 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
    * @param item
    * @memberof EntityItemsListDetailsComponent
    */
-  editItem(item): void {
+  editItem(item: IItem): void {
 
     // open edit item mat dialog and keep reference
     this.dialogRef = this._matDialog.open(EntityItemsListItemFormDialogComponent, {
@@ -281,18 +279,26 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   /**
    * Toggle star
    *
-   * @param itemId id of the item toggled star
+   * @param {number} itemId id of the item toggled star
    * @memberof EntityItemsListDetailsComponent
    */
-  toggleStar(itemId): void {
+  toggleStar(itemId: number): void {
+
+    // if user's starred array contains that item id
     if (this.user.starred.includes(itemId)) {
+
+      // remove from array
       this.user.starred.splice(this.user.starred.indexOf(itemId), 1);
     }
     else {
+
+      // add to array
       this.user.starred.push(itemId);
     }
 
+    // ask entity service to update user's data
     this._entityService.updateUserData(this.user);
+
   }
 
 }
@@ -314,6 +320,12 @@ export class FilesDataSource extends DataSource<IItem> {
 
   }
 
+  /**
+   * Connect function called by the table to retrieve one stream containing the data to render.
+   *
+   * @memberof FilesDataSource
+   * @returns {Observable<any[]>}
+   */
   connect(): Observable<IItem[]> {
 
     // bind to onItemsChanged subject of our entities service
@@ -336,7 +348,7 @@ export class FilesDataSource2 extends DataSource<any> {
    * Constructor
    *
    * @param {EntityService} _entityService
-   * @memberof FilesDataSource
+   * @memberof FilesDataSource2
    */
   constructor(
     private _entityService: EntityService
@@ -350,7 +362,7 @@ export class FilesDataSource2 extends DataSource<any> {
   /**
    * Connect function called by the table to retrieve one stream containing the data to render.
    *
-   * @memberof FilesDataSource
+   * @memberof FilesDataSource2
    * @returns {Observable<any[]>}
    */
   connect(): Observable<any[]> {
@@ -363,7 +375,7 @@ export class FilesDataSource2 extends DataSource<any> {
    *
    * Disconnect implementation
    *
-   * @memberof FilesDataSource
+   * @memberof FilesDataSource2
    */
   disconnect(): void {}
 

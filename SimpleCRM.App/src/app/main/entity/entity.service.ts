@@ -23,9 +23,9 @@ const APPLICATION_JSON = 'application/json';
  * Using BehaviorSubject typed objects, check [this issue reponse](https://stackoverflow.com/a/43351340/7210166)
  * to understeand the difference(s) with regular Subject typed objects.
  *
- * I think it is used to be able to subscribe to it and get values from, even if we called .next() on it before.
+ * Probably used to be able to subscribe to it and get values from, even if we called .next() on it before.
  * So if onItemsChanged is triggered before EntityItemsListDetailsComponent's ngOnInit() method and FilesDataSource initialization,
- * the datasource of EntityItemsListDetailsComponent will still receive data
+ * the datasource of EntityItemsListDetailsComponent will receive data on later subscription
  *
  * @description Service for entities and their items.
  * @export
@@ -39,20 +39,23 @@ export class EntityService implements Resolve<any> {
   private headers: HttpHeaders = new HttpHeaders();
 
   // public
-  onItemsChanged = new BehaviorSubject<any>([]);
+  items: IItem[];
+  onItemsChanged = new BehaviorSubject<IItem[]>([]);
+  selectedItems: number[] = [];
+  onSelectedItemsChanged = new BehaviorSubject<any>([]);
 
   /** TO DELETE BELOW */
 
-  items: Item[];
+  items2: Item[];
   user: any;
-  selectedItems: string[] = [];
+  selectedItems2: string[] = [];
   searchText: string;
   filterBy: string;
 
   onItemsChanged2: BehaviorSubject<any>;
   onFilterChanged: Subject<any>;
   onUserDataChanged: BehaviorSubject<any>;
-  onSelectedItemsChanged: BehaviorSubject<any>;
+  onSelectedItemsChanged2: BehaviorSubject<any>;
   onSearchTextChanged: Subject<any>;
 
   /** TO DELETE ABOVE */
@@ -76,7 +79,7 @@ export class EntityService implements Resolve<any> {
 
     // Set the defaults
     this.onItemsChanged2 = new BehaviorSubject([]);
-    this.onSelectedItemsChanged = new BehaviorSubject([]);
+    this.onSelectedItemsChanged2 = new BehaviorSubject([]);
     this.onUserDataChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
     this.onFilterChanged = new Subject();
@@ -95,6 +98,7 @@ export class EntityService implements Resolve<any> {
 
     // return http observable result
     return this.http.get<IEntidad[]>(`${this.actionUrl}/entities`, { headers: this.headers });
+
   }
 
   /**
@@ -105,6 +109,7 @@ export class EntityService implements Resolve<any> {
    * @memberof EntityService
    */
   getItemsList(entity: string): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
+
     // get pagination settings from pagination service
     const paginationSettings = this.paginationService.getPaginationSettings(entity);
 
@@ -119,8 +124,9 @@ export class EntityService implements Resolve<any> {
     // return http observable of part of entity items
     return this.http.get<{links: any[], value: IItem[]}>(requestUrl, { observe: 'response', headers: this.headers })
 
-      // just trigger the next event of onItemsChanged also
-      .do(response => this.onItemsChanged.next(response.body.value));
+      // get the items and trigger the next onItemsChanged event also
+      .do(response => this.onItemsChanged.next(this.items = response.body.value));
+
   }
 
   /**
@@ -138,6 +144,7 @@ export class EntityService implements Resolve<any> {
 
     // return http observable of the entity item
     return this.http.get<IItem>(requestUrl, { headers: this.headers });
+
   }
 
   /** TO DELETE BELOW */
@@ -175,6 +182,7 @@ export class EntityService implements Resolve<any> {
         reject
       );
     });
+
   }
 
   getItems(): Promise<any> {
@@ -183,33 +191,34 @@ export class EntityService implements Resolve<any> {
       this.http.get( `${this.actionUrl}/entity-items` )
         .subscribe((response: any) => {
 
-          this.items = response;
+          this.items2 = response;
 
           if (this.filterBy === 'starred') {
 
-            this.items = this.items.filter(
+            this.items2 = this.items2.filter(
               _item => this.user.starred.includes(_item.id)
             );
           }
 
           if (this.filterBy === 'frequent') {
 
-            this.items = this.items.filter(
+            this.items2 = this.items2.filter(
               _item => this.user.frequentItems.includes(_item.id)
             );
           }
 
           if (this.searchText && this.searchText !== '') {
 
-            this.items = FuseUtils.filterArrayByString(this.items, this.searchText);
+            this.items2 = FuseUtils.filterArrayByString(this.items2, this.searchText);
           }
 
-          this.items = this.items.map(item => new Item(item));
+          this.items2 = this.items2.map(item => new Item(item));
 
-          this.onItemsChanged2.next(this.items);
-          resolve(this.items);
+          this.onItemsChanged2.next(this.items2);
+          resolve(this.items2);
         }, reject);
     });
+
   }
 
   /**
@@ -236,6 +245,7 @@ export class EntityService implements Resolve<any> {
           resolve(this.user);
         }, reject);
     });
+
   }
 
   /**
@@ -246,17 +256,21 @@ export class EntityService implements Resolve<any> {
   toggleSelectedItem(id): void {
 
     // first, check if we already have that item as selected...
+    // if (this.selectedItems2.length > 0) {
     if (this.selectedItems.length > 0) {
 
       // get position in selected items array
+      // const index = this.selectedItems2.indexOf(id);
       const index = this.selectedItems.indexOf(id);
 
       if (index !== -1) {
 
         // remove from array
+        // this.selectedItems2.splice(index, 1);
         this.selectedItems.splice(index, 1);
 
         // trigger the next event
+        // this.onSelectedItemsChanged.next(this.selectedItems2);
         this.onSelectedItemsChanged.next(this.selectedItems);
 
         // return
@@ -265,10 +279,13 @@ export class EntityService implements Resolve<any> {
     }
 
     // if we don't have it, push as selected
+    // this.selectedItems2.push(id);
     this.selectedItems.push(id);
 
     // trigger the next event
+    // this.onSelectedItemsChanged.next(this.selectedItems2);
     this.onSelectedItemsChanged.next(this.selectedItems);
+
   }
 
   /**
@@ -277,6 +294,7 @@ export class EntityService implements Resolve<any> {
   toggleSelectAll(): void {
 
     // if items are selected
+    // if (this.selectedItems2.length > 0) {
     if (this.selectedItems.length > 0) {
 
       // deselect all
@@ -287,6 +305,7 @@ export class EntityService implements Resolve<any> {
       // select all
       this.selectItems();
     }
+
   }
 
   /**
@@ -298,22 +317,28 @@ export class EntityService implements Resolve<any> {
   selectItems(filterParameter?, filterValue?): void {
 
     // clear selected items array
+    // this.selectedItems2 = [];
     this.selectedItems = [];
 
     // if there is no filter, select all items
     if (filterParameter === undefined || filterValue === undefined) {
 
       // clear selected items array
+      // this.selectedItems2 = [];
       this.selectedItems = [];
 
       // push id of all items to selected items array
+      // this.items2.map(item => {
       this.items.map(item => {
+        // this.selectedItems2.push(item.id);
         this.selectedItems.push(item.id);
       });
     }
 
     // trigger the next event
+    // this.onSelectedItemsChanged.next(this.selectedItems2);
     this.onSelectedItemsChanged.next(this.selectedItems);
+
   }
 
   /**
@@ -352,8 +377,7 @@ export class EntityService implements Resolve<any> {
     return new Promise((resolve, reject) => {
 
       // xhr post request to api/item... to update user data
-      this.http.post(`${this.actionUrl}/entity-items/${this.user.id}`, { ...userData })
-        .subscribe(response => {
+      this.http.post(`${this.actionUrl}/entity-items/${this.user.id}`, { ...userData }).subscribe(response => {
 
           // get user data again (async)
           this.getUserData();
@@ -365,6 +389,7 @@ export class EntityService implements Resolve<any> {
           resolve(response);
         });
     });
+
   }
 
   /**
@@ -373,10 +398,13 @@ export class EntityService implements Resolve<any> {
   deselectItems(): void {
 
     // clear selected items array
+    // this.selectedItems2 = [];
     this.selectedItems = [];
 
     // Trigger the next event
+    // this.onSelectedItemsChanged.next(this.selectedItems2);
     this.onSelectedItemsChanged.next(this.selectedItems);
+
   }
 
   /**
@@ -387,13 +415,17 @@ export class EntityService implements Resolve<any> {
   deleteItem(item): void {
 
     // find position of item in array of items
+    // const itemIndex = this.items2.indexOf(item);
     const itemIndex = this.items.indexOf(item);
 
     // remove it from array
+    // this.items2.splice(itemIndex, 1);
     this.items.splice(itemIndex, 1);
 
     // trigger the next event
-    this.onItemsChanged2.next(this.items);
+    // this.onItemsChanged2.next(this.items2);
+    this.onItemsChanged.next(this.items);
+
   }
 
   /**
@@ -402,23 +434,29 @@ export class EntityService implements Resolve<any> {
   deleteSelectedItems(): void {
 
     // foreach item in array of selected items
+    // for (const itemId of this.selectedItems2) {
     for (const itemId of this.selectedItems) {
 
       // find item
+      // const item = this.items2.find(_item => _item.id === itemId);
       const item = this.items.find(_item => _item.id === itemId);
 
       // get position in array of items
+      // const itemIndex = this.items2.indexOf(item);
       const itemIndex = this.items.indexOf(item);
 
       // remove of array of items
+      // this.items2.splice(itemIndex, 1);
       this.items.splice(itemIndex, 1);
     }
 
     // trigger the next event
-    this.onItemsChanged2.next(this.items);
+    // this.onItemsChanged2.next(this.items2);
+    this.onItemsChanged.next(this.items);
 
     // deselect all items
     this.deselectItems();
+
   }
 
   /** TO DELETE ABOVE */

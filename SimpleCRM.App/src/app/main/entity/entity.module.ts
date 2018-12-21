@@ -12,7 +12,8 @@ import {
   MatFormFieldModule,
   MatDatepickerModule,
   MatRippleModule,
-  MatInputModule
+  MatInputModule,
+  MatSlideToggleModule
 }                                                     from '@angular/material';
 
 import { FuseSidebarModule, FuseConfirmDialogModule } from '@fuse/components';
@@ -130,6 +131,7 @@ const routes: Route[] = [
     MatMenuModule,
     MatProgressSpinnerModule,
     MatRippleModule,
+    MatSlideToggleModule,
     MatTableModule,
     MatToolbarModule,
 
