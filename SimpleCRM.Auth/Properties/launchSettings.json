@@ -11,6 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "environmentVariables": {
+        "ASPNETCORE_URLS": "https://*:44321;http://*:50772",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
@@ -18,9 +19,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_URLS": "https://*:44321;http://*:50772",
-        "ASPNETCORE_HTTPS_PORT": "44321"
+        "ASPNETCORE_HTTPS_PORT": "44321",
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:44321/"
     }
