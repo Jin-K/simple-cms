@@ -1,6 +1,5 @@
-import { createSelector } from "@ngrx/store";
-
-import { getAuthState }   from "../reducers";
+import { createSelector } from '@ngrx/store';
+import { getAuthState }   from '../reducers';
 
 import * as _             from 'lodash';
 
@@ -12,12 +11,12 @@ export const getUserState = createSelector(
 export const getUserIsAuthorized = createSelector(
   getUserState,
   state => state.authorized
-)
+);
 
 export const getUserGivenName = createSelector(
   getUserState,
   state => state.given_name
-)
+);
 
 export const getUserEmail = createSelector(
   getUserState,

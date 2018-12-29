@@ -1,6 +1,6 @@
 <mat-table [dataSource]="dataSource"
-            matSort matSortActive="id"
-            matSortDisableClear matSortDirection="asc"
+            matSort matSortActive="{{orderBy.column}}"
+            matSortDisableClear matSortDirection="{{orderBy.direction}}"
            [@animateStagger]="{value:'50'}">
 
     <!-- Checkbox Column -->
@@ -64,8 +64,9 @@
         <mat-cell *matCellDef="let item">
             <div fxFlex="row" fxLayoutAlign="end center">
                 <button mat-icon-button (click)="$event.stopPropagation();toggleStar(item.id)" aria-label="Toggle star">
-                    <mat-icon class="amber-fg" *ngIf="user.starred.includes(item.id)">star</mat-icon>
-                    <mat-icon class="secondary-text" *ngIf="!user.starred.includes(item.id)">star_border</mat-icon>
+                    <!-- <mat-icon class="amber-fg" *ngIf="user.starred.includes(item.id)">star</mat-icon>
+                    <mat-icon class="secondary-text" *ngIf="!user.starred.includes(item.id)">star_border</mat-icon> -->
+                    <mat-icon class="secondary-text">star_border</mat-icon>
                 </button>
 
                 <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"

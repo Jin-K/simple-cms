@@ -170,10 +170,3 @@ INSERT INTO [auth].[IdentityClaims] ([Id], [IdentityResourceId], [Type]) VALUES 
 GO
 SET IDENTITY_INSERT [auth].[IdentityClaims] OFF
 GO
-SET IDENTITY_INSERT [dbo].[Users] ON 
-
-GO
- INSERT [dbo].[Users] ([UserId], [AccessFailedCount], [ConcurrencyStamp], [Email], [EmailConfirmed], [IsAdmin], [DataEventRecordsRole], [SecuredFilesRole], [LockoutEnabled], [LockoutEnd], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [SecurityStamp], [TwoFactorEnabled], [UserName]) VALUES (1, 0, 'fe80632a-a20f-4510-9237-205ebab34516', N'test@test.com', 0, 0, NULL, NULL, 1, NULL, N'TEST@TEST.COM', N'TEST@TEST.COM', N'AQAAAAEAACcQAAAAEEh1H8KfznRWQglPFMBIyzLo4AevzKuZYHJq+1vw6sZsvJQgbiIIJYJaTtXg0e3l7A==', NULL, 0, N'LFEFYRS5H6M3M7QURCCLH76HKHPWXQHZ', 0, N'test@test.com')
-GO
-SET IDENTITY_INSERT [dbo].[Users] OFF
-GO

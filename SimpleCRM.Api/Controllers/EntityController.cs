@@ -18,12 +18,13 @@ namespace SimpleCRM.Api.Controllers {
   /// 
   /// Contains following routes:
   /// 
-  /// - GET   entity/items            : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
-  /// - GET   entity/entities         : <see cref="EntityController.GetMainEntities()"></see>
-  /// - GET   entity/item             : <see cref="EntityController.GetItem(GetItemParameters)"></see>
-  /// - GET   entity/entity-items     : <see cref="EntityController.GetEntityItems()"></see>
-  /// - POST  entity/entity-items     : <see cref="EntityController.PostEntityItems(string)"></see>
-  /// - GET   entity/entity-items-user: <see cref="EntityController.GetUser()"></see>
+  /// - GET   entity/items              : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
+  /// - GET   entity/entities           : <see cref="EntityController.GetMainEntities()"></see>
+  /// - GET   entity/item               : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+  /// - GET   entity/entity-items       : <see cref="EntityController.GetEntityItems()"></see>
+  /// - POST  entity/entity-items       : <see cref="EntityController.PostEntityItems(string)"></see>
+  /// - GET   entity/entity-items-user  : <see cref="EntityController.GetUser()"></see>
+  /// - GET   entity/list-view-settings : <see cref="EntityController.GetListViewSettings(int)"></see>
   /// 
   /// </summary>
   [Authorize( AuthenticationSchemes = "Bearer" )]
@@ -59,38 +60,39 @@ namespace SimpleCRM.Api.Controllers {
     /// <returns>Returns a HATEOAS-like json response with a chunk of item</returns>
     [HttpGet( "items" )]
     public IActionResult GetItemsList([FromQuery] QueryParameters queryParameters) {
+      
+        // pascal case of entity name
+        var entity = queryParameters.Query.ToUpperCaseFirst();
 
-      // pascal case of entity name
-      var entity = queryParameters.Query.ToUpperCaseFirst();
+        // get filtered and ordered items from store
+        List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
+          entity,
+          queryParameters.OrderBy,
+          queryParameters.Descending,
+          queryParameters.Page,
+          queryParameters.PageCount
+        ).ToList();
 
-      // get filtered and ordered items from store
-      List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
-        entity,
-        queryParameters.OrderBy,
-        queryParameters.Descending,
-        queryParameters.Page,
-        queryParameters.PageCount
-      ).ToList();
+        // count total existing items for an entity
+        var allItemCount = _entitiesStore.Count(entity);
 
-      // count total existing items for an entity
-      var allItemCount = _entitiesStore.Count(entity);
+        // create pagination meta json
+        var paginationMetadata = new {
+          totalCount = allItemCount,
+          pageSize = queryParameters.PageCount,
+          currentPage = queryParameters.Page,
+          totalPages = queryParameters.GetTotalPages(allItemCount)
+        };
 
-      // create pagination meta json
-      var paginationMetadata = new {
-        totalCount = allItemCount,
-        pageSize = queryParameters.PageCount,
-        currentPage = queryParameters.Page,
-        totalPages = queryParameters.GetTotalPages(allItemCount)
-      };
+        // sets "X-Pagination" header with paginationMetadata
+        Response.Headers.Add( "X-Pagination", JsonConvert.SerializeObject( paginationMetadata ) );
 
-      // sets "X-Pagination" header with paginationMetadata
-      Response.Headers.Add( "X-Pagination", JsonConvert.SerializeObject( paginationMetadata ) );
+        // create HATEOAS links
+        var links = CreateLinksForCollection(queryParameters, allItemCount);
 
-      // create HATEOAS links
-      var links = CreateLinksForCollection(queryParameters, allItemCount);
+        // returns anonymous type JSON
+        return Ok( new { value, links } );
 
-      // returns anonymous type JSON
-      return Ok( new { value, links } );
     }
 
     /// <summary>
@@ -143,6 +145,28 @@ namespace SimpleCRM.Api.Controllers {
     /// <returns>Returns a json containing user data</returns>
     [HttpGet( "entity-items-user" )]
     public IActionResult GetEntityItemsUser() => Ok( this._entitiesStore.GetUserData() );
+
+    /// <summary>
+    /// Get user view settings for a specific entity
+    /// </summary>
+    /// <param name="userId">id of user (to pick exact view)</param>
+    /// <param name="entityName">entity name</param>
+    /// <returns>Returns a json containing view settings</returns>
+    [HttpGet( "list-view-settings" )]
+    public IActionResult GetListViewSettings(int userId, [FromQuery] string entityName)
+    => Ok(new {
+      name = entityName,
+      id = _entitiesStore.GetEntityIdByName(entityName),
+      pagination = new {
+        page = 0,
+        pageCount = 5,
+        orderBy = "id desc",
+        totalCount = _entitiesStore.Count(entityName)
+      },
+      filters = new {
+        category = "all"
+      }
+    });
 
     #endregion
 

@@ -9,7 +9,6 @@ import * as SessionActions  from './../actions/session.actions';
 export interface SessionState {
   started     : Date | undefined;
   loaded      : boolean | undefined;
-  token       : string | undefined;
 }
 /**
  * Session initial state
@@ -20,8 +19,7 @@ export interface SessionState {
  */
 export const SessionInitialState: SessionState = {
   started : undefined,
-  loaded  : undefined,
-  token   : undefined
+  loaded  : undefined
 };
 
 /**
@@ -49,8 +47,7 @@ export function SessionReducer(state = SessionInitialState, action: SessionActio
       // return new state
       return {
         ...state,
-        started: new Date(),
-        token: action.token
+        started: new Date()
       };
 
     default:

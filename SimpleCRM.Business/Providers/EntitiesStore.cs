@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace SimpleCRM.Business.Providers {
 
-  /// <summary>
-  /// The main EntitiesStore class
-  /// Provides methods to access entities database tables
-  /// </summary>
+	/// <summary>
+	/// The main EntitiesStore class
+	/// Provides methods to access entities database tables
+	/// </summary>
 	public class EntitiesStore {
 
     /// <summary>
@@ -34,14 +34,14 @@ namespace SimpleCRM.Business.Providers {
       UserData = JsonConvert.DeserializeObject<object>( "{\"id\":\"5725a6802d10e277a0f35724\",\"name\":\"John Doe\",\"avatar\":\"assets/images/avatars/profile.jpg\",\"starred\":[1,3,4,7,11,16],\"frequentItems\":[\"5725a6809fdd915739187ed5\",\"5725a68031fdbb1db2c1af47\",\"5725a680606588342058356d\",\"5725a680e7eb988a58ddf303\",\"5725a6806acf030f9341e925\",\"5725a68034cb3968e1f79eac\",\"5725a6801146cce777df2a08\",\"5725a680653c265f5c79b5a9\"],\"groups\":[{\"id\":\"5725a6802d10e277a0f35739\",\"name\":\"Friends\",\"itemIds\":[\"5725a680bbcec3cc32a8488a\",\"5725a680e87cb319bd9bd673\",\"5725a6802d10e277a0f35775\"]},{\"id\":\"5725a6802d10e277a0f35749\",\"name\":\"Clients\",\"itemIds\":[\"5725a680cd7efa56a45aea5d\",\"5725a68018c663044be49cbf\",\"5725a6809413bf8a0a5272b1\",\"5725a6803d87f1b77e17b62b\"]},{\"id\":\"5725a6802d10e277a0f35329\",\"name\":\"Recent Workers\",\"itemIds\":[\"5725a680bbcec3cc32a8488a\",\"5725a680653c265f5c79b5a9\",\"5725a6808a178bfd034d6ecf\",\"5725a6801146cce777df2a08\"]}]}" )
     };
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <remarks>
-    /// Sets <see cref="EntitiesStore._crmContext" /> via DI
-    /// </remarks>
-    /// <param name="crmContext">main database context of simple-crm</param>
-    public EntitiesStore(CrmContext crmContext) => _crmContext = crmContext;
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <remarks>
+		/// Sets <see cref="EntitiesStore._crmContext" /> via DI
+		/// </remarks>
+		/// <param name="crmContext">main database context of simple-crm</param>
+		public EntitiesStore(CrmContext crmContext) => _crmContext = crmContext;
 
     /// <summary>
     /// Gets all main entities
@@ -49,6 +49,14 @@ namespace SimpleCRM.Business.Providers {
     /// <returns>Returns all main entities as a generic list of <see cref="Entidad" /></returns>
     public async Task<IEnumerable<Entidad>> GetAllEntities()
     => await _crmContext.Entities.Select( e => new Entidad { Id = e.Id, Name = e.Name } ).ToListAsync();
+
+    /// <summary>
+    /// Gets the primary key id of an entity
+    /// </summary>
+    /// <param name="entityName">name of the entity</param>
+    /// <returns>Returns an integer id of the entity or -1 if not found</returns>
+		public int GetEntityIdByName(string entityName)
+    => _crmContext.Entities.FirstOrDefault( entity => entity.Name == entityName )?.Id ?? -1;
 
     /// <summary>
     /// Counts total of existing items for an given <paramref name="entity"/>

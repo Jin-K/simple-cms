@@ -1,4 +1,4 @@
-import * as entityActions from './actions';
+import * as entityActions   from './actions';
 import * as entitySelectors from './selectors';
 
 export {
@@ -6,7 +6,4 @@ export {
   entitySelectors
 };
 
-export * from './actions';
 export * from './reducers';
-export * from './effects';
-export * from './selectors';

@@ -2,43 +2,45 @@
 
   <div class="card">
 
-      <!-- SIDEBAR HEADER -->
-      <div class="header p-24" fxLayout="row" fxLayoutAlign="start center">
+    <!-- SIDEBAR HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="start center">
 
-          <!-- USER -->
-          <img [src]="user.avatar" class="avatar mr-16" [alt]="user.name"/>
-          <span class="h5">{{user.name}}</span>
-          <!-- / USER -->
+      <!-- USER -->
+      <!-- <img [src]="user.avatar" class="avatar mr-16" [alt]="user.name"/> -->
+      <!-- <span class="h5">{{user.name}}</span> -->
+      <ng-container *ngIf="userName$ | async as userName">
+        <img [src]="'assets/images/avatars/profile.jpg'" class="avatar mr-16" [alt]="userName" />
+        <span class="h5">{{userName}}</span>
+      </ng-container>
+      <!-- / USER -->
 
-      </div>
-      <!-- / SIDEBAR HEADER -->
+    </div>
+    <!-- / SIDEBAR HEADER -->
 
-      <!-- SIDEBAR CONTENT -->
-      <div class="content py-16" fusePerfectScrollbar>
+    <!-- SIDEBAR CONTENT -->
+    <div class="content py-16" fusePerfectScrollbar>
 
-          <div class="nav material2">
+      <div class="nav material2">
 
-              <div class="nav-item" aria-label="inbox">
-                  <a class="nav-link" matRipple (click)="changeFilter('all')"
-                     [ngClass]="{'active accent':filterBy ==='all'}">
-                      <span class="title">All Items</span>
-                  </a>
-              </div>
-
-              <div class="nav-item" aria-label="frequently contacted" (click)="changeFilter('frequent')">
-                  <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='frequent'}">
-                      <div class="title">Frequently contacted</div>
-                  </a>
-              </div>
-
-              <div class="nav-item" aria-label="starred" (click)="changeFilter('starred')">
-                  <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='starred'}">
-                      <div class="title">Starred Items</div>
-                  </a>
-              </div>
+        <ng-container *ngIf="filterBy$ | async as filterBy">
+          
+          <div class="nav-item" aria-label="inbox">
+            <a class="nav-link" matRipple (click)="changeFilter('all')" [ngClass]="{'active accent':filterBy ==='all'}">
+              <span class="title">All Items</span>
+            </a>
           </div>
+  
+          <div class="nav-item" aria-label="favorites" (click)="changeFilter('favorites')">
+            <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='favorites'}">
+              <div class="title">Favorite Items</div>
+            </a>
+          </div>
+          
+        </ng-container>
 
       </div>
+
+    </div>
 
   </div>
 

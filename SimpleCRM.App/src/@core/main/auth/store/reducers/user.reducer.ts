@@ -1,6 +1,7 @@
 import * as UserActions from './../actions/user.actions';
 
 export interface UserState {
+  id?         : number;
   given_name  : string;
   email       : string;
   authorized  : boolean;
@@ -38,11 +39,13 @@ export function UserReducer(state = UserInitialState, action: UserActions.UserAc
 
       // prepare constants (references)
       const userData = action.userData;
-      const roles    = userData.role || [];
+      const roles: string[] = userData.role || [];
+      const userId: string  = userData.sub;
 
       // return new state
       return {
         ...state,
+        id : +userId,
         given_name : userData.given_name,
         email : userData.email,
         roles

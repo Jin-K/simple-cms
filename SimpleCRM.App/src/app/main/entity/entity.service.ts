@@ -1,14 +1,22 @@
 import { HttpHeaders, HttpClient, HttpResponse }                from '@angular/common/http';
 import { Injectable }                                           from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Resolve } from '@angular/router';
-import { Observable, BehaviorSubject, Subject }                 from 'rxjs';
+import { Store, select }                                        from '@ngrx/store';
+import {
+  Observable,
+  BehaviorSubject,
+  Subject,
+  Subscription,
+  of,
+}                                                               from 'rxjs';
+import { switchMap, take, catchError }                          from 'rxjs/operators';
 
 import { PaginationService }                                    from '@core/pagination';
-import { FuseUtils }                                            from '@fuse/utils';
 
-import { IItem, IEntidad }                                      from 'app/models';
+import { IItem }                                                from 'app/models';
 import { coreConfig }                                           from 'app/config';
 import { Item }                                                 from './list/item.model';
+import { ElementsState, entityActions, entitySelectors }        from './store';
 
 /**
  * TODELETE constant string for 'application/json' ..
@@ -35,14 +43,16 @@ const APPLICATION_JSON = 'application/json';
 export class EntityService implements Resolve<any> {
 
   // private
-  private actionUrl = `${coreConfig.apiServer}/api/entity`;
-  private headers: HttpHeaders = new HttpHeaders();
+  private readonly actionUrl = `${coreConfig.apiServer}/api/entity`;
+  private readonly headers: HttpHeaders = new HttpHeaders();
+  private readonly entityFilterSubscriptions: {[key: string]: Subscription} = {};
 
   // public
   items: IItem[];
   onItemsChanged = new BehaviorSubject<IItem[]>([]);
   selectedItems: number[] = [];
   onSelectedItemsChanged = new BehaviorSubject<any>([]);
+  readonly onFilterChanged: {[key: string]: Subject<any>} = {};
 
   /** TO DELETE BELOW */
 
@@ -53,7 +63,7 @@ export class EntityService implements Resolve<any> {
   filterBy: string;
 
   onItemsChanged2: BehaviorSubject<any>;
-  onFilterChanged: Subject<any>;
+  onFilterChanged2: Subject<any>;
   onUserDataChanged: BehaviorSubject<any>;
   onSelectedItemsChanged2: BehaviorSubject<any>;
   onSearchTextChanged: Subject<any>;
@@ -69,7 +79,8 @@ export class EntityService implements Resolve<any> {
    */
   constructor(
     private http: HttpClient,
-    private paginationService: PaginationService<IItem>
+    private paginationService: PaginationService<IItem>,
+    private store: Store<ElementsState>
   ) {
 
     // set headers to use json
@@ -82,22 +93,30 @@ export class EntityService implements Resolve<any> {
     this.onSelectedItemsChanged2 = new BehaviorSubject([]);
     this.onUserDataChanged = new BehaviorSubject([]);
     this.onSearchTextChanged = new Subject();
-    this.onFilterChanged = new Subject();
+    this.onFilterChanged2 = new Subject();
 
     /** TO DELETE ABOVE */
   }
 
-  /**
-   * Gets all main entities.
-   *
-   * @description GET api/entities
-   * @returns {Observable<IEntidad[]>} returns an observable of an array of main entities
-   * @memberof EntityService
-   */
-  getAllEntities(): Observable<IEntidad[]> {
+  getItems2(entity: string, pagination: any, filters: entityActions.EntityListFilters): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
 
-    // return http observable result
-    return this.http.get<IEntidad[]>(`${this.actionUrl}/entities`, { headers: this.headers });
+    // prepare query url
+    let requestUrl = `${this.actionUrl}/items?page=${pagination.page + 1}`
+      + `&pageCount=${pagination.pageCount}`
+      + `&orderBy=${pagination.orderBy}&query=${entity}`;
+
+    // filter on user if specified
+    if (filters.user) {
+      requestUrl += `&userId=${filters.user.id}`;
+    }
+
+    // filter on category if specified
+    if (filters.category !== 'all') {
+      requestUrl += `&category=${filters.category}`;
+    }
+
+    // return observable of part of entity items with links
+    return this.http.get<{links: any[], value: IItem[]}>(requestUrl, { observe: 'response', headers: this.headers });
 
   }
 
@@ -124,8 +143,25 @@ export class EntityService implements Resolve<any> {
     // return http observable of part of entity items
     return this.http.get<{links: any[], value: IItem[]}>(requestUrl, { observe: 'response', headers: this.headers })
 
-      // get the items and trigger the next onItemsChanged event also
-      .do(response => this.onItemsChanged.next(this.items = response.body.value));
+      // do this with response also
+      .do(response => {
+
+        // filter if specified
+        switch (this.filterBy) {
+          case 'starred':
+            this.items = response.body.value.filter( _item => this.user.starred.includes(_item.id) );
+            break;
+          case 'frequent':
+            this.items = response.body.value.filter( _item => this.user.frequentItems.includes(_item.id) );
+            break;
+          default:
+            this.items = response.body.value;
+            break;
+        }
+
+        // trigger onItemsChanged event
+        this.onItemsChanged.next(this.items);
+      });
 
   }
 
@@ -147,79 +183,92 @@ export class EntityService implements Resolve<any> {
 
   }
 
-  /** TO DELETE BELOW */
-
   /**
    * Resolver
    *
    * @param {ActivatedRouteSnapshot} route activated route snapshot
-   * @param {RouterStateSnapshot} state router state snapshot
-   * @returns {(Observable<any> | Promise<any> | any)} returns observable of nothing
+   * @returns {Observable<any>} returns observable of any (void)
    * @memberof EntityService
    */
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
+  resolve(route: ActivatedRouteSnapshot): Observable<any> {
 
-    return new Promise((resolve, reject) => {
+    // get entity name from url params and reformat
+    const entity = this.onlyFirstLetterCapitalized(route.params.entity);
 
-      Promise.all([
-        this.getItems(),
-        this.getUserData()
-      ]).then(
-        ([files]) => {
-
-          this.onSearchTextChanged.subscribe(searchText => {
-            this.searchText = searchText;
-            this.getItems();
-          });
-
-          this.onFilterChanged.subscribe(filter => {
-            this.filterBy = filter;
-            this.getItems();
-          });
-
-          resolve();
-        },
-        reject
-      );
-    });
-
-  }
-
-  getItems(): Promise<any> {
-
-    return new Promise((resolve, reject) => {
-      this.http.get( `${this.actionUrl}/entity-items` )
-        .subscribe((response: any) => {
-
-          this.items2 = response;
-
-          if (this.filterBy === 'starred') {
-
-            this.items2 = this.items2.filter(
-              _item => this.user.starred.includes(_item.id)
-            );
-          }
-
-          if (this.filterBy === 'frequent') {
-
-            this.items2 = this.items2.filter(
-              _item => this.user.frequentItems.includes(_item.id)
-            );
-          }
-
-          if (this.searchText && this.searchText !== '') {
-
-            this.items2 = FuseUtils.filterArrayByString(this.items2, this.searchText);
-          }
-
-          this.items2 = this.items2.map(item => new Item(item));
-
-          this.onItemsChanged2.next(this.items2);
-          resolve(this.items2);
-        }, reject);
-    });
+    // return observable
+    return this.store.pipe(
+      // select ElementsState
+      select(entitySelectors.getElementsState),
+      // take only 1 emitted value
+      take(1),
+      // switch to new observable and check if entity is already loaded with displayed items
+      switchMap((elementsState: ElementsState) => elementsState.entities[entity] && elementsState.entities[entity].displayedItems !== undefined ?
+        // if contains items, dispatch change entity action
+        of(this.store.dispatch(new entityActions.ChangeEntity(entity))) :
+        // if doesn't contains items, request api
+        this.getItems2(entity, elementsState.entities[entity].pagination, elementsState.entities[entity].filters).map(
+          // dispatch fetch items action
+          response => this.store.dispatch(new entityActions.FetchItems(entity, response.body.value))
+        )
+      ),
+      // catch eventual errors
+      catchError(error => of(error))
+    );
 
   }
+
+  /** TO DELETE BELOW */
+
+  // /**
+  //  * Resolver
+  //  *
+  //  * @param {ActivatedRouteSnapshot} route activated route snapshot
+  //  * @param {RouterStateSnapshot} state router state snapshot
+  //  * @returns {Observable<HttpResponse<{links: any[], value: IItem[]}>>} returns observable of http response
+  //  * @memberof EntityService
+  //  */
+  // resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
+
+  //   // get entity name from url params
+  //   const entity = this.onlyFirstLetterCapitalized(route.params.entity);
+
+  //   // create observable of final result of 2 requests
+  //   let observableOfCompletedRequests = forkJoin(
+  //     this.getItemsList(entity),
+  //     from(this.getUserData())
+  //   );
+
+  //   // if no subscription for that entity filters exists
+  //   if (!this.entityFilterSubscriptions[entity]) {
+
+  //     // do this also on resolve
+  //     observableOfCompletedRequests = observableOfCompletedRequests.do(_ => {
+
+  //       // create new subject for filter
+  //       const subject = new Subject<string>();
+
+  //       // attach subject to subjects registry object
+  //       this.onFilterChanged[entity] = subject;
+
+  //       // subscribe to that subject for filter changes (it will be triggered elsewhere)
+  //       const subscription = subject.subscribe(filter => {
+
+  //         // save filter
+  //         this.filterBy = filter;
+
+  //         // reload list of items
+  //         this.getItemsList(entity).toPromise();
+  //       });
+
+  //       // attach usbscription to subscriptions registry object
+  //       this.entityFilterSubscriptions[entity] = subscription;
+  //     });
+  //   }
+
+  //   // return observable and catch errors if there are
+  //   return observableOfCompletedRequests.catch(error => of(error));
+
+  // }
 
   /**
    * Get user data
@@ -357,7 +406,7 @@ export class EntityService implements Resolve<any> {
         .subscribe(response => {
 
           // get items again (async)
-          this.getItems();
+          // this.getItems();
 
           // resolve
           resolve(response);
@@ -383,7 +432,7 @@ export class EntityService implements Resolve<any> {
           this.getUserData();
 
           // get items again (async)
-          this.getItems();
+          // this.getItems();
 
           // resolve
           resolve(response);
@@ -460,5 +509,58 @@ export class EntityService implements Resolve<any> {
   }
 
   /** TO DELETE ABOVE */
+
+  /**
+   * The main loadEntityView method
+   *
+   * @description loads entity pagination and filter options for a specific user
+   * @param {string} entity entity name
+   * @returns {(Observable<{ entity: string, pagination?: any, filters?: any | undefined }>)} observable of object containing entity, pagination and filter options
+   * @memberof EntityService
+   */
+  loadEntityView(entity: string): Observable<entityActions.LoadEntityCompletePayload> {
+
+    // prepare query url
+    const requestUrl = `${this.actionUrl}/list-view-settings?entityName=${entity}`;
+
+    // return observable of the user's entity view settings
+    return this.http.get<entityActions.LoadEntityCompletePayload>(requestUrl, { headers: this.headers });
+  }
+
+  /**
+   * Clean entity filter subscriptions
+   *
+   * @memberof EntityService
+   */
+  cleanFilterSubscriptions(): void {
+
+    // unsubscribe from all entity filter supscriptions
+    for (const prop in this.entityFilterSubscriptions) {
+
+      // ensure prop
+      if (this.entityFilterSubscriptions.hasOwnProperty(prop)) {
+
+        // unsubscribe
+        this.entityFilterSubscriptions[prop].unsubscribe();
+
+        // remove key from dictionary
+        delete this.entityFilterSubscriptions[prop];
+      }
+    }
+
+  }
+
+  /**
+   * Util method to capitalize the first letter of a string and set the rest of the string to lower case.
+   * TODO move it in a global utils file ?
+   *
+   * @private
+   * @param {string} str string to adapt
+   * @returns {string} adapted string
+   * @memberof EntityService
+   */
+  private onlyFirstLetterCapitalized(str: string): string {
+    return `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
+  }
 
 }

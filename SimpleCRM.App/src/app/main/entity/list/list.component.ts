@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy }            from '@angular/core';
 import { FormGroup }                                                  from '@angular/forms';
-import { MatDialog, Sort }                                            from '@angular/material';
+import { MatDialog, Sort, SortDirection }                             from '@angular/material';
 import { ActivatedRoute }                                             from '@angular/router';
-import { Store }                                                      from '@ngrx/store';
+import { Store, select }                                              from '@ngrx/store';
 import { Observable, Subject }                                        from 'rxjs';
-import { takeUntil }                                                  from 'rxjs/operators';
+import { map, takeUntil }                                             from 'rxjs/operators';
 
 import { fuseAnimations }                                             from '@fuse/animations';
 import { FuseSidebarService }                                         from '@fuse/components/sidebar/sidebar.service';
-import { PaginationItemList, PaginationService, PaginationSettings }  from '@core/pagination';
+import { PaginationService, PaginationSettings }                      from '@core/pagination';
 
 import { IItem }                                                      from 'app/models';
 import { entityActions, entitySelectors }                             from '../store';
@@ -32,6 +32,14 @@ import { EntityItemsListItemFormDialogComponent }                     from './en
 export class EntityListComponent implements OnInit, OnDestroy {
 
   /**
+   * Observable of order by options
+   *
+   * @type {Observable<{column: string, direction: SortDirection}>}
+   * @memberof EntityListComponent
+   */
+  $orderBy: Observable<{column: string, direction: SortDirection}>;
+
+  /**
    * Name of the entity
    *
    * @type {string}
@@ -39,13 +47,13 @@ export class EntityListComponent implements OnInit, OnDestroy {
    */
   entity: string;
 
-  /**
-   * Observable of the pagination items to display
-   *
-   * @type {Observable<PaginationItemList<IItem>>}
-   * @memberof EntityListComponent
-   */
-  paginationItems$: Observable<PaginationItemList<IItem>>;
+  // /**
+  //  * Observable of the pagination items to display
+  //  *
+  //  * @type {Observable<PaginationItemList<IItem>>}
+  //  * @memberof EntityListComponent
+  //  */
+  // paginationItems$: Observable<PaginationItemList<IItem>>;
 
   /**
    * TODELETE ref to dialog for creating new items
@@ -88,6 +96,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
    * @param {Store<any>} store the main store
    * @param {EntityService} entityService TODELETE service for entities and entity items
    * @param {MatDialog} matDialog TODELETE angular material's dialog
+   * @param {PaginationService<IItem>} paginationService TODELETE pagination service for items of type IItem
    * @memberof EntityListComponent
    */
   constructor(
@@ -97,7 +106,32 @@ export class EntityListComponent implements OnInit, OnDestroy {
     private entityService: EntityService,
     private matDialog: MatDialog,
     private paginationService: PaginationService<IItem>
-  ) { }
+  ) {
+
+    // get observable of order by properties
+    this.$orderBy = this.store.pipe(
+
+      // select current pagination options (depends on current entity ==> state.entity.current)
+      select(entitySelectors.getCurrentPagination),
+
+      // map to type { column: string, direction: SortDirection}
+      map(pagination => {
+
+        // split oderBy string and clear empty parts
+        const orderByParts = (pagination.orderBy as string).split(' ', 2).filter( part => part && part !== ' ' );
+
+        // get column
+        const column = orderByParts[0];
+
+        // get direction
+        const direction = (orderByParts.length === 2 ? orderByParts[1] : '') as SortDirection;
+
+        // return custom sort properties
+        return { column, direction };
+      })
+    );
+
+  }
 
   /**
    * ngOnInit implementation
@@ -114,13 +148,10 @@ export class EntityListComponent implements OnInit, OnDestroy {
 
       // get and save pagination settings
       this.paginationSettings = this.paginationService.getPaginationSettings(this.entity);
-
-      // trigger paginate()
-      this.paginate();
     });
 
-    // observe store to get pagination items to display
-    this.paginationItems$ = this.store.select(entitySelectors.selectCurrentItems);
+    // // observe store to get pagination items to display
+    // this.paginationItems$ = this.store.select(entitySelectors.getCurrentItems);
 
     // listen to onSelectedItemsChanged
     this.entityService.onSelectedItemsChanged
@@ -143,6 +174,9 @@ export class EntityListComponent implements OnInit, OnDestroy {
     // unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
+
+    // unsubscribe from entity filter subjects
+    this.entityService.cleanFilterSubscriptions();
 
   }
 
@@ -206,12 +240,21 @@ export class EntityListComponent implements OnInit, OnDestroy {
 
   onChangeSort(sort: Sort): void {
 
-    // change and prepare sort in pagination service
-    this.paginationSettings.changeSort(sort);
+    // dispatch pagination sort action
+    this.store.dispatch(new entityActions.Sort(this.onlyFirstLetterCapitalized(this.entity), sort.active, sort.direction));
 
-    // paginate
-    this.paginate();
+  }
 
+  /**
+   * Util method to capitalize the first letter of a string and set the rest of the string to lower case.
+   * TODO move it in a global utils file ?
+   *
+   * @param {string} str string to adapt
+   * @returns {string} adapted string
+   * @memberof EntityListComponent
+   */
+  onlyFirstLetterCapitalized(str: string): string {
+    return `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}`;
   }
 
 }

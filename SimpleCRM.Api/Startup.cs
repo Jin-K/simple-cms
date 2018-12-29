@@ -53,10 +53,10 @@ namespace SimpleCRM.Api {
       // logger setup
       Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
-        .Enrich.WithProperty("App", "SimpleCRM.Api")
+        .Enrich.WithProperty( "App", "SimpleCRM.Api" )
         .Enrich.FromLogContext()
-        .WriteTo.Seq("http://localhost:5341")
-        .WriteTo.RollingFile("../Logs/Api")
+        .WriteTo.Seq( "http://localhost:5341" )
+        .WriteTo.RollingFile( "../Logs/Api" )
         .CreateLogger();
 
       // store environment object
@@ -64,8 +64,8 @@ namespace SimpleCRM.Api {
 
       // build configuration
       var builder = new ConfigurationBuilder()
-        .SetBasePath(env.ContentRootPath)
-        .AddJsonFile("appsettings.json");
+        .SetBasePath( env.ContentRootPath )
+        .AddJsonFile( "appsettings.json" );
 
       // store configuration object
       _configuration = builder.Build();
@@ -81,46 +81,45 @@ namespace SimpleCRM.Api {
     public void ConfigureServices(IServiceCollection services) {
 
       // get connection string
-      var defaultConnection = _configuration.GetConnectionString("DefaultConnection");
+      var defaultConnection = _configuration.GetConnectionString( "DefaultConnection" );
 
       // add main database context using SQL Server
-      services.AddDbContext<CrmContext>( options => options.UseSqlServer( defaultConnection ), ServiceLifetime.Singleton );
+      services.AddDbContext<CrmContext>( options => options.UseSqlServer( defaultConnection ), ServiceLifetime.Scoped );
 
       // add singletons of store services for DI
-      services.AddSingleton<NewsStore>();
-      services.AddSingleton<EntitiesStore>();
-      services.AddSingleton<WidgetsStore>();
-      //services.AddSingleton<UserInfoInMemory>(); // TODO Check if required
-      services.AddSingleton<IMetricsUtil>(MetricsUtil.Singleton);
+      services.AddScoped<NewsStore>();
+      services.AddScoped<EntitiesStore>();
+      services.AddScoped<WidgetsStore>();
+      services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 
       // create custom cors policy
       var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
-      policy.Headers.Add("*");
-      policy.Methods.Add("*");
-      policy.Origins.Add("*");
+      policy.Headers.Add( "*" );
+      policy.Methods.Add( "*" );
+      policy.Origins.Add( "*" );
       policy.SupportsCredentials = true;
       policy.ExposedHeaders.Add( "X-Pagination" );
 
       // add custom policy to cors options using "corsGlobalPolicy" as name
-      services.AddCors(options => options.AddPolicy("corsGlobalPolicy", policy));
+      services.AddCors( options => options.AddPolicy( "corsGlobalPolicy", policy ) );
 
       // create custom authorization policy
       var guestPolicy = new AuthorizationPolicyBuilder()
-        .RequireClaim("scope", "dataEventRecords")
+        .RequireClaim( "scope", "dataEventRecords" )
         .Build();
 
       // create token validation parameters
       var tokenValidationParameters = new TokenValidationParameters {
         ValidIssuer = "https://localhost:44321/",
         ValidAudience = "dataEventRecords",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("dataEventRecordsSecret")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes( "dataEventRecordsSecret" )),
         NameClaimType = "name",
         RoleClaimType = "role"
       };
 
       // add the authentication scheme and setup the bearer authentication handler
       services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-        .AddJwtBearer(options => {
+        .AddJwtBearer( options => {
 
           // if running in docker container, set the authority server endpoint to http://auth:50772 and disable https requirement
           if (System.Environment.GetEnvironmentVariable( "DOTNET_RUNNING_IN_CONTAINER" ) == "true") {
@@ -152,7 +151,7 @@ namespace SimpleCRM.Api {
             OnMessageReceived = context => {
 
               // for SignalR routes (auth required), extract token from url and give it to (MessageReceivedContext) context
-              if (context.Request.Path.Value.StartsWithOneOf("/signalrhome", "/looney") && context.Request.Query.TryGetValue("token", out StringValues token) )
+              if (context.Request.Path.Value.StartsWithOneOf( "/signalrhome", "/looney" ) && context.Request.Query.TryGetValue( "token", out StringValues token ))
                 context.Token = token;
               
               // return
@@ -179,7 +178,7 @@ namespace SimpleCRM.Api {
       services.AddSignalR();
 
       // add MVC and setup json options
-      services.AddMvc().AddJsonOptions(options => {
+      services.AddMvc().AddJsonOptions( options => {
 
         // camel case in json responses
         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -201,10 +200,10 @@ namespace SimpleCRM.Api {
     public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
       // set exception's route
-      app.UseExceptionHandler("/Home/Error");
+      app.UseExceptionHandler( "/Home/Error" );
 
       // use "corsGlobalPolicy" name (defined above) as cors policy
-      app.UseCors("corsGlobalPolicy");
+      app.UseCors( "corsGlobalPolicy" );
 
       // use authentication
       app.UseAuthentication();
@@ -215,7 +214,7 @@ namespace SimpleCRM.Api {
       // define route that SignalR should use
       app.UseSignalR( routes => {
         routes.MapHub<SignalRHomeHub>( "/signalrhome" );
-        routes.MapHub<NewsHub>("/looney");
+        routes.MapHub<NewsHub>( "/looney" );
         routes.MapHub<DashboardHub>( "/dashboard" );
       });
 

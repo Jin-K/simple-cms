@@ -15,8 +15,3 @@ export const getSessionStarted = createSelector(
   getSessionState,
   state => state.started
 );
-
-export const getSessionToken = createSelector(
-  getSessionState,
-  state => state.token
-);

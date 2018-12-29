@@ -11,12 +11,12 @@ using Action = SimpleCRM.Data.Entities.Action;
 
 namespace SimpleCRM.Data {
 
-  /// <summary>
-  /// The main CrmContext class
-  /// <para>&#160;</para>
-  /// Main database context of simple-crm
-  /// </summary>
-  public class CrmContext : IdentityDbContext<AppUser, AppRole, int> {
+	/// <summary>
+	/// The main CrmContext class
+	/// <para>&#160;</para>
+	/// Main database context of simple-crm
+	/// </summary>
+	public class CrmContext : IdentityDbContext<AppUser, AppRole, int> {
 
     /// <summary>
     /// Public static hardcoded connection string, 
@@ -101,6 +101,14 @@ namespace SimpleCRM.Data {
     /// <summary>Contains all widgets in database table dbo.Widgets</summary>
     /// <value>Get the value of Widgets</value>
     public DbSet<Widget> Widgets { get; set; }
+
+    /// <summary>Contains all addresses in database table dbo.Addresses</summary>
+    /// <value>Get the value of Addresses</value>
+    public DbSet<Address> Addresses { get; set; }
+
+    /// <summary>Contains all favorites in database table dbo.Favorites</summary>
+    /// <value>Get the value of Favorites</value>
+    public DbSet<Favorite> Favorites { get; set; }
 
     #endregion
     
@@ -217,22 +225,6 @@ namespace SimpleCRM.Data {
         );
       } );
 
-      // dbo.Addresses
-      builder.Entity<Address>( addressBuilder => {
-
-        // set dbo.Addresses.Created's default value to sql NOW value
-        addressBuilder.Property( c => c.Created ).HasDefaultValueSql( DefaultNowSql );
-
-        // seed dbo.Addresses table
-        addressBuilder.Property( c => c.Main ).HasDefaultValue( false );
-        addressBuilder.HasData(
-          new Address { Id = 1, ContactId = 1, Street = "Avenue des Arts", Number = "4", Zip = "1040", City = "Brussels", Country = "BE" },
-          new Address { Id = 2, Name = "Planque", Main = true, ContactId = 1, Street = "Rue d'en dessous", Number = "11", Zip = "75000", City = "Paris", Country = "FR" },
-          new Address { Id = 3, Main = true, ContactId = 2, Street = "Chaussée des délires", Number = "357", Zip = "1337", City = "South Park", Country = "BE" },
-          new Address { Id = 4, Name = "QG", Main = true, CompanyId = 2, Street = "Place de la duchesse", Zip = "1080", City = "Brussels", Country = "BE" }
-        );
-      });
-
       // dbo.Companies
       builder.Entity<Company>( companyBuilder => {
 
@@ -264,6 +256,43 @@ namespace SimpleCRM.Data {
         );
       } );
 
+      // dbo.Addresses
+      builder.Entity<Address>( addressBuilder => {
+
+        // set dbo.Addresses.Created's default value to sql NOW value
+        addressBuilder.Property( c => c.Created ).HasDefaultValueSql( DefaultNowSql );
+
+        // seed dbo.Addresses table
+        addressBuilder.Property( c => c.Main ).HasDefaultValue( false );
+        addressBuilder.HasData(
+          new Address { Id = 1, ContactId = 1, Street = "Avenue des Arts", Number = "4", Zip = "1040", City = "Brussels", Country = "BE" },
+          new Address { Id = 2, Name = "Planque", Main = true, ContactId = 1, Street = "Rue d'en dessous", Number = "11", Zip = "75000", City = "Paris", Country = "FR" },
+          new Address { Id = 3, Main = true, ContactId = 2, Street = "Chaussée des délires", Number = "357", Zip = "1337", City = "South Park", Country = "BE" },
+          new Address { Id = 4, Name = "QG", Main = true, CompanyId = 2, Street = "Place de la duchesse", Zip = "1080", City = "Brussels", Country = "BE" }
+        );
+      });
+
+      // dbo.Favorites
+      builder.Entity<Favorite>( favoritesBuilder => {
+
+        // clustered primary key
+        favoritesBuilder.HasKey( c => new { c.UserId, c.EntityId, c.ItemId } );
+
+        // set dbo.Favorites.Created's default value to sql NOW value
+        favoritesBuilder.Property( f => f.Created ).HasDefaultValueSql( DefaultNowSql );
+
+        // seed dbo.Favorites table
+        favoritesBuilder.HasData(
+          new Favorite(1, 11, 1),
+          new Favorite(1, 11, 3),
+          new Favorite(1, 11, 7),
+          new Favorite(1, 11, 11),
+          new Favorite(1, 11, 16),
+          new Favorite(1, 10, 2),
+          new Favorite(1, 32, 1)
+        );
+      } );
+
       // dbo.Widgets
       builder.ApplyConfiguration(new WidgetConfig());
 
@@ -278,8 +307,36 @@ namespace SimpleCRM.Data {
       #region Identity Auth Tables
 
       // dbo.Users
-      builder.Entity<AppUser>().ToTable("Users")
-        .Property(p => p.Id).HasColumnName("UserId");
+      builder.Entity<AppUser>(userBuilder => {
+
+        // rename table as dbo.Users
+        userBuilder.ToTable( "Users" );
+
+        // rename Id column as dbo.Users.UserId
+        userBuilder.Property(p => p.Id).HasColumnName( "UserId" );
+
+        // create default test user
+        userBuilder.HasData(new AppUser {
+          Id = 1,
+          AccessFailedCount = 0,
+          ConcurrencyStamp = "fe80632a-a20f-4510-9237-205ebab34516",
+          Email = "test@test.com",
+          EmailConfirmed = false,
+          IsAdmin = false,
+          DataEventRecordsRole = null,
+          SecuredFilesRole = null,
+          LockoutEnabled = true,
+          LockoutEnd = null,
+          NormalizedEmail = "TEST@TEST.COM",
+          NormalizedUserName = "TEST@TEST.COM",
+          PasswordHash = "AQAAAAEAACcQAAAAEEh1H8KfznRWQglPFMBIyzLo4AevzKuZYHJq+1vw6sZsvJQgbiIIJYJaTtXg0e3l7A==",
+          PhoneNumber = null,
+          PhoneNumberConfirmed = false,
+          SecurityStamp = "LFEFYRS5H6M3M7QURCCLH76HKHPWXQHZ",
+          TwoFactorEnabled = false,
+          UserName = "test@test.com"
+        });
+      });
 
       // dbo.Roles
       builder.Entity<AppRole>().ToTable("Roles")

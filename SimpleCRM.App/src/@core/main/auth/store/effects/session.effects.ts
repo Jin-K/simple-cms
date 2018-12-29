@@ -17,7 +17,7 @@ export class SessionEffect {
   @Effect()
   authorized$: Observable<SessionActions.SessionStart> = this.actions$.pipe(
     ofType(UserActions.AUTHORIZATION_DONE),
-    map(_ => new SessionActions.SessionStart(this.oidcSecurityService.getToken())),
+    map(_ => new SessionActions.SessionStart()),
     catchError(error => of(error))
   );
 

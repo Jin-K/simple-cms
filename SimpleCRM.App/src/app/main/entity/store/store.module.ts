@@ -6,7 +6,7 @@ import { EntityEffects as entityEffects } from './effects';
 
 @NgModule({
   imports: [
-    StoreModule.forFeature('entity', reducers),
+    StoreModule.forFeature('elements', reducers),
     EffectsModule.forFeature([entityEffects])
   ]
 })

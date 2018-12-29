@@ -14,7 +14,7 @@ export class WNEFetchTryDone implements Action {
  */
 export class SessionStart implements Action {
   readonly type = SESSION_START;
-  constructor(public token: string) {}
+  constructor() {}
 }
 
 /**

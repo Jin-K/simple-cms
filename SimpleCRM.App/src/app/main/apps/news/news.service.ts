@@ -4,8 +4,9 @@ import { Store }                                from '@ngrx/store';
 import * as signalR                             from '@aspnet/signalr';
 import { Observable, Subject }                  from 'rxjs';
 import { takeUntil }                            from 'rxjs/operators';
+import { OidcSecurityService }                  from 'angular-auth-oidc-client';
 
-import { getUserIsAuthorized, getSessionToken } from '@core/auth';
+import { UserSelectors }                        from '@core/auth';
 
 import { coreConfig }                           from 'app/config';
 import { NewsItem }                             from 'app/models/news-item.class';
@@ -14,7 +15,7 @@ import * as newsActions                         from './store/actions';
 
 @Injectable()
 export class NewsService implements OnDestroy {
-  
+
   private readonly actionUrl: string;
   private readonly headers: HttpHeaders;
   private readonly _unsubscribeAll: Subject<any> = new Subject();
@@ -24,6 +25,7 @@ export class NewsService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private store: Store<State>,
+    private oidcSecurityService: OidcSecurityService
   ) {
     this.actionUrl = `${coreConfig.apiServer}/api/news`;
 
@@ -57,11 +59,10 @@ export class NewsService implements OnDestroy {
   }
 
   private init() {
-    this.store.select(getUserIsAuthorized)
+    this.store.select(UserSelectors.getUserIsAuthorized)
         .pipe(takeUntil(this._unsubscribeAll))
         .filter(isAuthorized => isAuthorized)
-        .withLatestFrom(this.store.select(getSessionToken))
-        .subscribe(([, token]) => this.initHub(token));
+        .subscribe(_ => this.initHub(this.oidcSecurityService.getToken()));
   }
 
   private initHub(token: string) {

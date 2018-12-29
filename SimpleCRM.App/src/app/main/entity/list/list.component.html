@@ -39,7 +39,7 @@
 
       <!-- SIDEBAR CONTENT -->
       <div class="content" fusePerfectScrollbar>
-        <entity-items-list-main-sidebar [@animate]="{value:'*'}"></entity-items-list-main-sidebar>
+        <entity-items-list-main-sidebar [@animate]="{value:'*'}" [entity]="onlyFirstLetterCapitalized(entity)"></entity-items-list-main-sidebar>
       </div>
       <!-- / SIDEBAR CONTENT -->
       
@@ -51,7 +51,7 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <entity-items-list-details (changeSort)="onChangeSort($event)"></entity-items-list-details>
+        <entity-items-list-details (changeSort)="onChangeSort($event)" [orderBy]="$orderBy | async"></entity-items-list-details>
       </div>
       <!-- / CONTENT -->
 
