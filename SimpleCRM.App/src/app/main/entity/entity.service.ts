@@ -101,9 +101,9 @@ export class EntityService implements Resolve<any> {
   getItems2(entity: string, pagination: any, filters: entityActions.EntityListFilters): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
 
     // prepare query url
-    let requestUrl = `${this.actionUrl}/items?page=${pagination.page + 1}`
-      + `&pageCount=${pagination.pageCount}`
-      + `&orderBy=${pagination.orderBy}&query=${entity}`;
+    let requestUrl = `${this.actionUrl}/items?entity=${entity}`
+      + `&page=${pagination.page + 1}&pageCount=${pagination.pageCount}`
+      + `&orderBy=${pagination.orderBy}`;
 
     // filter on user if specified
     if (filters.user) {
@@ -136,9 +136,9 @@ export class EntityService implements Resolve<any> {
     paginationSettings.loading = true;
 
     // prepare query url
-    const requestUrl = `${this.actionUrl}/items?page=${paginationSettings.page}`
-      + `&pageCount=${paginationSettings.pageSize}`
-      + `&orderBy=${paginationSettings.sort}&query=${entity}`;
+    const requestUrl = `${this.actionUrl}/items?entity=${entity}`
+      + `&page=${paginationSettings.page}&pageCount=${paginationSettings.pageSize}`
+      + `&orderBy=${paginationSettings.sort}`;
 
     // return http observable of part of entity items
     return this.http.get<{links: any[], value: IItem[]}>(requestUrl, { observe: 'response', headers: this.headers })

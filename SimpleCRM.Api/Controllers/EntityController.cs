@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -12,22 +13,22 @@ using SimpleCRM.Business.Providers;
 
 namespace SimpleCRM.Api.Controllers {
 
-  /// <summary>
-  /// The main EntityController class
-  /// Handles all the routes for entities and entity items
-  /// 
-  /// Contains following routes:
-  /// 
-  /// - GET   entity/items              : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
-  /// - GET   entity/entities           : <see cref="EntityController.GetMainEntities()"></see>
-  /// - GET   entity/item               : <see cref="EntityController.GetItem(GetItemParameters)"></see>
-  /// - GET   entity/entity-items       : <see cref="EntityController.GetEntityItems()"></see>
-  /// - POST  entity/entity-items       : <see cref="EntityController.PostEntityItems(string)"></see>
-  /// - GET   entity/entity-items-user  : <see cref="EntityController.GetUser()"></see>
-  /// - GET   entity/list-view-settings : <see cref="EntityController.GetListViewSettings(int)"></see>
-  /// 
-  /// </summary>
-  [Authorize( AuthenticationSchemes = "Bearer" )]
+	/// <summary>
+	/// The main EntityController class
+	/// Handles all the routes for entities and entity items
+	/// 
+	/// Contains following routes:
+	/// 
+	/// - GET   entity/items              : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
+	/// - GET   entity/entities           : <see cref="EntityController.GetMainEntities()"></see>
+	/// - GET   entity/item               : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+	/// - GET   entity/entity-items       : <see cref="EntityController.GetEntityItems()"></see>
+	/// - POST  entity/entity-items       : <see cref="EntityController.PostEntityItems(string)"></see>
+	/// - GET   entity/entity-items-user  : <see cref="EntityController.GetUser()"></see>
+	/// - GET   entity/list-view-settings : <see cref="EntityController.GetListViewSettings(int)"></see>
+	/// 
+	/// </summary>
+	[Authorize( AuthenticationSchemes = "Bearer" )]
   [Route( "api/[controller]" )]
   public class EntityController : Controller {
 
@@ -45,7 +46,8 @@ namespace SimpleCRM.Api.Controllers {
     /// sets <see cref="EntityController._entitiesStore" /> via DI
     /// </remarks>
     /// <param name="entitiesStore">store for entities</param>
-    public EntityController(EntitiesStore entitiesStore) => _entitiesStore = entitiesStore;
+    public EntityController(EntitiesStore entitiesStore)
+    => _entitiesStore = entitiesStore;
 
     #region Endpoints
 
@@ -62,35 +64,37 @@ namespace SimpleCRM.Api.Controllers {
     public IActionResult GetItemsList([FromQuery] QueryParameters queryParameters) {
       
         // pascal case of entity name
-        var entity = queryParameters.Query.ToUpperCaseFirst();
+        var entity = queryParameters.Entity.ToUpperCaseFirst();        
 
         // get filtered and ordered items from store
         List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
           entity,
           queryParameters.OrderBy,
           queryParameters.Descending,
-          queryParameters.Page,
-          queryParameters.PageCount
+          (uint) queryParameters.Page,
+          (uint) queryParameters.PageCount,
+          queryParameters.UserId ?? - int.Parse( HttpContext.User.GetSub() ),
+          queryParameters.ListCategory
         ).ToList();
 
         // count total existing items for an entity
         var allItemCount = _entitiesStore.Count(entity);
 
-        // create pagination meta json
-        var paginationMetadata = new {
+        // create pagination meta json anonymous object
+        var paginationMetaHeader = new {
           totalCount = allItemCount,
           pageSize = queryParameters.PageCount,
           currentPage = queryParameters.Page,
           totalPages = queryParameters.GetTotalPages(allItemCount)
         };
 
-        // sets "X-Pagination" header with paginationMetadata
-        Response.Headers.Add( "X-Pagination", JsonConvert.SerializeObject( paginationMetadata ) );
+        // set "X-Pagination" header
+        Response.Headers.Add( "X-Pagination", JsonConvert.SerializeObject( paginationMetaHeader ) );
 
         // create HATEOAS links
         var links = CreateLinksForCollection(queryParameters, allItemCount);
 
-        // returns anonymous type JSON
+        // return anonymous type JSON
         return Ok( new { value, links } );
 
     }

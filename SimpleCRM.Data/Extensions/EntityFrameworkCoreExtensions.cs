@@ -95,5 +95,4 @@ namespace Microsoft.EntityFrameworkCore {
     }
 
 	}
-
 }
