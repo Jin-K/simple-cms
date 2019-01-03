@@ -1,4 +1,4 @@
-import { DataSource }                             from '@angular/cdk/collections';
+import { DataSource }                                     from '@angular/cdk/collections';
 import {
   Component,
   OnInit,
@@ -9,20 +9,21 @@ import {
   Output,
   EventEmitter,
   Input
-}                                                 from '@angular/core';
-import { FormGroup }                              from '@angular/forms';
-import { MatDialogRef, MatDialog, MatSort, Sort } from '@angular/material';
-import { Store, select }                          from '@ngrx/store';
-import { Subject, Observable }                    from 'rxjs';
-import { takeUntil, tap, filter }                 from 'rxjs/operators';
+}                                                         from '@angular/core';
+import { FormGroup }                                      from '@angular/forms';
+import { MatDialogRef, MatDialog, MatSort, Sort }         from '@angular/material';
+import { Store, select }                                  from '@ngrx/store';
+import { Subject, Observable }                            from 'rxjs';
+import { takeUntil, tap, filter }                         from 'rxjs/operators';
 
-import { fuseAnimations }                         from '@fuse/animations';
-import { FuseConfirmDialogComponent }             from '@fuse/components/confirm-dialog/confirm-dialog.component';
+import { fuseAnimations }                                 from '@fuse/animations';
+import { FuseConfirmDialogComponent }                     from '@fuse/components/confirm-dialog/confirm-dialog.component';
 
-import { IItem }                                  from 'app/models';
-import { EntityItemsListItemFormDialogComponent } from '../entity-items-list-item-form/entity-items-list-item-form.component';
-import { EntityService }                          from '../../entity.service';
-import { ElementsState, entitySelectors }         from '../../store';
+import { IItem }                                          from 'app/models';
+import { EntityItemsListItemFormDialogComponent }         from '../entity-items-list-item-form/entity-items-list-item-form.component';
+import { EntityService }                                  from '../../entity.service';
+import { ElementsState, entitySelectors, entityActions }  from '../../store';
+import { SelectionCheckboxState }                         from '../../store/selectors';
 
 /**
  * The main EntityItemsListDetailsComponent class
@@ -40,6 +41,14 @@ import { ElementsState, entitySelectors }         from '../../store';
   animations: fuseAnimations
 })
 export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
+
+  /**
+   * Entity name of listed items
+   *
+   * @type {string}
+   * @memberof EntityItemsListDetailsComponent
+   */
+  @Input() entity: string;
 
   /**
    * Sort options (orderby ==> column, direction)
@@ -75,15 +84,13 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   dialogContent: TemplateRef<any>;
 
   // public
-  items: any;
   user: any;
-  dataSource: FilesDataSource | null;
-  // displayedColumns = ['checkbox', 'avatar', 'id', 'name', 'active', 'created', 'buttons'];
+  dataSource: StoreItemsDataSource | null;
   displayedColumns = ['checkbox', 'avatar', 'id', 'active', 'created', 'buttons'];
-  selecteditems: any[];
   checkboxes: {};
   dialogRef: any;
   confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
+  checkboxState: SelectionCheckboxState;
 
   // private
   private _unsubscribeAll: Subject<any> = new Subject();
@@ -110,7 +117,7 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     // instantiate data source
-    this.dataSource = new FilesDataSource(this._store);
+    this.dataSource = new StoreItemsDataSource(this._store);
 
     // get current displayed items from store
     this._store.select(entitySelectors.getCurrentDisplayedItems).pipe(
@@ -122,22 +129,12 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
       tap(items => items.map(item => (this.checkboxes = {}) && (this.checkboxes[item.id] = false)))
     ).subscribe();
 
-    // listen to onSelectedItemsChanged
-    this._entityService.onSelectedItemsChanged
+    // get checkboxes model from store
+    this._store.pipe(select(entitySelectors.getCurrentViewModelSelection))
       // attach unsubscriber
       .pipe(takeUntil(this._unsubscribeAll))
-      // subscribe
-      .subscribe(selecteditems => {
-        // for each checkbox
-        for (const id in this.checkboxes) {
-          // assert id
-          if (!this.checkboxes.hasOwnProperty(id)) continue;
-          // check checkbox if in selected items
-          this.checkboxes[id] = selecteditems.includes(id);
-        }
-        // save selected items
-        this.selecteditems = selecteditems;
-      });
+      // subscribe and update this.checkboxes
+      .subscribe(_checkboxes => this.checkboxes = _checkboxes);
 
     // // listen to onUserDataChanged
     // this._entityService.onUserDataChanged
@@ -145,14 +142,6 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
     //   .pipe(takeUntil(this._unsubscribeAll))
     //   // subscribe to save user
     //   .subscribe(user => { console.log(user); this.user = user; });
-
-    // listen to onFilterChanged
-    this._entityService.onFilterChanged2
-      // attach unsubscriber
-      .pipe(takeUntil(this._unsubscribeAll))
-      // subscribe to deselect all items of signal
-      // .subscribe(() => this._entityService.deselectItems());
-      .subscribe(this._entityService.deselectItems.bind(this._entityService));
 
     // listen to sort changes of the mat-table
     this.sort.sortChange
@@ -162,6 +151,16 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
       .do(this.changeSort)
       // subscribe
       .subscribe();
+
+    // subscribe to page selection checkbox state
+    this._store.pipe(
+      // get it from store
+      select(entitySelectors.getCurrentPageSelectionCheckbox),
+      // attach unsubscriber
+      takeUntil(this._unsubscribeAll),
+      // update this.checkboxState for view
+      tap(_checkboxState => this.checkboxState = _checkboxState)
+    ).subscribe();
 
   }
 
@@ -239,6 +238,10 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  toggleSelectDisplayedItems(): void {
+    this._store.dispatch(new entityActions.ToggleDisplayedItems(this.entity));
+  }
+
   /**
    * Delete item
    *
@@ -270,11 +273,11 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   /**
    * On selected change
    *
-   * @param itemId id of the selected item
+   * @param {number} itemId id of the selected item
    * @memberof EntityItemsListDetailsComponent
    */
-  onSelectedChange(itemId): void {
-    this._entityService.toggleSelectedItem(itemId);
+  onSelectedChange(itemId: number): void {
+    this._store.dispatch(new entityActions.ToggleOne(this.entity, itemId));
   }
 
   /**
@@ -304,13 +307,13 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
 
 }
 
-export class FilesDataSource extends DataSource<IItem> {
+export class StoreItemsDataSource extends DataSource<IItem> {
 
   /**
    * Constructor
    *
    * @param {Store<ElementsState>} _store store for elements (entities, items)
-   * @memberof FilesDataSource
+   * @memberof StoreItemsDataSource
    */
   constructor(
     private _store: Store<ElementsState>
@@ -324,7 +327,7 @@ export class FilesDataSource extends DataSource<IItem> {
   /**
    * Connect function called by the table to retrieve one stream containing the data to render.
    *
-   * @memberof FilesDataSource
+   * @memberof StoreItemsDataSource
    * @returns {Observable<any[]>}
    */
   connect(): Observable<IItem[]> {
@@ -337,7 +340,7 @@ export class FilesDataSource extends DataSource<IItem> {
   /**
    * Disconnect implementation
    *
-   * @memberof FilesDataSource
+   * @memberof StoreItemsDataSource
    */
   disconnect(): void { }
 

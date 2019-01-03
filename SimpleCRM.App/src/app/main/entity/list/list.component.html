@@ -28,7 +28,7 @@
   <!-- / HEADER -->
 
   <!-- SELECTED BAR -->
-  <selected-bar class="accent-600" *ngIf="hasSelectedItems" [@slideInTop]></selected-bar>
+  <selected-bar class="accent-600" *ngIf="hasSelectedItems$ | async" [@slideInTop] [entity]="entity"></selected-bar>
   <!-- / SELECTED BAR -->
 
   <!-- CONTENT -->
@@ -39,7 +39,7 @@
 
       <!-- SIDEBAR CONTENT -->
       <div class="content" fusePerfectScrollbar>
-        <entity-items-list-main-sidebar [@animate]="{value:'*'}" [entity]="onlyFirstLetterCapitalized(entity)"></entity-items-list-main-sidebar>
+        <entity-items-list-main-sidebar [@animate]="{value:'*'}" [entity]="entity"></entity-items-list-main-sidebar>
       </div>
       <!-- / SIDEBAR CONTENT -->
       
@@ -51,19 +51,19 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <entity-items-list-details (changeSort)="onChangeSort($event)" [orderBy]="$orderBy | async"></entity-items-list-details>
+        <entity-items-list-details (changeSort)="onChangeSort($event)" [orderBy]="$orderBy | async" [entity]="entity"></entity-items-list-details>
       </div>
       <!-- / CONTENT -->
 
       <!-- APP PAGINATOR -->
-      <app-paginator showFirstLastButtons
+      <!-- <app-paginator showFirstLastButtons
                     [length]="paginationSettings.length"
                     [pageSize]="paginationSettings.pageSize"
                     [pageSizeOptions]="paginationSettings.selectItemsPerPage"
                     [pageIndex]="paginationSettings.pageIndex"
                     [selectionLength]="paginationSettings.selectionLength"
                     (page)="paginationSettings.changePage($event); paginate()">
-      </app-paginator>
+      </app-paginator> -->
       <!-- / APP PAGINATOR -->
       
     </div>

@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef }      from '@angular/material';
-import { Subject }                      from 'rxjs';
-import { takeUntil }                    from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, Input }                  from '@angular/core';
+import { MatDialog, MatDialogRef }                              from '@angular/material';
+import { Store, select }                                        from '@ngrx/store';
+import { FuseConfirmDialogComponent }                           from '@fuse/components/confirm-dialog/confirm-dialog.component';
+import { Subject, Observable }                                  from 'rxjs';
+import { map }                                                  from 'rxjs/operators';
 
-import { FuseConfirmDialogComponent }   from '@fuse/components/confirm-dialog/confirm-dialog.component';
-import { EntityService }                from '../../entity.service';
+import { EntityService }                                        from '../../entity.service';
+import { ElementsEntityState, entityActions, entitySelectors }  from '../../store';
 
 @Component({
   selector: 'selected-bar',
@@ -13,10 +15,17 @@ import { EntityService }                from '../../entity.service';
 })
 export class SelectedBarComponent implements OnInit, OnDestroy {
 
+  /**
+   * Entity name of listed items
+   *
+   * @type {string}
+   * @memberof SelectedBarComponent
+   */
+  @Input() entity: string;
+
   confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
-  hasSelectedItems: boolean;
-  isIndeterminate: boolean;
-  selectedItems: string[];
+  selectedItems$: Observable<number[]>;
+  selectionCounters$: Observable<{selectionCount: number, totalCount: number}>;
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -30,7 +39,8 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
    */
   constructor(
     private _entityService: EntityService,
-    public _matDialog: MatDialog
+    public _matDialog: MatDialog,
+    private _store: Store<ElementsEntityState>
   ) {
 
     // Set the private defaults
@@ -46,16 +56,20 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 
-    // subscribe to item's selection changes
-    this._entityService.onSelectedItemsChanged
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(selectedItems => {
-        this.selectedItems = selectedItems;
-        setTimeout(() => {
-          this.hasSelectedItems = selectedItems.length > 0;
-          this.isIndeterminate = (selectedItems.length !== this._entityService.items.length && selectedItems.length > 0);
-        }, 0);
-      });
+    this.selectedItems$ = this._store.pipe(
+      select(entitySelectors.getCurrentViewModelSelection),
+      map(selection => {
+        const selectedItems = [] as number[];
+        for (const x in selection)
+          if (selection.hasOwnProperty(x) && selection[x] === true)
+            selectedItems.push( +x );
+        return selectedItems;
+      })
+    );
+
+    this.selectionCounters$ = this._store.pipe(
+      select(entitySelectors.getCurrentSelectionCounters)
+    );
   }
 
   /**
@@ -74,20 +88,24 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
 
   /**
    * Select all
+   *
+   * @memberof SelectedBarComponent
    */
   selectAll(): void {
 
     // select items
-    this._entityService.selectItems();
+    this._store.dispatch(new entityActions.SelectAll(this.entity));
   }
 
   /**
    * Deselect all
+   *
+   * @memberof SelectedBarComponent
    */
   deselectAll(): void {
 
     // deselect items
-    this._entityService.deselectItems();
+    this._store.dispatch(new entityActions.DeselectAll(this.entity));
   }
 
   /**

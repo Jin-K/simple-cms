@@ -12,7 +12,7 @@
     <div>
 
       <span class="selected-items-count">
-        <span class="mr-4">{{selectedItems.length}}</span>
+        <span class="mr-4">{{(selectionCounters$ | async).selectionCount}}</span>
         <span>selected</span>
       </span>
 

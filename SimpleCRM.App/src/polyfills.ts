@@ -97,6 +97,12 @@ if ( typeof SVGElement.prototype.contains === 'undefined' )
 }
 
 /**
+ * To see Map & Set contents in @ngrx/store-devtools
+ */
+import 'core-js/es7/map';
+import 'core-js/es7/set';
+
+/**
  * Some other IE-fixes (imports, polyfills)
  */
 import 'isomorphic-fetch';

@@ -64,7 +64,10 @@ namespace SimpleCRM.Api.Controllers {
     public IActionResult GetItemsList([FromQuery] QueryParameters queryParameters) {
       
         // pascal case of entity name
-        var entity = queryParameters.Entity.ToUpperCaseFirst();        
+        var entity = queryParameters.Entity.ToUpperCaseFirst();
+
+        // prepare userId
+        var userId = queryParameters.UserId ?? - int.Parse( HttpContext.User.GetSub() );
 
         // get filtered and ordered items from store
         List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
@@ -73,12 +76,10 @@ namespace SimpleCRM.Api.Controllers {
           queryParameters.Descending,
           (uint) queryParameters.Page,
           (uint) queryParameters.PageCount,
-          queryParameters.UserId ?? - int.Parse( HttpContext.User.GetSub() ),
+          out int allItemCount,
+          userId,
           queryParameters.ListCategory
         ).ToList();
-
-        // count total existing items for an entity
-        var allItemCount = _entitiesStore.Count(entity);
 
         // create pagination meta json anonymous object
         var paginationMetaHeader = new {
@@ -165,7 +166,7 @@ namespace SimpleCRM.Api.Controllers {
         page = 0,
         pageCount = 5,
         orderBy = "id desc",
-        totalCount = _entitiesStore.Count(entityName)
+        totalCount = _entitiesStore.GetTotalItemsCount(entityName)
       },
       filters = new {
         category = "all"

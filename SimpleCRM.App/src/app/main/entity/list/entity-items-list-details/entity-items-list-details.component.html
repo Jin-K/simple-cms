@@ -6,7 +6,10 @@
     <!-- Checkbox Column -->
     <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? paginationSettings.toggleMasterSelection() : null"></mat-checkbox>
+          <mat-checkbox (change)="$event ? toggleSelectDisplayedItems() : null"
+                        [checked]="checkboxState === 1"
+                        [indeterminate]="checkboxState === 2">
+          </mat-checkbox>
         </mat-header-cell>
         <mat-cell *matCellDef="let item">
             <mat-checkbox [(ngModel)]="checkboxes[item.id]" (ngModelChange)="onSelectedChange(item.id)"

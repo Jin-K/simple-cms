@@ -8,12 +8,13 @@ import {
   map,
   catchError,
   tap,
-  withLatestFrom
+  withLatestFrom,
+  filter
 }                                                               from 'rxjs/operators';
 
 import { entitySelectors, entityActions, ElementsEntityState }  from '..';
+import { SelectionIdsStrategy }                                 from '../reducers';
 import { EntityService }                                        from '../../entity.service';
-import { IItem }                                                from '../../../../models';
 
 /**
  * The main EntityEffects class
@@ -38,33 +39,10 @@ export class EntityEffects {
   ) { }
 
   /**
-   * Effect of paginating
+   * The main loadEntityViewComplete$ effect
    *
-   * @memberof EntityEffects
-   */
-  @Effect() paginateSuccess$ = this.actions$.pipe(
-    // of type PAGINATE
-    ofType(entityActions.PAGINATE),
-    // get items list from service
-    switchMap((action: entityActions.Paginate) => this.entidadService.getItemsList(action.entity).pipe(
-      // map http response to get totalCount, items and then dispatch a new action
-      map((response: any) => {
-        // get totalCount from 'X-Pagination' header
-        const totalCount: number = JSON.parse(response.headers.get('X-Pagination')).totalCount;
-        // get items from body
-        const dataSource: IItem[] = response.body.value;
-        // dispatch new PAGINATE_SUCCESS action
-        return new entityActions.PaginateSuccess(this.onlyFirstLetterCapitalized(action.entity), dataSource, totalCount);
-      }),
-      // handle error(s)
-      catchError(error => of(error))
-    ))
-  );
-
-  /**
-   * Effect of loading an entity.
+   * @description effect of loading an entity.
    * Should occure only once per entity (on first listingEntity$ effect) and retrieves pagination/filter settings from api.
-   *
    * @memberof EntityEffects
    */
   @Effect() loadEntityViewComplete$ = this.actions$.pipe(
@@ -80,8 +58,9 @@ export class EntityEffects {
   );
 
   /**
-   * Effect of sorting, filtering or paginating
+   * The main refreshDisplayItems$ effect
    *
+   * @description effect of sorting, filtering or paginating
    * @memberof EntityEffects
    */
   @Effect({dispatch: false}) refreshDisplayItems$ = this.actions$.pipe(
@@ -92,12 +71,31 @@ export class EntityEffects {
     // map to current entity instance (of type ElementsEntityState)
     map(([action, elementsState]: [entityActions.ChangeFilter | entityActions.Sort, Dictionary<ElementsEntityState>]) => elementsState[action.entity]),
     // switch to observable of api request
-    switchMap((entity: ElementsEntityState) => this.entidadService.getItems2(entity.name, entity.pagination, entity.filters).pipe(
+    switchMap((entity: ElementsEntityState) => this.entidadService.getItems(entity.name, entity.pagination, entity.filters).pipe(
       // dispatch fetch items action on response
-      tap(response => this.store.dispatch(new entityActions.FetchItems(entity.name, response.body.value))),
+      tap( response => this.store.dispatch( new entityActions.FetchItems( entity.name, response.body.value, JSON.parse( response.headers.get( 'X-Pagination' ) ).totalCount ) ) ),
       // catch eventual errors
       catchError(error => of(error))
     ))
+  );
+
+  /**
+   * The main clearSelectionOnChangeFilters$ effect
+   *
+   * @description when changing filter(s) (user, category), we must clear selection because total items length will not be the same
+   * @memberof EntityEffects
+   */
+  @Effect() clearSelectionOnChangeFilter$ = this.actions$.pipe(
+    // of type CHANGE_FILTER
+    ofType<entityActions.ChangeFilter>(entityActions.CHANGE_FILTER),
+    // with latest value of selection
+    withLatestFrom(this.store.pipe(select(entitySelectors.getCurrentSelection))),
+    // don't need to deselect all if no selection at all
+    filter(([, selection]) => !( selection.strategy === SelectionIdsStrategy.Normal && selection.ids === undefined )),
+    // just dispatch a deselect all action
+    map(([{entity}]) => new entityActions.DeselectAll(entity)),
+    // catch eventual errors
+    catchError(error => of(error))
   );
 
   /**
