@@ -28,7 +28,7 @@
     </div>
 
     <div class="multi-select-actions">
-      <button mat-icon-button (click)="deleteSelectedItems()" aria-label="delete selected">
+      <button mat-icon-button [disabled]="currentHasMoreThat100Selected$ | async" (click)="deleteSelectedItems()" aria-label="delete selected">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

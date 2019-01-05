@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 using SimpleCRM.Business.Models;
 using SimpleCRM.Data;
 using SimpleCRM.Data.Entities;
+using _Action = SimpleCRM.Data.Entities.Action;
 
 namespace SimpleCRM.Business.Providers {
 
@@ -126,7 +128,7 @@ namespace SimpleCRM.Business.Providers {
     /// <param name="userId">User id (if negative, absolute value is id of current user)</param>
     /// <param name="listCategory">Category of items to show ( of type <see cref="EntityListCategory" /> )</param>
     /// <returns>Returns an ordered chunk of items as a generic <see cref="IEnumerable" /> of <see cref="Item" /></returns>
-    public IEnumerable<Item> GetOrderedItems(string entity, string orderBy, bool descending, uint page, uint pageCount, out int totalCount, int userId = 0, EntityListCategory listCategory = EntityListCategory.All) {
+    public IEnumerable<Item> GetFilteredAndOrderedItems(string entity, string orderBy, bool descending, uint page, uint pageCount, out int totalCount, int userId = 0, EntityListCategory listCategory = EntityListCategory.All) {
 
       // assert user id
       if (userId == 0) throw new System.ArgumentException( "userId cannot be 0" );
@@ -191,10 +193,10 @@ namespace SimpleCRM.Business.Providers {
     /// <summary>
     /// Gets an entity item depending on <paramref name="entityName" /> and <paramref name="id" />
     /// </summary>
-    /// <param name="entityName">Entity name for items</param>
-    /// <param name="id">Id of item</param>
-    /// <param name="loadRelatedData">Do we need to load related data ?</param>
-    /// <returns>Returns a raw <see cref="IEntidad" /> object</returns>
+    /// <param name="entityName">entity name for items</param>
+    /// <param name="id">id of item</param>
+    /// <param name="loadRelatedData">do we need to load related data ?</param>
+    /// <returns>returns a raw <see cref="IEntidad" /> object</returns>
     public IEntidad GetItem(string entityName, int id, bool loadRelatedData = false) {
 
       // prepare query
@@ -206,7 +208,7 @@ namespace SimpleCRM.Business.Providers {
       // get appropriate DbSet<TEntity> as IQueryable<TEntity>
       var set = _crmContext.Query<IEntidad>(entityType);
 
-      // filter on id
+      // filter on id (query)
       set = set.FromSql( query );
 
       // search for properties with "InversePropertyAttribute" in entity type ==> they are includable
@@ -222,6 +224,76 @@ namespace SimpleCRM.Business.Providers {
       // return item
       return set.FirstOrDefault();
 
+    }
+
+    /// <summary>
+    /// Deletes an entity item depending on <paramref name="entityName" /> and <paramref name="id" />
+    /// </summary>
+    /// <param name="entityName">entity name for items</param>
+    /// <param name="id">id of item</param>
+    /// <returns>returns true if delete succeeded</returns>
+    public bool DeleteItem(string entityName, int id) {
+
+      var itemToDelete = (from i in _crmContext.AsQueryable<IEntidad>(entityName) where i.Id == id select i).First();
+
+      // TODO Use reflection ?
+      if (itemToDelete is Contact contactToDelete) {
+        _crmContext.Contacts.Remove(contactToDelete);
+      }
+      if (itemToDelete is Company companyToDelete) {
+        _crmContext.Companies.Remove(companyToDelete);
+      }
+      if (itemToDelete is _Action actionToDelete) {
+        _crmContext.Actions.Remove(actionToDelete);
+      }
+
+      try {
+        return _crmContext.SaveChanges() == 1;
+      }
+      catch (DbUpdateConcurrencyException) {
+        throw;
+      }
+      catch (DbUpdateException) {
+        return false;
+      }
+      
+    }
+
+    /// <summary>
+    /// Deletes a list of entity items depending on <paramref name="entityName" /> and <paramref name="ids" />
+    /// </summary>
+    /// <remarks>
+    /// If delete fails due to foreign key constraints, it returns false and nothing is deleted
+    /// </remarks>
+    /// <param name="entityName">entity name for items</param>
+    /// <param name="ids">array of ids</param>
+    /// <returns>returns true if delete succeeded for all items</returns>
+    public bool DeleteItems(string entityName, int[] ids) {
+
+      var itemsToDelete = from i in _crmContext.AsQueryable<IEntidad>(entityName) where ids.Contains(i.Id) select i;
+
+      switch(entityName) {
+        case "Contacts": 
+          _crmContext.Contacts.RemoveRange(itemsToDelete.Cast<Contact>());
+          break;
+        case "Companies": 
+          _crmContext.Companies.RemoveRange(itemsToDelete.Cast<Company>());
+          break;
+        case "Actions": 
+          _crmContext.Actions.RemoveRange(itemsToDelete.Cast<_Action>());
+          break;
+      }
+
+      try {
+        return _crmContext.SaveChanges() == ids.Length;
+      }
+      catch (DbUpdateConcurrencyException) {
+        throw;
+      }
+      catch (DbUpdateException) {
+        return false;
+      }
+      
     }
 
     /// <summary>
@@ -264,6 +336,45 @@ namespace SimpleCRM.Business.Providers {
     /// <returns>Returns user data</returns>
     public object GetUserData()
     => _fakeDB.UserData;
+
+    /// <summary>
+    /// Gets a list of ids (max 100 ?) for a given <paramref name="entity" />, the opposite of the received <paramref name="inverseIds" />.
+    /// Initial list can be differ depending on filters (<paramref name="userId" />, <paramref name="category" />)
+    /// </summary>
+    /// <param name="entity">entity name</param>
+    /// <param name="userId">id of the user (can be negative)</param>
+    /// <param name="category">category name (all or favorites)</param>
+    /// <param name="inverseIds">inverse ids array of integers</param>
+    /// <param name="limit">limit of id to return (default = 100)</param>
+    /// <returns>Returns the list of normalized ids as enumerable</returns>
+		public IEnumerable<int> GetInverseIdsForEntity(string entity, int userId, string category, int[] inverseIds, int limit = 100) {
+
+      var inverseIdsSet = from item in _crmContext.AsQueryable<IEntidad>( entity ) where !inverseIds.Contains(item.Id) select item.Id;
+
+      if (userId > 0) {
+        
+        // TODO
+      }
+      else userId *= -1;
+
+      var entityId = _crmContext.Entities.SingleOrDefault( e => e.Name == entity )?.Id ?? 0;
+
+      // if favorites category specified
+      if (category == "favorites") {
+
+        // get only items listed in favorites table (for specific user)
+        inverseIdsSet =
+          from favo in _crmContext.Favorites
+            join item in inverseIdsSet on favo.ItemId equals item into item_favo
+          from favoriteItem in item_favo
+          where favo.EntityId == entityId
+              && favo.UserId == userId
+          select favoriteItem;
+      }
+
+      return inverseIdsSet.Take( limit );
+      
+		}
     
   }
 

@@ -184,7 +184,7 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   /**
    * Edit item
    *
-   * @param item
+   * @param {IItem} item
    * @memberof EntityItemsListDetailsComponent
    */
   editItem(item: IItem): void {
@@ -245,10 +245,10 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
   /**
    * Delete item
    *
-   * @param {any} item item to delete
+   * @param {IItem} item item to delete
    * @memberof EntityItemsListDetailsComponent
    */
-  deleteItem(item: any): void {
+  deleteItem(item: IItem): void {
 
     // open closeable dialog and save reference
     this.confirmDialogRef = this._matDialog.open(FuseConfirmDialogComponent, {
@@ -262,7 +262,7 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
     this.confirmDialogRef.afterClosed().subscribe(result => {
 
       // delete item if result
-      if (result) this._entityService.deleteItem(item);
+      if (result) this._store.dispatch(new entityActions.DeleteItem(this.entity, item.id));
 
       // remove reference to dialog
       this.confirmDialogRef = null;

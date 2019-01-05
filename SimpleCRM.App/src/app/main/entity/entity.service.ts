@@ -5,9 +5,8 @@ import { Store, select }                          from '@ngrx/store';
 import {
   Observable,
   BehaviorSubject,
-  Subject,
-  Subscription,
   of,
+  throwError,
 }                                                 from 'rxjs';
 import { switchMap, take, catchError }            from 'rxjs/operators';
 
@@ -19,7 +18,6 @@ import {
   entitySelectors,
   EntityFilters
 }                                                 from './store';
-import { Item }                                   from './list/item.model';
 
 /**
  * TODELETE constant string for 'application/json' ..
@@ -235,60 +233,31 @@ export class EntityService implements Resolve<any> {
 
   }
 
-  /**
-   * Delete item
-   *
-   * @param item
-   */
-  deleteItem(item): void {
-
-    // // find position of item in array of items
-    // // const itemIndex = this.items2.indexOf(item);
-    // const itemIndex = this.items.indexOf(item);
-
-    // // remove it from array
-    // // this.items2.splice(itemIndex, 1);
-    // this.items.splice(itemIndex, 1);
-
-    // // trigger the next event
-    // // this.onItemsChanged2.next(this.items2);
-    // this.onItemsChanged.next(this.items);
-
-  }
-
-  /**
-   * Delete selected items
-   */
-  deleteSelectedItems(): void {
-
-    // // foreach item in array of selected items
-    // // for (const itemId of this.selectedItems2) {
-    // for (const itemId of this.selectedItems) {
-
-    //   // find item
-    //   // const item = this.items2.find(_item => _item.id === itemId);
-    //   const item = this.items.find(_item => _item.id === itemId);
-
-    //   // get position in array of items
-    //   // const itemIndex = this.items2.indexOf(item);
-    //   const itemIndex = this.items.indexOf(item);
-
-    //   // remove of array of items
-    //   // this.items2.splice(itemIndex, 1);
-    //   this.items.splice(itemIndex, 1);
-    // }
-
-    // // trigger the next event
-    // // this.onItemsChanged2.next(this.items2);
-    // this.onItemsChanged.next(this.items);
-
-    // // deselect all items
-    // this.deselectItems();
-
-  }
-
   /** TO DELETE ABOVE */
 
+
+  /**
+   * Delete item requesting api
+   *
+   * @param {string} entity entity name
+   * @param {number} itemId id of the item to delete
+   */
+  deleteItem(entity: string, itemId: number): Observable<{}> {
+
+    // use deleteItems method
+    return this.deleteItems(entity, [ itemId ]);
+
+  }
+
+  /**
+   * Delete items
+   */
+  deleteItems(entity: string, itemIds: number[]): Observable<{}> {
+
+    // return observable of delete request
+    return this.http.delete( `${this.actionUrl}/${entity}/${itemIds.join('+')}`, { headers: this.headers } );
+
+  }
 
   /**
    * Deselect all items for given entity
@@ -318,6 +287,36 @@ export class EntityService implements Resolve<any> {
 
     // return observable of the user's entity view settings
     return this.http.get<entityActions.LoadEntityCompletePayload>(requestUrl, { headers: this.headers });
+  }
+
+  /**
+   * Returns from the list of negative ids, a list of the inverse ids.
+   * So (LengthofFilteredItemsFromAPI - negativeIds >= 100) === true !!!
+   *
+   * The list of negative ids has to be short also.
+   *
+   * TODO Find a way to have an unique token or timestamp for each delete requests chain (starting form this.getItems call)
+   * ==> so we are "sure" we don't delete items that are created after our unique token/timestamp
+   *
+   * @param {string} entity entity name
+   * @param {EntityFilters} filters entity filters
+   * @param {number[]} negativeIds array of negative ids
+   * @returns {Observable<number[]>} observable of inversed ids array
+   * @memberof EntityService
+   */
+  getInversedIdsForDeletion(entity: string, filters: EntityFilters, negativeIds: number[]): Observable<number[]> {
+
+    const joinedAbsolutedIds = negativeIds.map(nid => -nid).join('+');
+
+    const requestUrl = `${this.actionUrl}/inverse-ids/${joinedAbsolutedIds}?entity=${entity}`
+      + (filters.user ? `&userId=${filters.user.id}` : '')
+      + (filters.category !== 'all' ? `&category=${filters.category}` : '');
+
+    if (requestUrl.length > 1024) return throwError( 'Request url is too long (max 1024)' );
+
+    // return observable of get request
+    return this.http.get<number[]>( requestUrl, { headers: this.headers });
+
   }
 
   /**

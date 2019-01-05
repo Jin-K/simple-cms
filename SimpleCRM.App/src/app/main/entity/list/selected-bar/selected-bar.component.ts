@@ -5,8 +5,7 @@ import { FuseConfirmDialogComponent }                           from '@fuse/comp
 import { Subject, Observable }                                  from 'rxjs';
 import { map }                                                  from 'rxjs/operators';
 
-import { EntityService }                                        from '../../entity.service';
-import { ElementsEntityState, entityActions, entitySelectors }  from '../../store';
+import { entityActions, entitySelectors, ElementsState }        from '../../store';
 
 @Component({
   selector: 'selected-bar',
@@ -26,6 +25,7 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
   confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
   selectedItems$: Observable<number[]>;
   selectionCounters$: Observable<{selectionCount: number, totalCount: number}>;
+  currentHasMoreThat100Selected$: Observable<boolean>;
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -33,14 +33,13 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
   /**
    * Creates an instance of SelectedBarComponent.
    *
-   * @param {EntityService} _entityService is replacing _itemsService in skeleton sample of @fuse
    * @param {MatDialog} _matDialog angular material dialog
+   * @param {Store<ElementsState>} _store elements store
    * @memberof SelectedBarComponent
    */
   constructor(
-    private _entityService: EntityService,
     public _matDialog: MatDialog,
-    private _store: Store<ElementsEntityState>
+    private _store: Store<ElementsState>
   ) {
 
     // Set the private defaults
@@ -70,6 +69,8 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
     this.selectionCounters$ = this._store.pipe(
       select(entitySelectors.getCurrentSelectionCounters)
     );
+
+    this.currentHasMoreThat100Selected$ = this._store.pipe(select(entitySelectors.getCurrentHasMoreThat100Selected));
   }
 
   /**
@@ -127,7 +128,7 @@ export class SelectedBarComponent implements OnInit, OnDestroy {
 
         // delete selected item if there is a result
         if (result) {
-          this._entityService.deleteSelectedItems();
+          this._store.dispatch(new entityActions.DeleteSelectedItems(this.entity));
         }
 
         // remove reference to closed confirm dialog

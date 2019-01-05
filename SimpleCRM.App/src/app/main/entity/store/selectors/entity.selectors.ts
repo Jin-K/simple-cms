@@ -48,6 +48,21 @@ export const getCurrentSelectionCounters = createSelector(getCurrentSelection, g
 
 export const getCurrentPageSelectionCheckbox = createSelector(getCurrentDisplayedItems, getCurrentViewModelSelection, displayedItemsAndSelectionViewModelToCheckboxState);
 
+export const getCurrentHasMoreThat100Selected = createSelector(getCurrentSelection, getCurrentPagination, checkIfMoreThat100Selected);
+
+function checkIfMoreThat100Selected(selection: EntitySelection, pagination: EntityPagination): boolean {
+
+  // prepare set
+  const idsSet = selection.ids || new Set<number>();
+
+  // count selected items
+  const selectionCount = selection.strategy === SelectionIdsStrategy.Normal ? idsSet.size : pagination.totalCount - idsSet.size;
+
+  // return true if more that 100
+  return selectionCount > 100;
+
+}
+
 function displayedItemsAndSelectionViewModelToCheckboxState(displayedItems: IItem[], viewModelSelection: {}) {
 
   let cpt = 0;

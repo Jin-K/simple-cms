@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -19,13 +20,15 @@ namespace SimpleCRM.Api.Controllers {
 	/// 
 	/// Contains following routes:
 	/// 
-	/// - GET   entity/items              : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
-	/// - GET   entity/entities           : <see cref="EntityController.GetMainEntities()"></see>
-	/// - GET   entity/item               : <see cref="EntityController.GetItem(GetItemParameters)"></see>
-	/// - GET   entity/entity-items       : <see cref="EntityController.GetEntityItems()"></see>
-	/// - POST  entity/entity-items       : <see cref="EntityController.PostEntityItems(string)"></see>
-	/// - GET   entity/entity-items-user  : <see cref="EntityController.GetUser()"></see>
-	/// - GET   entity/list-view-settings : <see cref="EntityController.GetListViewSettings(int)"></see>
+	/// - GET     entity/items?entity&page&pageCount(&orderBy)(&userId)(&category)  : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
+	/// - GET     entity/inverse-ids/{inverseIds}?entity(&category)(&userId)        : <see cref="EntityController.GetInverseIdsForDeletion(QueryParameters)"></see>
+	/// - GET     entity/entities                                                   : <see cref="EntityController.GetMainEntities()"></see>
+	/// - GET     entity/item                                                       : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+	/// - DELETE  entity/{entity}/{ids}                                             : <see cref="EntityController.DeleteItemOrItems(string, string)"></see>
+	/// - GET     entity/entity-items                                               : <see cref="EntityController.GetEntityItems()"></see>
+	/// - POST    entity/entity-items/{id}                                          : <see cref="EntityController.PostEntityItems(string, dynamic)"></see>
+	/// - GET     entity/entity-items-user                                          : <see cref="EntityController.GetEntityItemsUser()"></see>
+	/// - GET     entity/list-view-settings                                         : <see cref="EntityController.GetListViewSettings(string)"></see>
 	/// 
 	/// </summary>
 	[Authorize( AuthenticationSchemes = "Bearer" )]
@@ -70,7 +73,7 @@ namespace SimpleCRM.Api.Controllers {
         var userId = queryParameters.UserId ?? - int.Parse( HttpContext.User.GetSub() );
 
         // get filtered and ordered items from store
-        List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetOrderedItems(
+        List<SimpleCRM.Business.Models.Item> value = _entitiesStore.GetFilteredAndOrderedItems(
           entity,
           queryParameters.OrderBy,
           queryParameters.Descending,
@@ -101,6 +104,51 @@ namespace SimpleCRM.Api.Controllers {
     }
 
     /// <summary>
+    /// Gets, for a given <paramref name="entity" />, the list of ids opposite/inverse to received <paramref name="inverseIds" />,
+    /// depends on optional filters (<paramref name="category" />, <paramref name="userId" />)
+    /// </summary>
+    /// <param name="inverseIds">inverse ids string separated with '+'</param>
+    /// <param name="entity">entity name</param>
+    /// <param name="category">optional category ("all" or "favorites")</param>
+    /// <param name="userId">optional user id</param>
+    /// <returns>Returns the list of normalized ids</returns>
+    [HttpGet( "inverse-ids/{inverseIds}" )]
+    public IActionResult GetInverseIdsForDeletion(string inverseIds, [FromQuery] string entity, [FromQuery] string category, [FromQuery] int? userId) {
+
+      // if category defined but not "all" or "favorites" ==> 400 Bad Request
+      if (!string.IsNullOrEmpty(category) && category != "all" && category != "favorites") return BadRequest(new { error = "Invalid value for category" });
+
+      // split inverse ids
+      var inverseIdsStringArray = inverseIds.Split('+', StringSplitOptions.RemoveEmptyEntries);
+
+      // prepare set of integers
+      var inverseIdsIntegerSet = new HashSet<int>();
+
+      // iterate array of string ids
+      foreach(var inverseStringId in inverseIdsStringArray) {
+
+        // if non numeric id in array ==> bad field/parameters ==> 400 Bad Request
+        if (!int.TryParse(inverseStringId, out int inverseIntegerId)) return BadRequest();
+
+        // otherwise, add to set
+        inverseIdsIntegerSet.Add(inverseIntegerId);
+      }
+
+      // if just no inverse id received
+      if (inverseIdsIntegerSet.Count == 0) return StatusCode(StatusCodes.Status422UnprocessableEntity);
+
+      // if no userId ==> negative value of current user id
+      if (!userId.HasValue) userId = - int.Parse( HttpContext.User.GetSub() );
+
+      // get max 100 correct ids from store
+      var normalizedIds = _entitiesStore.GetInverseIdsForEntity(entity, userId.Value, category, inverseIdsIntegerSet.ToArray());
+
+      // return list of items (200 OK)
+      return Ok( normalizedIds );
+
+    }
+
+    /// <summary>
     /// Gets all main entities
     /// </summary>
     /// <returns>Returns a basic JSON response containing a list of all the main entities</returns>
@@ -120,6 +168,73 @@ namespace SimpleCRM.Api.Controllers {
 
       // return as json
       return Ok( item );
+    }
+
+    /// <summary>
+    /// Deletes one or multiple items on a given <paramref name="entity" />
+    /// </summary>
+    /// <remarks>
+    /// Parameter <paramref name="ids" /> is a string containing 1 or multiple numeric ids.
+    /// If multiple ids are specified, they should be separated with a '+'
+    /// </remarks>
+    /// <param name="entity">entity name</param>
+    /// <param name="ids">id or list of ids separated by '+'</param>
+    /// <returns></returns>
+    [HttpDelete( "{entity}/{ids}" )]
+    public IActionResult DeleteItemOrItems(string entity, string ids) {
+
+      // split ids
+      var idsStringArray = ids.Split('+', StringSplitOptions.RemoveEmptyEntries);
+
+      // prepare set of integers
+      var idsIntegerSet = new HashSet<int>();
+
+      // iterate array of string ids
+      foreach(var stringId in idsStringArray) {
+        
+        // if non numeric id in array ==> bad field/parameters ==> 400 Bad Request
+        if (!int.TryParse(stringId, out int integerId)) return BadRequest();
+
+        // otherwise, add to set
+        idsIntegerSet.Add(integerId);
+      }
+
+      switch(idsIntegerSet.Count) {
+
+        // no id
+        case 0:
+
+          // validation issues (StatusCode 422)
+          return StatusCode(StatusCodes.Status422UnprocessableEntity);
+
+        // 1 id
+        case 1:
+
+          // if delete item not ok ==> Conflict with foreign key constraint
+          if(!this._entitiesStore.DeleteItem(entity, idsIntegerSet.First())) {
+
+            // 409 Conflict
+            return StatusCode(StatusCodes.Status409Conflict);
+          }
+
+          // 200 OK
+          return Ok();
+
+        // multiple ids
+        default:
+
+          // if delete items not ok ==> Conflict ?
+          if (!this._entitiesStore.DeleteItems(entity, idsIntegerSet.ToArray())) {
+
+            // 409 Conflict
+            return StatusCode(StatusCodes.Status409Conflict);
+          }
+
+          // 200 OK
+          return Ok();
+
+      }
+
     }
 
     /// <summary>
@@ -154,11 +269,10 @@ namespace SimpleCRM.Api.Controllers {
     /// <summary>
     /// Get user view settings for a specific entity
     /// </summary>
-    /// <param name="userId">id of user (to pick exact view)</param>
     /// <param name="entityName">entity name</param>
     /// <returns>Returns a json containing view settings</returns>
     [HttpGet( "list-view-settings" )]
-    public IActionResult GetListViewSettings(int userId, [FromQuery] string entityName)
+    public IActionResult GetListViewSettings([FromQuery] string entityName)
     => Ok(new {
       name = entityName,
       id = _entitiesStore.GetEntityIdByName(entityName),

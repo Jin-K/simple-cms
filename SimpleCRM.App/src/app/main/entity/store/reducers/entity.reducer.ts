@@ -17,7 +17,7 @@ import * as _                                                                   
 export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, action: entityActions.EntityActions): ElementsState {
 
   // get entity if action specified an entity name
-  const entity = action.entity ? state.entities[action.entity] : null;
+  let entity: ElementsEntityState;
 
   // if action requires that entity exists in store but it doesn't, return unchanged state
   switch (action.type) {
@@ -27,9 +27,11 @@ export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, act
     case entityActions.FETCH_ITEMS:
     case entityActions.PAGINATE_SUCCESS:
     case entityActions.TOGGLE_ONE:
+    case entityActions.TOGGLE_RANGE:
     case entityActions.SELECT_ALL:
     case entityActions.DESELECT_ALL:
     case entityActions.TOGGLE_DISPLAYED_ITEMS:
+      entity = action.entity ? state.entities[action.entity] : null;
       if (!entity) return state;
       break;
 
@@ -97,19 +99,10 @@ export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, act
     /** TOGGLE_ONE: Select/deselect an item */
     case entityActions.TOGGLE_ONE:
 
-      // get item id
-      const itemId = action.itemId;
-
-      // get type of toggle we will handle
-      const selectionType = getSelectionType(itemId, entity.selection);
-
-      // get changes for selection
-      const changes = { selection: buildSelection(entity, selectionType, itemId) };
-
       // return state with updated entity selection
       return entityAdapter.updateOne({
         id: entity.name,
-        changes
+        changes: getToggleSelectionChanges(entity, [action.itemId])
       }, state);
 
     /** SELECT_ALL: Select all items for an entity */
@@ -148,6 +141,15 @@ export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, act
         }
       }, state);
 
+    /** TOGGLE_RANGE: Toggle selection for specified items */
+    case entityActions.TOGGLE_RANGE:
+
+      // return state with updated entity selection
+      return entityAdapter.updateOne({
+        id: entity.name,
+        changes: getToggleSelectionChanges(entity, action.itemIds)
+      }, state);
+
     /** DEFAULT: not related to elements (entities - items) */
     default:
 
@@ -155,6 +157,21 @@ export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, act
       return state;
 
   }
+
+}
+
+function getToggleSelectionChanges(entity: ElementsEntityState, itemIds: number[]): { selection: EntitySelection } {
+
+  // prepare changes object
+  const changes = { selection: { ...entity.selection } as EntitySelection };
+
+  // get type of toggle we will handle
+  const selectionType = getSelectionType(itemIds[0], entity.selection);
+
+  // get changes for selection
+  itemIds.forEach(itemId => changes.selection = buildSelection(entity, selectionType, itemId));
+
+  return changes;
 
 }
 
@@ -287,8 +304,9 @@ function buildSelection({ selection, pagination }: ElementsEntityState, selectio
 
     case SelectionToggleItemAction.RemoveUnselected:
 
-      // remove from ids set
+      // remove from ids set and undefine if nothing selected
       newSelection.ids.delete(itemId);
+      if (newSelection.ids.size === 0) newSelection.ids = undefined;
 
       return newSelection;
 
@@ -301,10 +319,10 @@ function buildSelection({ selection, pagination }: ElementsEntityState, selectio
 /**
  * Gets appropriate selection code (kind of state)
  *
- * ds = displayed selected count,
- * dc = displayed count,
- * ts = total selected count,
- * tc = total count
+ * ds = displayed selected items count,
+ * dc = displayed items count,
+ * ts = total selected items count,
+ * tc = total items count
  *
  * @param {EntitySelection} selection current entity selection state
  * @param {IItem[]} displayedItems current dispalyed items
