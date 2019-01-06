@@ -15,17 +15,17 @@ using _Action = SimpleCRM.Data.Entities.Action;
 namespace SimpleCRM.Business.Providers {
 
 	/// <summary>
-	/// The main EntitiesStore class
+	/// The main ElementsStore class
 	/// Provides methods to access entities database tables
 	/// </summary>
-	public class EntitiesStore {
+	public class ElementsStore {
 
     /// <summary>
     /// CrmContext's instance.
     /// 
-    /// <seealso cref="EntitiesStore(CrmContext)"/>
+    /// <seealso cref="ElementsStore.ElementsStore(CrmContext)" />
     /// </summary>
-    private readonly CrmContext _crmContext;
+    readonly CrmContext _crmContext;
 
     /// <summary>
     /// TODELETE Fake db for entity items and user data
@@ -40,10 +40,10 @@ namespace SimpleCRM.Business.Providers {
 		/// Constructor
 		/// </summary>
 		/// <remarks>
-		/// Sets <see cref="EntitiesStore._crmContext" /> via DI
+		/// Sets <see cref="ElementsStore._crmContext" /> via DI
 		/// </remarks>
 		/// <param name="crmContext">main database context of simple-crm</param>
-		public EntitiesStore(CrmContext crmContext) => _crmContext = crmContext;
+		public ElementsStore(CrmContext crmContext) => _crmContext = crmContext;
 
     /// <summary>
     /// Gets all main entities
@@ -66,11 +66,11 @@ namespace SimpleCRM.Business.Providers {
     /// <example>
     /// This example show how to call the <see cref="GetTotalItemsCount" /> method
     /// <code>
-    /// int ExampleCountMethod(EntitiesStore entitiesStore, int case) {
+    /// int ExampleCountMethod(ElementsStore elementsStore, int case) {
     ///   switch(case) {
-    ///     case 1: return entitiesStore.GetTotalItemsCount("contacts");
-    ///     case 2: return entitiesStore.GetTotalItemsCount("companies");
-    ///     case 3: return entitiesStore.GetTotalItemsCount("actions");
+    ///     case 1: return elementsStore.GetTotalItemsCount("contacts");
+    ///     case 2: return elementsStore.GetTotalItemsCount("companies");
+    ///     case 3: return elementsStore.GetTotalItemsCount("actions");
     ///     default: throw new ArgumentException( "only contacts, companies or actions for the moment" );
     ///   }
     /// }
@@ -80,41 +80,6 @@ namespace SimpleCRM.Business.Providers {
     /// <returns>Returns the count</returns>
     public int GetTotalItemsCount(string entity)
     => _crmContext.AsQueryable<IEntidad>( entity ).Count();
-
-    public int GetFilteredCount(string entity, int userId, EntityListCategory listCategory = EntityListCategory.All) {
-
-      // get original set for specified entity
-      var set = _crmContext.AsQueryable<IEntidad>( entity );
-
-      if (userId > 0) {
-        // TODO
-        // itemsSet = 
-        //   from usit in _crmContext.UserItems
-        //     join item in itemsSet on usit.ItemId equals item.Id into user_item
-        //   from userItem in user_item
-        //   where usit.EntityId == entityId
-        //   select userItem;
-      }
-      else userId *= -1;
-
-      if (listCategory == EntityListCategory.Favorites) {
-
-        // get only items listed in favorite table (for specific user)
-        set = 
-          from favo in _crmContext.Favorites
-            join item in set on favo.ItemId equals item.Id into item_favo
-          from favoriteItem in item_favo
-          where favo.EntityId == 1
-              && favo.UserId == userId
-          select favoriteItem;
-
-      }
-
-      return set.Count();
-
-    }
-
-
 
     /// <summary>
     /// Get all entity items filtered by <paramref name="queryParameters"/>
@@ -152,6 +117,8 @@ namespace SimpleCRM.Business.Providers {
       }
       else userId *= -1;
 
+      IQueryable<int> favoriteIds;
+
       // if favorites category specified
       if (listCategory == EntityListCategory.Favorites) {
 
@@ -164,6 +131,20 @@ namespace SimpleCRM.Business.Providers {
               && favo.UserId == userId
           select favoriteItem;
 
+        // select all filtered items for favorites
+        favoriteIds = from item in itemsSet
+                      select item.Id;
+
+      }
+      else {
+
+        // query for favorites
+        favoriteIds = from favo in _crmContext.Favorites
+                      join item in itemsSet on favo.ItemId equals item.Id into item_favo
+                    from favoriteItem in item_favo
+                    where favo.EntityId == entityId
+                        && favo.UserId == userId
+                    select favoriteItem.Id;
       }
 
       // get total count of entity items (filtered or not)
@@ -186,7 +167,7 @@ namespace SimpleCRM.Business.Providers {
         .Take( (int) pageCount )
 
         // cast IEntidad object to Item object
-        .Select( Item.FromEntidad );
+        .Select( item => Item.FromEntidad(item, favoriteIds.Contains(item.Id) ) );
 
     }
 

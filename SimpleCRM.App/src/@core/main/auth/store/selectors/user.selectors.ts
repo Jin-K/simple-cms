@@ -28,6 +28,11 @@ export const getUserRoles = createSelector(
   state => state.roles
 );
 
+export const getUserId = createSelector(
+  getUserState,
+  state => state.id
+);
+
 export const getUserHasAdminRole = createSelector(
   getUserRoles,
   roles => !!~_.indexOf(roles, 'admin')

@@ -13,8 +13,10 @@ import {
   mergeMap
 }                                                               from 'rxjs/operators';
 
-import { entitySelectors, entityActions, ElementsEntityState }  from '..';
-import { SelectionIdsStrategy, EntitySelection }                from '../reducers';
+import { UserSelectors }                                        from '@core/auth';
+
+import { entitySelectors, entityActions }                       from '..';
+import { SelectionIdsStrategy, IEntityState, IEntitySelection } from '../reducers';
 import { EntityService }                                        from '../../entity.service';
 
 import * as _                                                   from 'lodash';
@@ -38,7 +40,7 @@ export class EntityEffects {
   constructor(
     private entidadService: EntityService,
     private actions$: Actions,
-    private store: Store<ElementsEntityState>
+    private store: Store<IEntityState>
   ) { }
 
   /**
@@ -72,9 +74,9 @@ export class EntityEffects {
     // take latest value of entities in ElementsState (state.elements.entities)
     withLatestFrom(this.store.pipe(select(entitySelectors.selectEntities))),
     // map to current entity instance (of type ElementsEntityState)
-    map(([action, elementsState]: [entityActions.ChangeFilter | entityActions.Sort, Dictionary<ElementsEntityState>]) => elementsState[action.entity]),
+    map(([action, elementsState]: [entityActions.ChangeFilter | entityActions.Sort, Dictionary<IEntityState>]) => elementsState[action.entity]),
     // switch to observable of api request
-    switchMap((entity: ElementsEntityState) => this.entidadService.getItems(entity.name, entity.pagination, entity.filters).pipe(
+    switchMap((entity: IEntityState) => this.entidadService.getItems(entity.name, entity.pagination, entity.filters).pipe(
       // dispatch fetch items action on response
       tap( response => this.store.dispatch( new entityActions.FetchItems( entity.name, response.body.value, JSON.parse( response.headers.get( 'X-Pagination' ) ).totalCount ) ) ),
       // catch eventual errors
@@ -147,8 +149,8 @@ export class EntityEffects {
     ofType<entityActions.DeleteSelectedItems>(entityActions.DELETE_SELECTED_ITEMS),
     // with current selection value from store
     withLatestFrom(this.store.pipe(select(entitySelectors.getCurrentSelection))),
-    // switch map trick to have 'action' and 'selection' available in lower levels ...
-    switchMap(([action, selection]) => of(this.getIdsFromSelection(selection)).pipe(
+    // switch map workaround to have 'action' and 'selection' available in lower levels ...
+    switchMap( ([action, selection]) => of(this.getIdsFromSelection(selection) ).pipe(
       // if ids array contains negative values ==> get max 100 inversed ids for deletion (api is limited to 100 deletes max)
       mergeMap((ids) =>
         // iif rxjs operator to choose between 2 observables
@@ -160,7 +162,7 @@ export class EntityEffects {
             // get current filters
             select(entitySelectors.getCurrentFilters),
             // switch to http response of /entity/{inverse-ids}?entity=...
-            switchMap(filters => this.entidadService.getInversedIdsForDeletion(action.entity, filters, ids))
+            switchMap( filters => this.entidadService.getInversedIdsForDeletion(action.entity, filters, ids) )
           ),
           // if condition above is false, return observable of input object
           of(ids)
@@ -182,13 +184,58 @@ export class EntityEffects {
           // return only entity
           return entity;
         }),
-        switchMap(entity => this.entidadService.getItems(entity.name, entity.pagination, entity.filters).pipe(
+        switchMap( entity => this.entidadService.getItems(entity.name, entity.pagination, entity.filters ).pipe(
           // dispatch FetchItems action
           map( response => new entityActions.FetchItems( entity.name, response.body.value, JSON.parse( response.headers.get( 'X-Pagination' ) ).totalCount ) ),
+          // catch eventual errors
+          catchError(error => of(new entityActions.FetchItemsFailed(action.entity, error)))
         ))
       )),
       // catch eventual errors of delete requests chain and dispatch delete selected items failed action
-      catchError(error => of(new entityActions.DeleteSelectedItemsFailed(error)))
+      catchError( error => of(new entityActions.DeleteSelectedItemsFailed(error)) )
+    ))
+  );
+
+  /**
+   * The main toggleFavoriteToApi$ effect
+   *
+   * @description make a put/delete request to api to add/remove favorite, redispatches
+   *              ToggleFavoriteDone if ok, ToggleFavoriteFailed if api request failed
+   * @memberof EntityEffects
+   */
+  @Effect() toggleFavoriteToApi$ = this.actions$.pipe(
+    // of type TOGGLE_FAVORITE
+    ofType<entityActions.ToggleFavorite>(entityActions.TOGGLE_FAVORITE),
+    // take userId from auth store
+    withLatestFrom(this.store.select(UserSelectors.getUserId)),
+    // send to api and observe response
+    switchMap(([action, userId]) => this.entidadService.toggleFavorite(action.add, userId, action.entity, action.itemId).pipe(
+      // if success response ==> done action dispatched
+      map(() => new entityActions.ToggleFavoriteDone(action.entity)),
+      // if failed ==> dispatch failed action
+      catchError(error => of(new entityActions.ToggleFavoriteFailed(action.entity, error)))
+    ))
+  );
+
+
+  /**
+   * The main toggleFavoriteDone$ effect
+   *
+   * @description on toggle favorite done, gets items from api and dispatches FetchItems action,
+   *              or FetchItemsFailed if an error occurs
+   * @memberof EntityEffects
+   */
+  @Effect() toggleFavoriteDone$ = this.actions$.pipe(
+    // of type TOGGLE_FAVORITE_DONE
+    ofType<entityActions.ToggleFavoriteDone>(entityActions.TOGGLE_FAVORITE_DONE),
+    // with some store values
+    withLatestFrom(this.store.select(entitySelectors.getCurrentPagination), this.store.select(entitySelectors.getCurrentFilters)),
+    // switch to get items request observable
+    switchMap(([action, pagination, filters]) => this.entidadService.getItems(action.entity, pagination, filters).pipe(
+      // if success response ==> fetch items
+      map( response => new entityActions.FetchItems( action.entity, response.body.value, JSON.parse ( response.headers.get( 'X-Pagination' ) ).totalCount ) ),
+      // catch eventual errors
+      catchError(error => of(new entityActions.FetchItemsFailed(action.entity, error)))
     ))
   );
 
@@ -197,11 +244,11 @@ export class EntityEffects {
    * but the type of numbers contained in the array are saying if we need to do an inverse delete
    *
    * @private
-   * @param {EntitySelection} selection entity selection from store
+   * @param {IEntitySelection} selection entity selection from store
    * @returns {number[]} transformed array of ids
    * @memberof EntityEffects
    */
-  private getIdsFromSelection(selection: EntitySelection): number[] {
+  private getIdsFromSelection(selection: IEntitySelection): number[] {
 
     // if some items selected (normal strategy) ==> ids set as array of ids
     if (selection.strategy === SelectionIdsStrategy.Normal && selection.ids instanceof Set)         return Array.from(selection.ids);

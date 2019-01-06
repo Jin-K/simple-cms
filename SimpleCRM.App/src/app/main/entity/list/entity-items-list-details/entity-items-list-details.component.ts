@@ -286,22 +286,10 @@ export class EntityItemsListDetailsComponent implements OnInit, OnDestroy {
    * @param {number} itemId id of the item toggled star
    * @memberof EntityItemsListDetailsComponent
    */
-  toggleStar(itemId: number): void {
+  toggleStar(itemId: number, isStarred: boolean): void {
 
-    // if user's starred array contains that item id
-    if (this.user.starred.includes(itemId)) {
-
-      // remove from array
-      this.user.starred.splice(this.user.starred.indexOf(itemId), 1);
-    }
-    else {
-
-      // add to array
-      this.user.starred.push(itemId);
-    }
-
-    // ask entity service to update user's data
-    this._entityService.updateUserData(this.user);
+    // dispatch toggle favorite action
+    this._store.dispatch(new entityActions.ToggleFavorite(this.entity, itemId, !isStarred));
 
   }
 

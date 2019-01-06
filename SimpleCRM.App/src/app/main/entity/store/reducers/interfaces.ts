@@ -8,35 +8,35 @@ import { SelectionIdsStrategy } from './enums';
  *
  * @export
  * @interface ElementsState
- * @extends {EntityState<ElementsEntityState>}
+ * @extends {EntityState<IEntityState>}
  */
-export interface ElementsState extends EntityState<ElementsEntityState> {
+export interface ElementsState extends EntityState<IEntityState> {
   loading: boolean;
   current?: string;
 }
 
 /**
- * The main ElementsEntityState for state.elements.entities entries
+ * The main IEntityState for state.elements.entities entries
  *
  * @export
- * @interface ElementsEntityState
+ * @interface IEntityState
  */
-export interface ElementsEntityState {
+export interface IEntityState {
   id: string;
   name: string;
   displayedItems?: IItem[];
-  pagination?: EntityPagination;
-  filters: EntityFilters;
-  selection: EntitySelection;
+  pagination?: IEntityPagination;
+  filters: IEntityFilters;
+  selection: IEntitySelection;
 }
 
 /**
- * The main EntityPagination interface for state.elements.entities[].pagination
+ * The main IEntityPagination interface for state.elements.entities[].pagination
  *
  * @export
- * @interface EntityPagination
+ * @interface IEntityPagination
  */
-export interface EntityPagination {
+export interface IEntityPagination {
   page: number;
   pageCount: number;
   orderBy: string;
@@ -44,12 +44,12 @@ export interface EntityPagination {
 }
 
 /**
- * The main EntityFilters interface for state.elements.entities[].filters
+ * The main IEntityFilters interface for state.elements.entities[].filters
  *
  * @export
- * @interface EntityFilters
+ * @interface IEntityFilters
  */
-export interface EntityFilters {
+export interface IEntityFilters {
   category: 'all' | 'favorite';
   user?: {
     id: number,
@@ -58,12 +58,12 @@ export interface EntityFilters {
 }
 
 /**
- * The main EntitySelection interface for state.elements.entities[].selection
+ * The main IEntitySelection interface for state.elements.entities[].selection
  *
  * @export
- * @interface EntitySelection
+ * @interface IEntitySelection
  */
-export interface EntitySelection {
+export interface IEntitySelection {
   ids?: Set<number> | undefined;
   strategy: SelectionIdsStrategy;
 }

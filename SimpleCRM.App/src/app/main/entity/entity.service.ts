@@ -7,6 +7,7 @@ import {
   BehaviorSubject,
   of,
   throwError,
+  iif,
 }                                                 from 'rxjs';
 import { switchMap, take, catchError }            from 'rxjs/operators';
 
@@ -16,7 +17,8 @@ import {
   ElementsState,
   entityActions,
   entitySelectors,
-  EntityFilters
+  IEntityFilters,
+  IEntityPagination
 }                                                 from './store';
 
 /**
@@ -74,12 +76,12 @@ export class EntityService implements Resolve<any> {
    * Gets json response containing a chunk of items depending on the pagination settings and filters received as parameters
    *
    * @param {string} entity entity name
-   * @param {*} pagination pagination settings
-   * @param {EntityFilters} filters entity filters for category, user
+   * @param {IEntityPagination} pagination pagination settings
+   * @param {IEntityFilters} filters entity filters for category, user
    * @returns {Observable<HttpResponse<{links: any[], value: IItem[]}>>} returns an observable of the http response
    * @memberof EntityService
    */
-  getItems(entity: string, pagination: any, filters: EntityFilters): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
+  getItems(entity: string, pagination: IEntityPagination, filters: IEntityFilters): Observable<HttpResponse<{links: any[], value: IItem[]}>> {
 
     // prepare query url
     let requestUrl = `${this.actionUrl}/items?entity=${entity}`
@@ -206,33 +208,6 @@ export class EntityService implements Resolve<any> {
     });
   }
 
-  /**
-   * Update user data
-   *
-   * @param userData
-   * @returns {Promise<any>}
-   */
-  updateUserData(userData): Promise<any> {
-
-    // return promise
-    return new Promise((resolve, reject) => {
-
-      // xhr post request to api/item... to update user data
-      this.http.post(`${this.actionUrl}/entity-items/${this.user.id}`, { ...userData }).subscribe(response => {
-
-          // get user data again (async)
-          this.getUserData();
-
-          // get items again (async)
-          // this.getItems();
-
-          // resolve
-          resolve(response);
-        });
-    });
-
-  }
-
   /** TO DELETE ABOVE */
 
 
@@ -299,12 +274,12 @@ export class EntityService implements Resolve<any> {
    * ==> so we are "sure" we don't delete items that are created after our unique token/timestamp
    *
    * @param {string} entity entity name
-   * @param {EntityFilters} filters entity filters
+   * @param {IEntityFilters} filters entity filters
    * @param {number[]} negativeIds array of negative ids
    * @returns {Observable<number[]>} observable of inversed ids array
    * @memberof EntityService
    */
-  getInversedIdsForDeletion(entity: string, filters: EntityFilters, negativeIds: number[]): Observable<number[]> {
+  getInversedIdsForDeletion(entity: string, filters: IEntityFilters, negativeIds: number[]): Observable<number[]> {
 
     const joinedAbsolutedIds = negativeIds.map(nid => -nid).join('+');
 
@@ -317,6 +292,31 @@ export class EntityService implements Resolve<any> {
     // return observable of get request
     return this.http.get<number[]>( requestUrl, { headers: this.headers });
 
+  }
+
+
+  /**
+   * Sends a put or delete request to api to toggle a favorite entity item for a user.
+   *
+   * PUT request if adding,
+   * DELETE request if removing
+   *
+   * @param {boolean} add adding favorite ?
+   * @param {number} userId user id (current user ==> state.auth.user.id in store)
+   * @param {string} entity entity name
+   * @param {number} itemId entity item id
+   * @returns {Observable<{}>} observable of http response
+   * @memberof EntityService
+   */
+  toggleFavorite(add: boolean, userId: number, entity: string, itemId: number): Observable<{}> {
+    // PUT    api/favorites/${userId}?entity=${entity}&id=${itemId}
+    // DELETE api/favorites/${userId}?entity=${entity}&id=${itemId};
+    // PUT    api/user/starred/${userId}/${entity}?id=${itemId}
+    // DELETE api/user/starred/${userId}/${entity}?id=${itemId};
+    return iif(() => add,
+      this.http.put(`${coreConfig.apiServer}/api/user/starred/${userId}/${entity}?id=${itemId}`, null, { headers: this.headers }),
+      this.http.delete(`${coreConfig.apiServer}/api/user/starred/${userId}/${entity}?id=${itemId}`, { headers: this.headers })
+    );
   }
 
   /**

@@ -28,7 +28,7 @@ namespace SimpleCRM.Data.Entities {
     [NotMapped]
     public IEntidad Item { get; set; } = default(IEntidad);
 
-		internal Favorite(int userId, int entityId, int itemId) {
+		public Favorite(int userId, int entityId, int itemId) {
 			UserId = userId;
 			EntityId = entityId;
 			ItemId = itemId;

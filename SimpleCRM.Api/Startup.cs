@@ -88,7 +88,8 @@ namespace SimpleCRM.Api {
 
       // add singletons of store services for DI
       services.AddScoped<NewsStore>();
-      services.AddScoped<EntitiesStore>();
+      services.AddScoped<ElementsStore>();
+      services.AddScoped<UsersStore>();
       services.AddScoped<WidgetsStore>();
       services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 

@@ -1,6 +1,6 @@
 import { IItem }                                                                                  from 'app/models';
 import { INITIAL_ELEMENTS_STATE, INITIAL_ENTITY_STATE, ALL_ITEMS_SELECTED_STATE, entityAdapter }  from './initial-states';
-import { EntitySelection, ElementsState, ElementsEntityState }                                    from './interfaces';
+import { IEntitySelection, ElementsState, IEntityState }                                          from './interfaces';
 import { SelectionIdsStrategy, SelectionToggleItemAction, SelectionCode }                         from './enums';
 import * as entityActions                                                                         from '../actions';
 
@@ -17,7 +17,7 @@ import * as _                                                                   
 export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, action: entityActions.EntityActions): ElementsState {
 
   // get entity if action specified an entity name
-  let entity: ElementsEntityState;
+  let entity: IEntityState;
 
   // if action requires that entity exists in store but it doesn't, return unchanged state
   switch (action.type) {
@@ -160,10 +160,10 @@ export function entityReducer(state: ElementsState = INITIAL_ELEMENTS_STATE, act
 
 }
 
-function getToggleSelectionChanges(entity: ElementsEntityState, itemIds: number[]): { selection: EntitySelection } {
+function getToggleSelectionChanges(entity: IEntityState, itemIds: number[]): { selection: IEntitySelection } {
 
   // prepare changes object
-  const changes = { selection: { ...entity.selection } as EntitySelection };
+  const changes = { selection: { ...entity.selection } as IEntitySelection };
 
   // get type of toggle we will handle
   const selectionType = getSelectionType(itemIds[0], entity.selection);
@@ -178,10 +178,10 @@ function getToggleSelectionChanges(entity: ElementsEntityState, itemIds: number[
 /**
  * Toggles (selection) for the current displayed items
  *
- * @param {ElementsEntityState} entity entity name
- * @returns {EntitySelection} new entity selection
+ * @param {IEntityState} entity entity name
+ * @returns {IEntitySelection} new entity selection
  */
-function toggleDisplayedItemsAndGetNewEntitySelection(entity: ElementsEntityState): EntitySelection {
+function toggleDisplayedItemsAndGetNewEntitySelection(entity: IEntityState): IEntitySelection {
 
   // prepare selection
   const newSelection = { ...entity.selection };
@@ -235,10 +235,10 @@ function toggleDisplayedItemsAndGetNewEntitySelection(entity: ElementsEntityStat
  * Determines the typy of selection we will have to perform
  *
  * @param {number} itemId id of the item
- * @param {EntitySelection} selection current selection
+ * @param {IEntitySelection} selection current selection
  * @returns {SelectionToggleItemAction} returns a type of selection
  */
-function getSelectionType(itemId: number, selection: EntitySelection): SelectionToggleItemAction {
+function getSelectionType(itemId: number, selection: IEntitySelection): SelectionToggleItemAction {
 
   const ids = selection.ids;
 
@@ -259,15 +259,15 @@ function getSelectionType(itemId: number, selection: EntitySelection): Selection
 /**
  * Build new selection object after toggling one item
  *
- * @param {ElementsEntityState} { selection, pagination } selection and pagination properties of the entity state
+ * @param {IEntityState} { selection, pagination } selection and pagination properties of the entity state
  * @param {SelectionToggleItemAction} selectionType type of selection
  * @param {number} itemId toggled item id
- * @returns {EntitySelection} new state for the entity selection
+ * @returns {IEntitySelection} new state for the entity selection
  */
-function buildSelection({ selection, pagination }: ElementsEntityState, selectionType: SelectionToggleItemAction, itemId: number): EntitySelection {
+function buildSelection({ selection, pagination }: IEntityState, selectionType: SelectionToggleItemAction, itemId: number): IEntitySelection {
 
   // clone selection object
-  const newSelection: EntitySelection = {
+  const newSelection: IEntitySelection = {
     ids: selection.ids !== undefined ? _.clone(selection.ids) : new Set<number>(),
     strategy: selection.strategy
   };
@@ -324,12 +324,12 @@ function buildSelection({ selection, pagination }: ElementsEntityState, selectio
  * ts = total selected items count,
  * tc = total items count
  *
- * @param {EntitySelection} selection current entity selection state
+ * @param {IEntitySelection} selection current entity selection state
  * @param {IItem[]} displayedItems current dispalyed items
  * @param {number} tc total count of items
  * @returns {SelectionCode} exact code describing the selection state
  */
-function getSelectionCode(selection: EntitySelection, displayedItems: IItem[], tc: number): SelectionCode {
+function getSelectionCode(selection: IEntitySelection, displayedItems: IItem[], tc: number): SelectionCode {
 
   // displayed counter constant
   const dc = displayedItems.length;

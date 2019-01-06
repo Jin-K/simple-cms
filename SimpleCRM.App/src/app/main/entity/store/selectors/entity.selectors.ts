@@ -5,9 +5,9 @@ import {
   entityAdapter,
   ElementsState,
   INITIAL_ENTITY_STATE,
-  EntitySelection,
+  IEntitySelection,
   SelectionIdsStrategy,
-  EntityPagination
+  IEntityPagination
 }                                                 from '../reducers';
 import { IItem }                                  from 'app/models';
 
@@ -50,7 +50,7 @@ export const getCurrentPageSelectionCheckbox = createSelector(getCurrentDisplaye
 
 export const getCurrentHasMoreThat100Selected = createSelector(getCurrentSelection, getCurrentPagination, checkIfMoreThat100Selected);
 
-function checkIfMoreThat100Selected(selection: EntitySelection, pagination: EntityPagination): boolean {
+function checkIfMoreThat100Selected(selection: IEntitySelection, pagination: IEntityPagination): boolean {
 
   // prepare set
   const idsSet = selection.ids || new Set<number>();
@@ -81,7 +81,7 @@ function displayedItemsAndSelectionViewModelToCheckboxState(displayedItems: IIte
 
 }
 
-function selectionAndPaginationToSelectionCounters(selection: EntitySelection, pagination: EntityPagination): SelectionCounter {
+function selectionAndPaginationToSelectionCounters(selection: IEntitySelection, pagination: IEntityPagination): SelectionCounter {
 
   const totalCount = pagination.totalCount;
 
@@ -111,7 +111,7 @@ function selectionAndPaginationToSelectionCounters(selection: EntitySelection, p
 
 }
 
-function selectionSetToViewModel(selection: EntitySelection, displayedItems: IItem[] = []): {} {
+function selectionSetToViewModel(selection: IEntitySelection, displayedItems: IItem[] = []): {} {
 
   const checkboxes = {};
 
