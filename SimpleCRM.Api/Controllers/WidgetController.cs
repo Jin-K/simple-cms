@@ -8,7 +8,7 @@ namespace SimpleCRM.Api.Controllers {
   /// The main WidgetController class
   /// </summary>
   [Route("api/[controller]")]
-  public class WidgetController : Controller {
+  public class WidgetController : ControllerBase {
 
     /// <summary>
     /// Store for widgets

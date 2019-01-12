@@ -41,7 +41,7 @@ namespace SimpleCRM.Api.Controllers {
 	/// </remarks>
 	[Authorize( AuthenticationSchemes = "Bearer" )]
   [Route( "api/[controller]" )]
-  public class EntityController : Controller {
+  public class EntityController : ControllerBase {
 
     /// <summary>
     /// ElementsStore's instance.

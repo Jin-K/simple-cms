@@ -8,7 +8,7 @@ namespace SimpleCRM.Api.Controllers {
   /// The main NewsController class
   /// </summary>
   [Route("api/[controller]")]
-  public class NewsController : Controller {
+  public class NewsController : ControllerBase {
 
     /// <summary>
     /// Injected store for news

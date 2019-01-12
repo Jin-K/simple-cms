@@ -19,7 +19,7 @@ namespace SimpleCRM.Api.Controllers {
 	///
 	/// </summary>
 	[Route("api/[controller]")]
-	public class ChatController : Controller {
+	public class ChatController : ControllerBase {
 
 		/// <summary>
 		/// TODELETE Fake static db for chat data (null reset on Startup)

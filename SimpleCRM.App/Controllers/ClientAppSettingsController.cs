@@ -4,7 +4,7 @@ using SimpleCRM.App.ViewModel;
 
 namespace SimpleCRM.App.Controllers {
   [Route("api/[controller]")]
-  public class ClientAppSettingsController : Controller {
+  public class ClientAppSettingsController : ControllerBase {
     readonly ClientAppSettings _clientAppSettings;
 
     public ClientAppSettingsController(IOptions<ClientAppSettings> clientAppSettings) {

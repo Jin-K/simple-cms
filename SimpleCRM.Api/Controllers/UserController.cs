@@ -20,7 +20,7 @@ namespace SimpleCRM.Api.Controllers {
   /// </remarks>
 	[Authorize( AuthenticationSchemes = "Bearer" )]
   [Route( "api/[controller]" )]
-	public class UserController : Controller {
+	public class UserController : ControllerBase {
 
     /// <summary>
     /// ElementsStore's instance.
