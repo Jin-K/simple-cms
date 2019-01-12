@@ -18,11 +18,9 @@ using SimpleCRM.Auth.Extensions;
 using SimpleCRM.Common;
 
 namespace SimpleCRM.Auth {
-	public class Startup {
+  public class Startup {
     public IConfigurationRoot Configuration { get; }
     readonly IHostingEnvironment _environment;
-    string _clientId = "";
-    string _clientSecret = "";
 
     public Startup(IHostingEnvironment env) {
       Log.Logger = new LoggerConfiguration()
@@ -49,18 +47,21 @@ namespace SimpleCRM.Auth {
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services) {
-      _clientId = Configuration["MicrosoftClientId"];
-      _clientSecret = Configuration["MicrosoftClientSecret"];
+      var clientId = Configuration["MicrosoftClientId"];
+      var clientSecret = Configuration["MicrosoftClientSecret"];
 
-      var connectionString = Configuration.GetConnectionString("DefaultConnection");
-      var migrationsAssembly = typeof(CrmContext).GetTypeInfo().Assembly.GetName().Name;
+      var connectionString = Configuration.GetConnectionString( "DefaultConnection" );
+      var migrationsAssembly = typeof( CrmContext ).GetTypeInfo().Assembly.GetName().Name;
 
-      // Load identityserver config from file and set into configuration
+      var certificatePath = Configuration["certificates:signing"];
+      var certificatePassword = Configuration["certificates:password"];
+
+      // load identityserver config from file and set into configuration
       services.AddOptions();
-      services.Configure<IdentityServerConfiguration>(Configuration.GetSection("IdentityServerConfiguration"));
+      services.Configure<IdentityServerConfiguration>( Configuration.GetSection( "IdentityServerConfiguration" ) );
 
-      // TODO: Use same DBContext as SimpleCRM.Data (Merge contexts like the "amraps" project)
-      services.AddDbContext<CrmContext>(options => options.UseSqlServer(connectionString));
+      // add main database context using SQL Server
+      services.AddDbContext<CrmContext>( options => options.UseSqlServer( connectionString ) );
 
       services.AddIdentity<AppUser, AppRole>()
         .AddEntityFrameworkStores<CrmContext>()
@@ -68,10 +69,10 @@ namespace SimpleCRM.Auth {
 
       services.AddAuthentication()
         .AddMicrosoftAccount( options => {
-          options.ClientId = _clientId;
+          options.ClientId = clientId;
           options.SignInScheme = "Identity.External";
-          options.ClientSecret = _clientSecret;
-         } );
+          options.ClientSecret = clientSecret;
+        } );
 
       services.AddMvc();
 
@@ -79,22 +80,20 @@ namespace SimpleCRM.Auth {
       services.AddTransient<IResourceStore, CrmResourceStore>();
       services.AddTransient<IProfileService, CrmProfileService>();
       services.AddTransient<IEmailSender, AuthMessageSender>();
-      services.AddSingleton<IMetricsUtil>(MetricsUtil.Singleton);
+      services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 
       services.AddIdentityServer( x => x.IssuerUri = "https://localhost:44321/" )
-        // .AddSigningCredential( cert )
-        // .AddDeveloperSigningCredential()
-        .LoadSigningCredentialFrom(Configuration["certificates:signing"], Configuration["certificates:password"])
-        .AddConfigurationStore(options => {
+        .LoadSigningCredentialFrom( certificatePath, certificatePassword )
+        .AddConfigurationStore( options => {
           options.ConfigureDbContext = builder =>
-            builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
           options.DefaultSchema = "auth";
-        })
-        .AddOperationalStore(options => {
+        } )
+        .AddOperationalStore( options => {
           options.ConfigureDbContext = builder =>
-            builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
           options.DefaultSchema = "auth";
-        })
+        } )
         .AddAspNetIdentity<AppUser>()
         .AddClientStore<CrmClientsStore>()
         .AddProfileService<CrmProfileService>()
@@ -110,8 +109,8 @@ namespace SimpleCRM.Auth {
       }
       else app.UseExceptionHandler( "/Home/Error" );
 
-      app.UseXfo(s => s.Deny());
-      app.UseCsp(configurer => configurer.FrameAncestors(config => config.CustomSources("http://localhost:4200", "https://localhost:44300")));
+      app.UseXfo( s => s.Deny() );
+      app.UseCsp( configurer => configurer.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
 
       app.UseStaticFiles()
         .UseIdentityServer()
