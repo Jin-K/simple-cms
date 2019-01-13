@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SimpleCRM.Auth.Models {
   public class ConsentViewModel : ConsentInputModel {
-    public ConsentViewModel(ConsentInputModel model, string returnUrl, AuthorizationRequest request, Client client, Resources resources) {
+    public ConsentViewModel(ConsentInputModel model, string returnUrl, AuthorizationRequest request, Client client, IdentityServer4.Models.Resources resources) {
       RememberConsent = model?.RememberConsent ?? true;
       ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>();
 

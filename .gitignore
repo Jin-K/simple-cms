@@ -1,12 +1,12 @@
 # IDE - Visual Studio
 .vs/
 Logs/
-SimpleCRM.Business/bin/
-SimpleCRM.Business/obj/
-SimpleCRM.Common/obj/
-SimpleCRM.Common/bin/
-SimpleCRM.Data/obj/
-SimpleCRM.Data/bin/
+**/obj/
+**/bin/
+
+# IDE - JetBrains Rider
+.idea/
+*.DotSettings.user
 
 # To create locally (SimpleCRM.Data/database_upgrade.sh, ssl/howto.txt)
 SimpleCRM.Data/Migrations/**

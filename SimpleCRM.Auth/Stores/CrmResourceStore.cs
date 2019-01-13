@@ -33,7 +33,7 @@ namespace SimpleCRM.Auth.Stores {
       return await _baseResourceStore.FindApiResourceAsync(name);
 		}
 
-		public async Task<Resources> GetAllResourcesAsync() {
+		public async Task<IdentityServer4.Models.Resources> GetAllResourcesAsync() {
       var dbResources = await _baseResourceStore.GetAllResourcesAsync();
       dbResources.IdentityResources = await SeedIdentityResources(dbResources.IdentityResources.ToList());
       dbResources.ApiResources = await SeedApiResources(dbResources.ApiResources.ToList());

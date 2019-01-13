@@ -98,7 +98,7 @@ namespace SimpleCRM.Common {
 
     }
 
-    void DispatchEvent<T>(T value) where T : struct {
+	  private void DispatchEvent<T>(T value) where T : struct {
 
       if (value is long && WorkingSet64Changed != null)
         DispatchEventWithParams(WorkingSet64Changed.GetInvocationList(), new object[] { (T) value });

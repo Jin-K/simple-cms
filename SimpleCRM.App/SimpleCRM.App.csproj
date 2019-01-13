@@ -43,12 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="config\" />
-    <Folder Include="src\assets\styles\" />
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
@@ -56,12 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="src\app\fuse-config\index.ts" />
-    <TypeScriptCompile Include="src\main-aot.webpack.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleCRM.Common\SimpleCRM.Common.csproj"/>
+    <ProjectReference Include="..\SimpleCRM.Common\SimpleCRM.Common.csproj" />
   </ItemGroup>
 
 </Project>

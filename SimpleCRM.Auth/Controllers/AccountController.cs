@@ -352,6 +352,13 @@ namespace SimpleCRM.Auth.Controllers {
     [HttpGet]
     public IActionResult AccessDenied() => View();
 
+    /// <summary>
+    /// Not implemented
+    /// </summary>
+    /// <returns>Exception</returns>
+    public IActionResult LoginWithRecoveryCode()
+    => throw new NotImplementedException();
+
     #region Helpers
     private void AddErrors(IdentityResult result) {
       foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);

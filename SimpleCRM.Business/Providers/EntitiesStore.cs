@@ -18,9 +18,9 @@ namespace SimpleCRM.Business.Providers {
     /// <summary>
     /// CrmContext's instance.
     /// 
-    /// <seealso cref="EntitiesStore.EntitiesStore(CrmContext)" />
+    /// <seealso cref="EntitiesStore(CrmContext)"/>
     /// </summary>
-    readonly CrmContext _crmContext;
+    private readonly CrmContext _crmContext;
 
     /// <summary>
     /// Constructor
@@ -71,17 +71,17 @@ namespace SimpleCRM.Business.Providers {
     public IEnumerable<Item> GetAll(string entity, string orderBy, bool descending, int page, int pageCount) {
 
 			// call special reflection method to get all items of desired table (one of CrmContext's DbSet<> properties)
-      IQueryable<IEntidad> _allItems = _crmContext.AsQueryable<IEntidad>( entity );
+      IQueryable<IEntidad> allItems = _crmContext.AsQueryable<IEntidad>( entity );
 
       // if not trying to order on column "active" (I think this column had an issue with ordering)
       if (!orderBy.StartsWith("active")) {
 
         // order by desired column, descending or not
-        _allItems = _allItems.OrderBy( orderBy, descending );
+        allItems = allItems.OrderBy( orderBy, descending );
       }
 
       // return all items starting from ordered query of IEntidad objects
-      return _allItems
+      return allItems
 
         // skip calculated amount depending on PageCount and Page
         .Skip( pageCount * ( page - 1 ) )

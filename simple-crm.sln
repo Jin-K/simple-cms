@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCRM.Business", "Simpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCRM.Common", "SimpleCRM.Common\SimpleCRM.Common.csproj", "{BC31A1B5-6A8F-4ABE-A552-F520C0FE7876}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleCRM.Tests", "SimpleCRM.Tests", "{D6446DB3-B059-4642-8C97-DBF4AE4EA471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCRM.Tests.Acceptance", "SimpleCRM.Tests\SimpleCRM.Tests.Acceptance\SimpleCRM.Tests.Acceptance.csproj", "{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,11 +49,18 @@ Global
 		{BC31A1B5-6A8F-4ABE-A552-F520C0FE7876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC31A1B5-6A8F-4ABE-A552-F520C0FE7876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC31A1B5-6A8F-4ABE-A552-F520C0FE7876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9557ED26-74BB-43D5-BED6-FCC2BED0D0FA}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC19E8CA-C23F-4DC2-81EB-4FCB5DB764A9} = {D6446DB3-B059-4642-8C97-DBF4AE4EA471}
 	EndGlobalSection
 EndGlobal

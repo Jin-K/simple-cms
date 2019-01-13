@@ -11,6 +11,6 @@ namespace SimpleCRM.Business.Models {
     public bool active { get; set; }
     public System.DateTime created { get; set; }
 
-    public static Item FromEntidad(IEntidad item) => new Item { id = item.Id, active = true, created = item.Created};
+    public static Item FromEntidad(IEntidad item) => new Item { id = item.Id, active = true, created = item.Created };
   }
 }
