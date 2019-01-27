@@ -7,12 +7,13 @@ using SimpleCRM.Data;
 using SimpleCRM.Data.Entities;
 
 namespace SimpleCRM.Business.Providers {
-  public class NewsStore {
-    readonly CrmContext _crmContext;
+  
+  public class NewsStore : INewsStore {
 
-    public NewsStore(CrmContext crmContext) {
-      _crmContext = crmContext;
-    }
+    private readonly CrmContext _crmContext;
+
+    public NewsStore(CrmContext crmContext)
+    => _crmContext = crmContext;
 
 
     public async Task AddGroup(string group) {

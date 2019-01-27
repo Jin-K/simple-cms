@@ -3,10 +3,10 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9"/>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleCRM.Data\SimpleCRM.Data.csproj"/>
-    <ProjectReference Include="..\SimpleCRM.Common\SimpleCRM.Common.csproj"/>
+    <ProjectReference Include="..\SimpleCRM.Data\SimpleCRM.Data.csproj" />
+    <ProjectReference Include="..\SimpleCRM.Common\SimpleCRM.Common.csproj" />
   </ItemGroup>
 </Project>
