@@ -1,0 +1,84 @@
+<div id="entity-list" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+
+  <!-- HEADER -->
+  <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="start"
+       fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+
+    <!-- APP TITLE -->
+    <div fxLayout="row" fxLayoutAlign="start center">
+
+      <button class="sidebar-toggle mr-12" mat-icon-button fxHide.gt-sm (click)="toggleSidebar('entity-items-list-main-sidebar')">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon class="logo-icon mr-16" 
+                  [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">account_box
+        </mat-icon>
+        <span class="logo-text h1" 
+              [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+            Items
+        </span>
+      </div>
+      
+    </div>
+    <!-- / APP TITLE -->
+
+  </div>
+  <!-- / HEADER -->
+
+  <!-- SELECTED BAR -->
+  <selected-bar class="accent-600" *ngIf="hasSelectedItems$ | async" [@slideInTop] [entity]="entity"></selected-bar>
+  <!-- / SELECTED BAR -->
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" name="entity-items-list-main-sidebar" position="left" lockedOpen="gt-sm">
+
+      <!-- SIDEBAR CONTENT -->
+      <div class="content" fusePerfectScrollbar>
+        <entity-items-list-main-sidebar [@animate]="{value:'*'}" [entity]="entity"></entity-items-list-main-sidebar>
+      </div>
+      <!-- / SIDEBAR CONTENT -->
+      
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <div class="center p-24 pb-56 pr-sm-92" fusePerfectScrollbar>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <entity-items-list-details (changeSort)="onChangeSort($event)" [orderBy]="$orderBy | async" [entity]="entity"></entity-items-list-details>
+      </div>
+      <!-- / CONTENT -->
+
+      <!-- APP PAGINATOR -->
+      <!-- <app-paginator showFirstLastButtons
+                    [length]="paginationSettings.length"
+                    [pageSize]="paginationSettings.pageSize"
+                    [pageSizeOptions]="paginationSettings.selectItemsPerPage"
+                    [pageIndex]="paginationSettings.pageIndex"
+                    [selectionLength]="paginationSettings.selectionLength"
+                    (page)="paginationSettings.changePage($event); paginate()">
+      </app-paginator> -->
+      <!-- / APP PAGINATOR -->
+      
+    </div>
+    <!-- / CENTER -->
+    
+  </div>
+  <!-- / CONTENT -->
+
+</div>
+
+<!-- ADD CONTACT BUTTON -->
+<button mat-fab class="accent" id="add-item-button" (click)="newItem()" aria-label="add item"
+        [@animate]="{ value:'*', params: { delay: '300ms', scale: '.2' }}">
+  <mat-icon>person_add</mat-icon>
+</button>
+<!-- / ADD CONTACT BUTTON -->
+
+

@@ -4,36 +4,88 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
-       {
-           "name": ".NET Core Launch (web)",
-           "type": "coreclr",
-           "request": "launch",
-           "preLaunchTask": "Run API and Auth",
-           "program": "${workspaceRoot}/SimpleCRM.App/bin/Debug/netcoreapp2.1/SimpleCRM.App.dll",
-           "args": [],
-           "cwd": "${workspaceRoot}/SimpleCRM.App",
-           "stopAtEntry": false,
-           "launchBrowser": {
-               "enabled": true,
-               "args": "${auto-detect-url}",
-               "windows": {
-                   "command": "cmd.exe",
-                   "args": "/C \"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" ${auto-detect-url}"
-               },
-               "osx": {
-                   "command": "open"
-               },
-               "linux": {
-                   "command": "xdg-open"
-               }
-           },
-           "env": {
-               "ASPNETCORE_ENVIRONMENT": "Development",
-               "ASPNETCORE_URLS":"https://localhost:44300"
-           },
-           "sourceFileMap": {
-               "/Views": "${workspaceRoot}/Views"
-           }
-       }
+        {
+            "name": "SimpleCMS.Api .NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/SimpleCMS.Api/bin/Debug/netcoreapp2.2/SimpleCMS.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/SimpleCMS.Api",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT"  : "Development"
+            }
+        }, {
+            "name": "SimpleCMS.Auth .NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/SimpleCMS.Auth/bin/Debug/netcoreapp2.2/SimpleCMS.Auth.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/SimpleCMS.Auth",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        }, {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Run API and Auth",
+            "program": "${workspaceRoot}/SimpleCMS.App/bin/Debug/netcoreapp2.2/SimpleCMS.App.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}/SimpleCMS.App",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C \"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" ${auto-detect-url}"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS":"https://localhost:44300"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceRoot}/Views"
+            }
+        }
     ]
 }

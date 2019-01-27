@@ -1,4 +1,15 @@
 # IDE - Visual Studio
 .vs/
 Logs/
-SimpleCRM.AngularWebpackStarter/
+**/obj/
+**/bin/
+
+# IDE - JetBrains Rider
+.idea/
+*.DotSettings.user
+
+# To create locally (SimpleCMS.Data/database_upgrade.sh, ssl/howto.txt)
+SimpleCMS.Data/Migrations
+ssl/localhost.crt
+ssl/localhost.key
+ssl/localhost.pfx

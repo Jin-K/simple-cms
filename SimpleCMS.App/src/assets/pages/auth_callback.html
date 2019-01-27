@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Authentication callback</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+  <script>
+    "use strict";
+    window.onload = function() {
+      if (window.location.hash) {
+        var masterWnd = window.opener || window.parent || window.top;
+        masterWnd.postMessage({
+          action: 'hash',
+          message: window.location.hash.substr(1),  // token from the URL without the `#` symbol
+        }, 'https://localhost:44300');              // "*" or the app's URL (more secure)
+      }
+    };
+  </script>  
+</body>
+</html>

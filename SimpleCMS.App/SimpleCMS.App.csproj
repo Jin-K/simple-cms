@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <UserSecretsId>UserSecret</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="src\app\core\**" />
+    <Compile Remove="src\app\entity\**" />
+    <Compile Remove="src\app\root-store\**" />
+    <Compile Remove="src\app\shared\**" />
+    <Compile Remove="src\app\user\**" />
+    <Content Remove="src\app\core\**" />
+    <Content Remove="src\app\entity\**" />
+    <Content Remove="src\app\root-store\**" />
+    <Content Remove="src\app\shared\**" />
+    <Content Remove="src\app\user\**" />
+    <EmbeddedResource Remove="src\app\core\**" />
+    <EmbeddedResource Remove="src\app\entity\**" />
+    <EmbeddedResource Remove="src\app\root-store\**" />
+    <EmbeddedResource Remove="src\app\shared\**" />
+    <EmbeddedResource Remove="src\app\user\**" />
+    <None Remove="src\app\core\**" />
+    <None Remove="src\app\entity\**" />
+    <None Remove="src\app\root-store\**" />
+    <None Remove="src\app\shared\**" />
+    <None Remove="src\app\user\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="src\app\app.constants.ts" />
+    <None Remove="src\app\fuse-config\index.ts" />
+    <None Remove="src\main-aot.webpack.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+    <None Include="package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleCMS.Common\SimpleCMS.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,104 @@
+<mat-table [dataSource]="dataSource"
+            matSort matSortActive="{{orderBy.column}}"
+            matSortDisableClear matSortDirection="{{orderBy.direction}}"
+           [@animateStagger]="{value:'50'}">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleSelectDisplayedItems() : null"
+                        [checked]="checkboxState === 1"
+                        [indeterminate]="checkboxState === 2">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <mat-checkbox [(ngModel)]="checkboxes[item.id]" (ngModelChange)="onSelectedChange(item.id)"
+                          (click)="$event.stopPropagation()">
+            </mat-checkbox>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Avatar Column -->
+    <ng-container matColumnDef="avatar">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <img class="avatar" *ngIf="item.avatar" [alt]="item.name"
+                 [src]="item.avatar"/>
+        </mat-cell>
+    </ng-container>
+    
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+      <mat-cell *matCellDef="let item">
+        <p class="font-weight-600">
+          {{item.id}}
+        </p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <!-- <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <p class="text-truncate font-weight-600">{{item.name}} {{item.lastName}}</p>
+        </mat-cell>
+    </ng-container> -->
+    
+    <!-- Active Column -->
+    <ng-container matColumnDef="active">
+      <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm mat-sort-header>Active</mat-header-cell>
+      <mat-cell *matCellDef="let item" fxHide fxShow.gt-sm>
+        <p class="active">{{item.active}}</p>
+      </mat-cell>
+    </ng-container>
+    
+    <!-- Created Column -->
+    <ng-container matColumnDef="created">
+      <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md mat-sort-header>Created</mat-header-cell>
+      <mat-cell *matCellDef="let item" fxHide fxShow.gt-md>
+        <p class="created text-truncate">{{item.created}}</p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Buttons Column -->
+    <ng-container matColumnDef="buttons">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <div fxFlex="row" fxLayoutAlign="end center">
+                <button mat-icon-button (click)="$event.stopPropagation();toggleStar(item.id, item.starred)" aria-label="Toggle star">
+                    <mat-icon class="amber-fg" *ngIf="item.starred">star</mat-icon>
+                    <mat-icon class="secondary-text" *ngIf="!item.starred">star_border</mat-icon>
+                </button>
+
+                <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                        (click)="$event.stopPropagation();">
+                    <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button>
+
+                <mat-menu #moreMenu="matMenu">
+                  <button mat-menu-item aria-label="edit" (click)="editItem(item)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit</span>
+                  </button>
+                  <button mat-menu-item aria-label="remove" (click)="deleteItem(item)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Remove</span>
+                  </button>
+                </mat-menu>
+            </div>
+
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let item; columns: displayedColumns;"
+             class="item"
+             [routerLink]="['consult', item.id]"
+             [ngClass]="{'accent-50':checkboxes[item.id]}"
+             matRipple
+             [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+

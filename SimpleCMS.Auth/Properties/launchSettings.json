@@ -1,0 +1,29 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:50772/",
+      "sslPort": 44321
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://*:44321;http://*:50772",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "SimpleCMS.Auth": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://*:44321;http://*:50772",
+        "ASPNETCORE_HTTPS_PORT": "44321",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:44321/"
+    }
+  }
+}

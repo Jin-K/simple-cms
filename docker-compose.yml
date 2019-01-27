@@ -2,9 +2,9 @@ version: '3'
 
 services:
   app:
-    build: ./SimpleCRM.App
+    build: ./SimpleCMS.App
     volumes:
-      - ./SimpleCRM.App:/app
+      - ./SimpleCMS.App:/app
       - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
       - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
     ports:
@@ -15,9 +15,9 @@ services:
       - ASPNETCORE_HTTPS_PORT=44300
       - ASPNETCORE_ENVIRONMENT=Development
   auth:
-    build: ./SimpleCRM.Auth
+    build: ./SimpleCMS.Auth
     volumes:
-      - ./SimpleCRM.Auth:/auth
+      - ./SimpleCMS.Auth:/auth
       - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
       - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
     ports:
@@ -30,9 +30,9 @@ services:
     networks:
       - back-channel
   api:
-    build: ./SimpleCRM.Api
+    build: ./SimpleCMS.Api
     volumes:
-      - ./SimpleCRM.Api:/api
+      - ./SimpleCMS.Api:/api
       - C:\Users\angel.munoz\AppData\Roaming\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
       - C:\Users\angel.munoz\.aspnet\https:/root/.aspnet/https/
     ports:
