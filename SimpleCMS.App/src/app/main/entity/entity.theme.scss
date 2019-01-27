@@ -1,0 +1,27 @@
+@mixin entity-theme($theme) {
+
+  $background: map-get($map: $theme, $key: background);
+  $foreground: map-get($map: $theme, $key: foreground);
+  $is-dark: map-get($map: $theme, $key: is-dark);
+
+  #entity-list {
+
+    .content {
+
+      .sidebar {
+
+        .sidebar-content {
+
+          .card {
+            background: map-get($map: $background, $key: card);
+          }
+          
+        }
+        
+      }
+      
+    }
+    
+  }
+  
+}

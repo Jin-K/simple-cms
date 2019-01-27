@@ -1,0 +1,34 @@
+{
+  "extends": "../tslint.json",
+  "rules": {
+    "directive-selector": [
+        true,
+        "attribute",
+        [
+          "simple-cms",
+          ""
+        ],
+        "camelCase"
+    ],
+    "component-selector": [
+        true,
+        "element",
+        [
+          "simple-cms",
+          ""
+        ],
+        [
+          "kebab-case",
+          "camelCase"
+        ]
+    ],
+    "import-spacing": false,
+    "no-debugger": false,
+    "curly": false,
+    "no-empty-interface": false,
+    "one-line": false,
+    "no-output-on-prefix": false,
+    "typedef-whitespace": false,
+    "no-bitwise": false
+  }
+}

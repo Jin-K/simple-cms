@@ -5,13 +5,13 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": "SimpleCRM.Api .NET Core Launch (web)",
+            "name": "SimpleCMS.Api .NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/SimpleCRM.Api/bin/Debug/netcoreapp2.2/SimpleCRM.Api.dll",
+            "program": "${workspaceFolder}/SimpleCMS.Api/bin/Debug/netcoreapp2.2/SimpleCMS.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SimpleCRM.Api",
+            "cwd": "${workspaceFolder}/SimpleCMS.Api",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true,
@@ -31,13 +31,13 @@
                 "ASPNETCORE_ENVIRONMENT"  : "Development"
             }
         }, {
-            "name": "SimpleCRM.Auth .NET Core Launch (web)",
+            "name": "SimpleCMS.Auth .NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/SimpleCRM.Auth/bin/Debug/netcoreapp2.2/SimpleCRM.Auth.dll",
+            "program": "${workspaceFolder}/SimpleCMS.Auth/bin/Debug/netcoreapp2.2/SimpleCMS.Auth.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SimpleCRM.Auth",
+            "cwd": "${workspaceFolder}/SimpleCMS.Auth",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true,
@@ -61,9 +61,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Run API and Auth",
-            "program": "${workspaceRoot}/SimpleCRM.App/bin/Debug/netcoreapp2.2/SimpleCRM.App.dll",
+            "program": "${workspaceRoot}/SimpleCMS.App/bin/Debug/netcoreapp2.2/SimpleCMS.App.dll",
             "args": [],
-            "cwd": "${workspaceRoot}/SimpleCRM.App",
+            "cwd": "${workspaceRoot}/SimpleCMS.App",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true,

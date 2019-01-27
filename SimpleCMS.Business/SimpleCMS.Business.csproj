@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleCMS.Common\SimpleCMS.Common.csproj" />
+    <ProjectReference Include="..\SimpleCMS.Data\SimpleCMS.Data.csproj" />
+  </ItemGroup>
+</Project>

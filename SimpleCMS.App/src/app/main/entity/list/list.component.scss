@@ -1,0 +1,19 @@
+@import "src/@fuse/scss/fuse";
+
+#entity-list {
+
+  .content {
+
+    overflow: hidden;
+
+    .sidebar {
+
+      &:not(.locked-open) {
+        background: white;
+      }
+      
+    }
+    
+  }
+  
+}
