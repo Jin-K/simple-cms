@@ -8,10 +8,10 @@ namespace SimpleCMS.Business.Providers {
 
 	public class UsersStore {
 
-    /// <summary>
-    /// CmsContext's instance.
-    /// </summary>
-    readonly CmsContext _cmsContext;
+		/// <summary>
+		/// CmsContext's instance.
+		/// </summary>
+		readonly CmsContext _cmsContext;
 
 		/// <summary>
 		/// Constructor
@@ -22,77 +22,73 @@ namespace SimpleCMS.Business.Providers {
 		/// <param name="cmsContext">main database context of simple-cms</param>
 		public UsersStore(CmsContext cmsContext) => _cmsContext = cmsContext;
 
-    /// <summary>
-    /// Creates a row if not exists in dbo.Favorites table
-    /// </summary>
-    /// <param name="userId">user id</param>
-    /// <param name="entity">entity name</param>
-    /// <param name="itemId">entity item id</param>
-    /// <returns>true if no errors</returns>
-    public bool CreateFavorite(int userId, string entity, int itemId) {
-      
-      // get entityId
-      var entityId = _cmsContext.Entities.SingleOrDefault( e => e.Name == entity )?.Id ?? 0;
+		/// <summary>
+		/// Creates a row if not exists in dbo.Favorites table
+		/// </summary>
+		/// <param name="userId">user id</param>
+		/// <param name="entity">entity name</param>
+		/// <param name="itemId">entity item id</param>
+		/// <returns>true if no errors</returns>
+		public bool CreateFavorite(int userId, string entity, int itemId) {
 
-      // prepare favorite row
-      var toAdd = new Favorite(userId, entityId, itemId);
+			// get entityId
+			var entityId = _cmsContext.Entities.SingleOrDefault(e => e.Name == entity)?.Id ?? 0;
 
-      // add to favorites
-      _cmsContext.Favorites.Add(toAdd);
+			// prepare favorite row
+			var toAdd = new Favorite(userId, entityId, itemId);
 
-      try {
-        // save
-        _cmsContext.SaveChanges();
-      }
-      catch (DbUpdateConcurrencyException) {
-        // rethrow
-        throw;
-      }
-      catch (DbUpdateException) {
-        // if foreign key constraints the most times
-        return false;
-      }
+			// add to favorites
+			_cmsContext.Favorites.Add(toAdd);
 
-      // if ok
-      return true;
+			try {
+				// save
+				_cmsContext.SaveChanges();
+			} catch (DbUpdateConcurrencyException) {
+				// rethrow
+				throw;
+			} catch (DbUpdateException) {
+				// if foreign key constraints the most times
+				return false;
+			}
 
-    }
+			// if ok
+			return true;
 
-    /// <summary>
-    /// Deletes a row if exists in dbo.Favorites table
-    /// </summary>
-    /// <param name="userId">user id</param>
-    /// <param name="entity">entity name</param>
-    /// <param name="itemId">entity item id</param>
-    /// <returns>true if no errors</returns>
-    public bool DeleteFavorite(int userId, string entity, int itemId) {
+		}
 
-      // get entityId
-      var entityId = _cmsContext.Entities.SingleOrDefault( e => e.Name == entity )?.Id ?? 0;
+		/// <summary>
+		/// Deletes a row if exists in dbo.Favorites table
+		/// </summary>
+		/// <param name="userId">user id</param>
+		/// <param name="entity">entity name</param>
+		/// <param name="itemId">entity item id</param>
+		/// <returns>true if no errors</returns>
+		public bool DeleteFavorite(int userId, string entity, int itemId) {
 
-      // prepare favorite item for supression
-      var toRemove = new Favorite(userId, entityId, itemId);
+			// get entityId
+			var entityId = _cmsContext.Entities.SingleOrDefault(e => e.Name == entity)?.Id ?? 0;
 
-      // remove from favorites
-      _cmsContext.Favorites.Remove(toRemove);
+			// prepare favorite item for supression
+			var toRemove = new Favorite(userId, entityId, itemId);
 
-      try {
-        // save changes
-        _cmsContext.SaveChanges();
-      }
-      catch (DbUpdateConcurrencyException) {
-        // rethrow
-        throw;
-      }
-      catch (DbUpdateException) {
-        // if foreign key constraints the most times
-        return false;
-      }
+			// remove from favorites
+			_cmsContext.Favorites.Remove(toRemove);
 
-      // if ok
-      return true;
+			try {
+				// save changes
+				_cmsContext.SaveChanges();
+			} catch (DbUpdateConcurrencyException) {
+				// rethrow
+				throw;
+			} catch (DbUpdateException) {
+				// if foreign key constraints the most times
+				return false;
+			}
 
-    }
+			// if ok
+			return true;
+
+		}
 
 	}
 
