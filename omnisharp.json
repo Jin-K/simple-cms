@@ -1,8 +1,8 @@
 {
   "formattingOptions": {
     "useTabs": true,
-    "tabSize": 2,
-    "indentationSize": 2,
+    "tabSize": 4,
+    "indentationSize": 4,
     "newLinesForBracesInTypes": false,
     "newLinesForBracesInMethods": false,
     "newLinesForBracesInProperties": false,
@@ -13,9 +13,9 @@
     "newLinesForBracesInObjectCollectionArrayInitializers": false,
     "newLinesForBracesInLambdaExpressionBody": false,
 
-    "newLineForElse": false,
-    "newLineForCatch": false,
-    "newLineForFinally": false,
+    "newLineForElse": true,
+    "newLineForCatch": true,
+    "newLineForFinally": true,
     "newLineForMembersInObjectInit": false,
     "newLineForMembersInAnonymousTypes": false,
     "newLineForClausesInQuery": false
