@@ -4,6 +4,10 @@ Logs/
 **/obj/
 **/bin/
 
+# IDE - Visual Studio (Extensions)
+_NCrunch_*/
+*.ncrunchsolution*
+
 # IDE - JetBrains Rider
 .idea/
 *.DotSettings.user

@@ -36,12 +36,6 @@ namespace SimpleCMS.Api {
 		private readonly IConfigurationRoot _configuration;
 
 		/// <summary>
-		/// Hosting environment object.
-		/// Instantiated in <see cref="Startup" />
-		/// </summary>
-		private readonly IHostingEnvironment _env;
-
-		/// <summary>
 		/// The main constructor.
 		/// </summary>
 		/// <param name="env">Injected hosting environment object. <seealso cref="IHostingEnvironment" /></param>
@@ -56,9 +50,6 @@ namespace SimpleCMS.Api {
                 .WriteTo.RollingFile("../Logs/Api")
                 .CreateLogger();
 
-			// store environment object
-			this._env = env;
-
 			// build configuration
 			var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -68,7 +59,7 @@ namespace SimpleCMS.Api {
 			_configuration = builder.Build();
 
 			// TODELETE reset static fake db
-			Controllers.ChatController.fakeDB = null;
+			Controllers.ChatController.FakeDb = null;
 		}
 
 		/// <summary>
@@ -105,8 +96,8 @@ namespace SimpleCMS.Api {
 
 			// create custom authorization policy
 			var guestPolicy = new AuthorizationPolicyBuilder()
-			  .RequireClaim("scope", "dataEventRecords")
-			  .Build();
+				.RequireClaim("scope", "dataEventRecords")
+				.Build();
 
 			// create token validation parameters
 			var tokenValidationParameters = new TokenValidationParameters {

@@ -8,13 +8,13 @@ namespace SimpleCMS.Data.Tests {
 	public class EntitiesTests : CmsContextTestBase {
 
 		[Fact]
-		public async Task ShouldReturn5Entitites() {
+		public void ShouldReturn5Entitites() {
 
 			// arrange
 			var service = new ElementsStore(_context);
 
 			// act
-			var results = await service.GetAllEntities();
+			var results = service.GetAllEntities();
 			var count = results.Count();
 
 			// assert

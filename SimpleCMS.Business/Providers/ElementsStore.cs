@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SimpleCMS.Business.Models;
 using SimpleCMS.Data;
 using SimpleCMS.Data.Entities;
 using SimpleCMS.Data.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using _Action = SimpleCMS.Data.Entities.Action;
 
 namespace SimpleCMS.Business.Providers {
@@ -46,8 +43,8 @@ namespace SimpleCMS.Business.Providers {
 		/// Gets all main entities
 		/// </summary>
 		/// <returns>Returns all main entities as a generic list of <see cref="Entidad" /></returns>
-		public Task<List<Entidad>> GetAllEntities()
-		=> _cmsContext.Entities.Select(e => new Entidad { Id = e.Id, Name = e.Name }).ToListAsync();
+		public List<Entidad> GetAllEntities()
+			=> _cmsContext.Entities.Select(e => new Entidad { Id = e.Id, Name = e.Name }).ToList();
 
 		/// <summary>
 		/// Gets the primary key id of an entity
@@ -79,7 +76,7 @@ namespace SimpleCMS.Business.Providers {
 		=> _cmsContext.AsQueryable<IEntidad>(entity).Count();
 
 		/// <summary>
-		/// Get all entity items filtered by <paramref name="queryParameters"/>
+		/// Get all entity items filtered by parameters
 		/// </summary>
 		/// <param name="entity">Entity name for items</param>
 		/// <param name="orderBy">Column name for ordering</param>

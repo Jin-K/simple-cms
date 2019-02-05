@@ -13,7 +13,7 @@ namespace SimpleCMS.Business.Providers {
 		private readonly CmsContext _cmsContext;
 
 		public NewsStore(CmsContext cmsContext)
-		=> _cmsContext = cmsContext;
+			=> _cmsContext = cmsContext;
 
 
 		public async Task AddGroup(string group) {
@@ -51,6 +51,7 @@ namespace SimpleCMS.Business.Providers {
 			);
 		}
 
-		public async Task<List<string>> GetAllGroups() => await _cmsContext.NewsGroups.Select(t => t.Name).ToListAsync();
+		public async Task<List<string>> GetAllGroups()
+			=> await _cmsContext.NewsGroups.Select(t => t.Name).ToListAsync();
 	}
 }

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +6,10 @@ using SimpleCMS.Api.Extensions;
 using SimpleCMS.Api.Models;
 using SimpleCMS.Business.Providers;
 using SimpleCMS.Common.Extensions;
+using SimpleCMS.Data.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleCMS.Api.Controllers {
 
@@ -21,24 +20,25 @@ namespace SimpleCMS.Api.Controllers {
 	/// <remarks>
 	/// Contains following routes:
 	/// 
-	/// - GET     entity/items?entity&amp;page&amp;pageCount(&amp;orderBy)(&amp;userId)(&amp;category)  : <see cref="EntityController.GetItemsList(QueryParameters)"></see>
+	/// - GET     entity/items?entity&amp;page&amp;pageCount(&amp;orderBy)(&amp;userId)(&amp;category)  : <see cref="GetItemsList(QueryParameters)"></see>
 	///
-	/// - GET     entity/inverse-ids/{inverseIds}?entity(&amp;category)(&amp;userId)                    : <see cref="EntityController.GetInverseIdsForDeletion(QueryParameters)"></see>
+	/// - GET     entity/inverse-ids/{inverseIds}?entity(&amp;category)(&amp;userId)                    : <see cref="GetInverseIdsForDeletion(string,string,string,int?)"></see>
 	///
-	/// - GET     entity/entities                                                                       : <see cref="EntityController.GetMainEntities()"></see>
+	/// - GET     entity/entities                                                                       : <see cref="GetMainEntities()"></see>
 	///
-	/// - GET     entity/item?entity&amp;id                                                             : <see cref="EntityController.GetItem(GetItemParameters)"></see>
+	/// - GET     entity/item?entity&amp;id                                                             : <see cref="GetItem(GetItemParameters)"></see>
 	///
-	/// - DELETE  entity/{entity}/{ids}                                                                 : <see cref="EntityController.DeleteItemOrItems(string, string)"></see>
+	/// - DELETE  entity/{entity}/{ids}                                                                 : <see cref="DeleteItemOrItems(string, string)"></see>
 	///
-	/// - GET     entity/entity-items                                                                   : <see cref="EntityController.GetEntityItems()"></see>
+	/// - GET     entity/entity-items                                                                   : <see cref="GetEntityItems()"></see>
 	///
-	/// - POST    entity/entity-items/{id}                                                              : <see cref="EntityController.PostEntityItems(string, dynamic)"></see>
+	/// - POST    entity/entity-items/{id}                                                              : <see cref="PostEntityItems(string, dynamic)"></see>
 	///
-	/// - GET     entity/entity-items-user                                                              : <see cref="EntityController.GetEntityItemsUser()"></see>
+	/// - GET     entity/entity-items-user                                                              : <see cref="GetEntityItemsUser()"></see>
 	///
-	/// - GET     entity/list-view-settings                                                             : <see cref="EntityController.GetListViewSettings(string)"></see>
+	/// - GET     entity/list-view-settings                                                             : <see cref="GetListViewSettings(string)"></see>
 	/// </remarks>
+	/// <inheritdoc />
 	[Authorize(AuthenticationSchemes = "Bearer")]
 	[Route("api/[controller]")]
 	public class EntityController : ControllerBase {
@@ -46,21 +46,18 @@ namespace SimpleCMS.Api.Controllers {
 		/// <summary>
 		/// ElementsStore's instance.
 		/// 
-		/// <seealso cref="EntityController.EntityController(IElementsStore)" />
+		/// <seealso cref="EntityController(IElementsStore)" />
 		/// </summary>
-		readonly IElementsStore _elementsStore;
+		private readonly IElementsStore _elementsStore;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <remarks>
-		/// sets <see cref="EntityController._elementsStore" /> via DI
+		/// sets <see cref="_elementsStore" /> via DI
 		/// </remarks>
 		/// <param name="elementsStore">store for entities</param>
-		public EntityController(IElementsStore elementsStore)
-		=> _elementsStore = elementsStore;
-
-		#region Endpoints
+		public EntityController(IElementsStore elementsStore) => _elementsStore = elementsStore;
 
 		/// <summary>
 		/// Find items depending on <paramref name="queryParameters"/>
@@ -81,7 +78,7 @@ namespace SimpleCMS.Api.Controllers {
 			var userId = queryParameters.UserId ?? -int.Parse(HttpContext.User.GetSub());
 
 			// get filtered and ordered items from store
-			List<Business.Models.Item> value = _elementsStore.GetFilteredAndOrderedItems(
+			var value = _elementsStore.GetFilteredAndOrderedItems(
 			  entity,
 			  queryParameters.OrderBy,
 			  queryParameters.Descending,
@@ -104,7 +101,7 @@ namespace SimpleCMS.Api.Controllers {
 			Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetaHeader));
 
 			// create HATEOAS links
-			var links = CreateLinksForCollection(queryParameters, allItemCount);
+			var links = new List<object>();
 
 			// return anonymous type JSON
 			return Ok(new { value, links });
@@ -161,13 +158,14 @@ namespace SimpleCMS.Api.Controllers {
 		/// </summary>
 		/// <returns>Returns a basic JSON response containing a list of all the main entities</returns>
 		[HttpGet("entities")]
-		public async Task<IActionResult> GetMainEntities() => Ok(await _elementsStore.GetAllEntities());
+		public IActionResult GetMainEntities()
+			=> Ok(_elementsStore.GetAllEntities());
 
 		/// <summary>
 		/// Gets an item depending on query parameters (<paramref name="getItemParameters"/>).
 		/// </summary>
 		/// <param name="getItemParameters">query and find parameters</param>
-		/// <returns>Returns a json object of type <see cref="Item" /></returns>
+		/// <returns>Returns a json object of type <see cref="IEntidad" /></returns>
 		[HttpGet("item")]
 		public IActionResult GetItem([FromQuery] GetItemParameters getItemParameters) {
 
@@ -219,7 +217,7 @@ namespace SimpleCMS.Api.Controllers {
 			case 1:
 
 				// if delete item not ok ==> Conflict with foreign key constraint
-				if (!this._elementsStore.DeleteItem(entity, idsIntegerSet.First())) {
+				if (!_elementsStore.DeleteItem(entity, idsIntegerSet.First())) {
 
 					// 409 Conflict
 					return StatusCode(StatusCodes.Status409Conflict);
@@ -231,7 +229,7 @@ namespace SimpleCMS.Api.Controllers {
 			default:
 
 				// if delete items not ok ==> Conflict ?
-				if (!this._elementsStore.DeleteItems(entity, idsIntegerSet.ToArray())) {
+				if (!_elementsStore.DeleteItems(entity, idsIntegerSet.ToArray())) {
 
 					// 409 Conflict
 					return StatusCode(StatusCodes.Status409Conflict);
@@ -251,18 +249,20 @@ namespace SimpleCMS.Api.Controllers {
 		/// </summary>
 		/// <returns>Returns a json array of dummy items</returns>
 		[HttpGet("entity-items")]
-		public IActionResult GetEntityItems() => Ok(this._elementsStore.GetItems());
+		public IActionResult GetEntityItems()
+			=> Ok(_elementsStore.GetItems());
 
 		/// <summary>
 		/// TODELETE Post entity item data to fake db
 		/// </summary>
 		/// <param name="id">id of the item to push or replace</param>
-		/// <returns>Returns a <see cref="<see cref="Microsoft.AspNetCore.Http.StatusCodes.Status201Created" />" /></returns>
+		/// <param name="rawContent">raw content of entity item</param>
+		/// <returns>Returns a <see cref="StatusCodes.Status201Created" />" /></returns>
 		[HttpPost("entity-items/{id}")]
 		public IActionResult PostEntityItems(string id, [FromBody] dynamic rawContent) {
 
 			// post item
-			this._elementsStore.PostItem(id, rawContent);
+			_elementsStore.PostItem(id, rawContent);
 
 			// returns 201 created
 			return Created("entity-items", rawContent);
@@ -273,7 +273,8 @@ namespace SimpleCMS.Api.Controllers {
 		/// </summary>
 		/// <returns>Returns a json containing user data</returns>
 		[HttpGet("entity-items-user")]
-		public IActionResult GetEntityItemsUser() => Ok(this._elementsStore.GetUserData());
+		public IActionResult GetEntityItemsUser()
+			=> Ok(_elementsStore.GetUserData());
 
 		/// <summary>
 		/// Get user view settings for a specific entity
@@ -282,38 +283,19 @@ namespace SimpleCMS.Api.Controllers {
 		/// <returns>Returns a json containing view settings</returns>
 		[HttpGet("list-view-settings")]
 		public IActionResult GetListViewSettings([FromQuery] string entityName)
-		=> Ok(new {
-			name = entityName,
-			id = _elementsStore.GetEntityIdByName(entityName),
-			pagination = new {
-				page = 0,
-				pageCount = 5,
-				orderBy = "id desc",
-				totalCount = _elementsStore.GetTotalItemsCount(entityName)
-			},
-			filters = new {
-				category = "all"
-			}
-		});
-
-		#endregion
-
-		/// <summary>
-		/// Is supposed to create HATEOAS links but returns an empty list.
-		/// 
-		/// GLO: <see href="https://app.gitkraken.com/glo/board/XAByRdbmZwAaenb4/card/XBBHIuVFfAAuuGcP">https://app.gitkraken.com/glo/board/XAByRdbmZwAaenb4/card/XBBHIuVFfAAuuGcP</see>
-		/// </summary>
-		/// <param name="queryParameters">query / filter parameters</param>
-		/// <param name="totalCount">total count</param>
-		/// <returns>Empty list of objects</returns>
-		List<object> CreateLinksForCollection(QueryParameters queryParameters, int totalCount) {
-
-			// create list of links
-			var links = new List<object>();
-
-			// return links
-			return links;
-		}
+			=> Ok(new {
+				name = entityName,
+				id = _elementsStore.GetEntityIdByName(entityName),
+				pagination = new {
+					page = 0,
+					pageCount = 5,
+					orderBy = "id desc",
+					totalCount = _elementsStore.GetTotalItemsCount(entityName)
+				},
+				filters = new {
+					category = "all"
+				}
+			});
 
 	}
 
