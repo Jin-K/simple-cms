@@ -22,8 +22,6 @@ namespace SimpleCMS.Auth {
 
     private IConfigurationRoot Configuration { get; }
 
-    private readonly IHostingEnvironment _environment;
-
     public Startup(IHostingEnvironment env) {
       Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Verbose()
@@ -32,8 +30,6 @@ namespace SimpleCMS.Auth {
         .WriteTo.Seq( "http://localhost:5341" )
         .WriteTo.RollingFile( "../Logs/Auth" )
         .CreateLogger();
-
-      _environment = env;
 
       var builder = new ConfigurationBuilder()
         .SetBasePath( env.ContentRootPath )
