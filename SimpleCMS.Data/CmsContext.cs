@@ -13,18 +13,6 @@ namespace SimpleCMS.Data {
 	/// <inheritdoc />
 	public class CmsContext : IdentityDbContext<AppUser, AppRole, int> {
 
-		/// <summary>
-		/// Public static hardcoded connection string, 
-		/// I think it is needed for auto-generated db contexts in SimpleCMS.Data/Migrations
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryCmsContext.CreateDbContext(string[])"/>
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryPersistedGrantDbContext.CreateDbContext(string[])"/>
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryConfigurationDbContext.CreateDbContext(string[])"/>
-		/// </summary>
-		internal const string HcConnectionString = "Data Source=localhost;Initial Catalog=SimpleCMS;Integrated Security=False;User ID=user1;Password=Password123";
-
 		#region DbSet<> properties are here
 
 		#region Main DbSet<> properties of CmsContext
