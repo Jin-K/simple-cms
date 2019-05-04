@@ -1,4 +1,3 @@
-using System.Reflection;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
@@ -16,9 +15,10 @@ using SimpleCMS.Common;
 using SimpleCMS.Data;
 using SimpleCMS.Data.Entities;
 using SimpleCMS.Data.Extensions;
+using System.Reflection;
 
 namespace SimpleCMS.Auth {
-  public class Startup {
+	public class Startup {
 
     private IConfigurationRoot Configuration { get; }
 
@@ -81,7 +81,7 @@ namespace SimpleCMS.Auth {
       services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 
       services.AddIdentityServer( x => x.IssuerUri = "https://localhost:44321/" )
-        .LoadSigningCredentialFrom( certificatePath, certificatePassword )
+        .AddSigningCredential()
         .AddConfigurationStore( options => {
           options.ConfigureDbContext = builder =>
             builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
