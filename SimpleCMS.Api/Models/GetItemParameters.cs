@@ -1,25 +1,29 @@
-﻿namespace SimpleCMS.Api.Models {
+﻿using Newtonsoft.Json;
 
-  /// <summary>
-  /// The main GetItemParameters class
-  /// </summary>
-  /// <remarks>
-  /// Is used to wrap query parameters of some /api/entity requests
-  /// </remarks>
-  public class GetItemParameters {
+namespace SimpleCMS.Api.Models {
 
-    /// <summary>
-    /// Entity name or SQL table table
-    /// </summary>
-    /// <value></value>
-    public string Entity { get; set; }
+	/// <summary>
+	/// The main GetItemParameters class
+	/// </summary>
+	/// <remarks>
+	/// Is used to wrap query parameters of some /api/entity requests
+	/// </remarks>
+	public class GetItemParameters {
 
-    /// <summary>
-    /// Unique Id of entity item
-    /// </summary>
-    /// <value></value>
-    public int Id { get; set; }
+		/// <summary>
+		/// Entity name or SQL table table
+		/// </summary>
+		/// <value></value>
+		[JsonProperty]
+		public string Entity { get; set; }
 
-  }
+		/// <summary>
+		/// Unique Id of entity item
+		/// </summary>
+		/// <value></value>
+		[JsonProperty]
+		public int Id { get; set; }
+
+	}
 
 }

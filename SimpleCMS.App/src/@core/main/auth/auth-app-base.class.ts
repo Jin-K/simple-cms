@@ -117,7 +117,7 @@ export abstract class AuthAppBase implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
 
       // filter on isAuthorized == true
-      .filter(isAuthorized => isAuthorized)
+      .filter(isAuthorized => !!isAuthorized)
 
       // subscribe and dispatch 'AUTHORIZATION DONE' if triggered (isAuthorized == true)
       .subscribe(_ => this._store.dispatch(new UserActions.AuthorizationDone));

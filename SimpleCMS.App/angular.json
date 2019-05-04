@@ -65,9 +65,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "simple-cms:build",
-            "sslKey": "../ssl/localhost.key",
-            "sslCert": "../ssl/localhost.crt"
+            "browserTarget": "simple-cms:build"
           },
           "configurations": {
             "production": {

@@ -1,4 +1,3 @@
-using System.Reflection;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
@@ -16,13 +15,12 @@ using SimpleCMS.Common;
 using SimpleCMS.Data;
 using SimpleCMS.Data.Entities;
 using SimpleCMS.Data.Extensions;
+using System.Reflection;
 
 namespace SimpleCMS.Auth {
-  public class Startup {
+	public class Startup {
 
     private IConfigurationRoot Configuration { get; }
-
-    private readonly IHostingEnvironment _environment;
 
     public Startup(IHostingEnvironment env) {
       Log.Logger = new LoggerConfiguration()
@@ -32,8 +30,6 @@ namespace SimpleCMS.Auth {
         .WriteTo.Seq( "http://localhost:5341" )
         .WriteTo.RollingFile( "../Logs/Auth" )
         .CreateLogger();
-
-      _environment = env;
 
       var builder = new ConfigurationBuilder()
         .SetBasePath( env.ContentRootPath )
@@ -85,7 +81,7 @@ namespace SimpleCMS.Auth {
       services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 
       services.AddIdentityServer( x => x.IssuerUri = "https://localhost:44321/" )
-        .LoadSigningCredentialFrom( certificatePath, certificatePassword )
+        .AddSigningCredential()
         .AddConfigurationStore( options => {
           options.ConfigureDbContext = builder =>
             builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
@@ -112,7 +108,7 @@ namespace SimpleCMS.Auth {
       else app.UseExceptionHandler( "/Home/Error" );
 
       app.UseXfo( s => s.Deny() );
-      app.UseCsp( configurer => configurer.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
+      app.UseCsp( configurator => configurator.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
 
       app.UseStaticFiles()
         .UseIdentityServer()

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SimpleCMS.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using SimpleCMS.Common;
 
 namespace SimpleCMS.Api.Hubs {
 	public class DashboardHub : Hub {
@@ -11,74 +11,80 @@ namespace SimpleCMS.Api.Hubs {
 		/// <summary>
 		/// Hashset containing connection ids
 		/// </summary>
-		readonly HashSet<string> connectedIds = new HashSet<string>();
+		private readonly HashSet<string> _connectedIds = new HashSet<string>();
 
 		/// <summary>
 		/// Custom workaround for performance counters (PerformanceCounter class)
 		/// </summary>
-		readonly IMetricsUtil metricsUtil;
-    
+		private readonly IMetricsUtil _metricsUtil;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-		public DashboardHub(IMetricsUtil _metricsUtil) => metricsUtil = _metricsUtil;
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public DashboardHub(IMetricsUtil metricsUtil) => _metricsUtil = metricsUtil;
 
 		/// <summary>
 		/// Called each time a client connects
 		/// </summary>
+		/// <inheritdoc />
 		public override Task OnConnectedAsync() {
+
 			// add to hashset
-			connectedIds.Add(Context.ConnectionId);
+			_connectedIds.Add( Context.ConnectionId );
 
 			// return base method
 			return base.OnConnectedAsync();
+
 		}
 
 		/// <summary>
 		/// Called each time a client disconnects
 		/// </summary>
-		/// <param name="exception"></param>
+		/// <param name="exception">exception received after disconnection</param>
+		/// <inheritdoc />
 		public override Task OnDisconnectedAsync(Exception exception) {
+
 			// remove from hashset
-			connectedIds.Remove(Context.ConnectionId);
+			_connectedIds.Remove( Context.ConnectionId );
 
 			// return base method
-			return base.OnDisconnectedAsync(exception);
+			return base.OnDisconnectedAsync( exception );
+
 		}
 
 		/// <summary>
 		/// Starts broadcasting data of server's performance watching for cpu changes.
 		/// </summary>
-		/// <param name="machines"></param>
-		/// <param name="delay"></param>
-		/// <returns>A </returns>
+		/// <returns>A child instance of <see cref="ChannelReader{T}"/> for reading from channel</returns>
 		public async Task<ChannelReader<object>> Monitor() {
+
 			// create an unbounded channel
 			var channel = Channel.CreateUnbounded<object>();
 
-      // broadcast once at begin
-      await channel.Writer.WriteAsync(new { Environment.MachineName, Type = "CPU", value = this.metricsUtil.ProcessorUsage });
-      await channel.Writer.WriteAsync(new { Environment.MachineName, Type = "Memory", value = this.metricsUtil.WorkingSet64 });
+			// broadcast once at begin
+			await channel.Writer.WriteAsync( new { Environment.MachineName, Type = "CPU", value = _metricsUtil.ProcessorUsage } );
+			await channel.Writer.WriteAsync( new { Environment.MachineName, Type = "Memory", value = _metricsUtil.WorkingSet64 } );
 
 			// attach event handler on cpu usage changes
-			this.metricsUtil.ProcessorUsageChanged += new ProcessorUsageChangedEventHandler(async (cpu) => {
+			_metricsUtil.ProcessorUsageChanged += async cpu => {
 
 				// broadcast to client
-				await channel.Writer.WriteAsync(new { Environment.MachineName, Type = "CPU", value = cpu });
+				await channel.Writer.WriteAsync( new { Environment.MachineName, Type = "CPU", value = cpu } );
 
-			});
+			};
 
-			// attach evnet handler on memory changes
-			this.metricsUtil.WorkingSet64Changed += new WorkingSet64ChangedEventHandler(async (memory) => {
+			// attach event handler on memory changes
+			_metricsUtil.WorkingSet64Changed += async memory => {
 
 				// broadcast
-				await channel.Writer.WriteAsync(new { Environment.MachineName, Type = "Memory", value = memory });
-			});
+				await channel.Writer.WriteAsync( new { Environment.MachineName, Type = "Memory", value = memory } );
+			};
 
 			// get the readable half of this channel
 			return channel.Reader;
+
 		}
 
 	}
+
 }

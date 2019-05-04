@@ -1,40 +1,131 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Options;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using System.Reflection;
 
 namespace SimpleCMS.Data {
-	public class TemporaryCmsContext : IDesignTimeDbContextFactory<CmsContext> {
-		public CmsContext CreateDbContext(string[] args) {
-      var builder = new DbContextOptionsBuilder<CmsContext>();
-      var migration = typeof(CmsContext).GetTypeInfo().Assembly.GetName().Name;
-      builder.UseSqlServer(CmsContext.HcConnectionString, b => b.MigrationsAssembly(migration));
-      return new CmsContext(builder.Options);
+
+	/// <summary>
+	/// Base class for temporary classes implementing <see cref="IDesignTimeDbContextFactory{TContext}"/>.
+	/// </summary>
+	/// <typeparam name="TContext">The type inheriting from <see cref="DbContext"/>.</typeparam>
+	public abstract class DesignTimeDbContextFactory<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext {
+
+		/// <summary>
+		/// The SQL connection string.
+		/// </summary>
+		protected readonly string ConnectionString;
+
+		/// <summary>
+		/// The assembly name where all our custom <see cref="DbContext"/> derived types are defined.
+		/// </summary>
+		protected readonly string AssemblyName = typeof(CmsContext).GetTypeInfo().Assembly.GetName().Name;
+
+		/// <summary>
+		/// Flag indicating if the <see cref="DbContextOptions{TContext}"/> object should be created in the <see cref="DesignTimeDbContextFactory{TContext}.CreateDbContext"/> method or not.
+		/// </summary>
+		protected abstract bool CreateDbOptionsBuilder { get; }
+
+		/// <summary>
+		/// Creates a new instance of <see cref="DesignTimeDbContextFactory{TContext}"/>.
+		/// </summary>
+		protected DesignTimeDbContextFactory() {
+			var configuration = new ConfigurationBuilder().SetBasePath( Directory.GetCurrentDirectory() )
+				.AddJsonFile( "appsettings.json" )
+				.Build();
+
+			ConnectionString = configuration.GetConnectionString( "DefaultConnection" );
 		}
+
+		/// <summary>
+		/// Creates a new instance of a derived context.
+		/// </summary>
+		/// <param name="args"> Arguments provided by the design-time service. </param>
+		/// <returns> An instance of <typeparamref name="TContext" />. </returns>
+		public TContext CreateDbContext(string[] args) {
+			if (!CreateDbOptionsBuilder) return CreateInstance();
+
+			var builder = new DbContextOptionsBuilder<TContext>();
+			builder.UseSqlServer( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
+			return CreateInstance( builder.Options );
+		}
+
+		/// <summary>
+		/// Abstract method to let derived classes finalize the <typeparamref name="TContext" /> creation by their own.
+		/// </summary>
+		/// <param name="builderOptions">The optional builder options.</param>
+		/// <returns>An instance of <typeparamref name="TContext" />.</returns>
+		protected abstract TContext CreateInstance(DbContextOptions<TContext> builderOptions = null);
+
 	}
 
-  public class TemporaryPersistedGrantDbContext : IDesignTimeDbContextFactory<PersistedGrantDbContext>
-  {
-    public PersistedGrantDbContext CreateDbContext(string[] args)
-    {
-      var builder = new DbContextOptionsBuilder<PersistedGrantDbContext>();
-      var migration = typeof(CmsContext).GetTypeInfo().Assembly.GetName().Name;
-      builder.UseSqlServer(CmsContext.HcConnectionString, b => b.MigrationsAssembly(migration));
-      var opOptions = new OperationalStoreOptions { DefaultSchema = "auth" };
-      return new PersistedGrantDbContext(builder.Options, opOptions);
-    }
-  }
+	/// <summary>
+	/// The main TemporaryCmsContext class.
+	/// </summary>
+	public class TemporaryCmsContext : DesignTimeDbContextFactory<CmsContext> {
 
-  public class TemporaryConfigurationDbContext : IDesignTimeDbContextFactory<ConfigurationDbContext>
-  {
-    public ConfigurationDbContext CreateDbContext(string[] args)
-    {
-      var builder = new DbContextOptionsBuilder<ConfigurationDbContext>();
-      var migration = typeof(CmsContext).GetTypeInfo().Assembly.GetName().Name;
-      builder.UseSqlServer(CmsContext.HcConnectionString, b => b.MigrationsAssembly(migration));
-      var storeOptions = new ConfigurationStoreOptions { DefaultSchema = "auth" };
-      return new ConfigurationDbContext(builder.Options, storeOptions);
-    }
-  }
+		/// <summary>
+		/// Flag indicating if the <see cref="DbContextOptions{TContext}"/> object should be created in the <see cref="DesignTimeDbContextFactory{TContext}.CreateDbContext"/> method or not.
+		/// </summary>
+		protected override bool CreateDbOptionsBuilder => true;
+
+		/// <summary>
+		/// Implementation of abstract <see cref="DesignTimeDbContextFactory{TContext}.CreateInstance"/> method.
+		/// </summary>
+		/// <param name="builderOptions">The optional builder options.</param>
+		/// <returns>An instance of <see cref="CmsContext"/>.</returns>
+		protected override CmsContext CreateInstance(DbContextOptions<CmsContext> builderOptions = null)
+			=> new CmsContext( builderOptions );
+
+	}
+
+	/// <summary>
+	/// The main TemporaryPersistedGrantDbContext class.
+	/// </summary>
+	public class TemporaryPersistedGrantDbContext : DesignTimeDbContextFactory<PersistedGrantDbContext> {
+
+		/// <summary>
+		/// Flag indicating if the <see cref="DbContextOptions{TContext}"/> object should be created in the <see cref="DesignTimeDbContextFactory{TContext}.CreateDbContext"/> method or not.
+		/// </summary>
+		protected override bool CreateDbOptionsBuilder => true;
+
+		/// <summary>
+		/// Implementation of abstract <see cref="DesignTimeDbContextFactory{TContext}.CreateInstance"/> method.
+		/// </summary>
+		/// <param name="builderOptions">The optional builder options.</param>
+		/// <returns>An instance of <see cref="PersistedGrantDbContext"/>.</returns>
+		protected override PersistedGrantDbContext CreateInstance(DbContextOptions<PersistedGrantDbContext> builderOptions = null) {
+			var opOptions = new OperationalStoreOptions { DefaultSchema = "auth" };
+			return new PersistedGrantDbContext( builderOptions, opOptions );
+		}
+
+	}
+
+	/// <summary>
+	/// The main TemporaryConfigurationDbContext class.
+	/// </summary>
+	public class TemporaryConfigurationDbContext : DesignTimeDbContextFactory<CustomConfigurationDbContext> {
+
+		/// <summary>
+		/// Flag indicating if the <see cref="DbContextOptions{TContext}"/> object should be created in the <see cref="DesignTimeDbContextFactory{TContext}.CreateDbContext"/> method or not.
+		/// </summary>
+		protected override bool CreateDbOptionsBuilder => false;
+
+		/// <summary>
+		/// Implementation of abstract <see cref="DesignTimeDbContextFactory{TContext}.CreateInstance"/> method.
+		/// </summary>
+		/// <param name="builderOptions">The optional builder options.</param>
+		/// <returns>An instance of <see cref="CustomConfigurationDbContext"/>.</returns>
+		protected override CustomConfigurationDbContext CreateInstance(DbContextOptions<CustomConfigurationDbContext> builderOptions = null) {
+			var builder = new DbContextOptionsBuilder<ConfigurationDbContext>();
+			builder.UseSqlServer( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
+			var storeOptions = new ConfigurationStoreOptions { DefaultSchema = "auth" };
+			return new CustomConfigurationDbContext( builder.Options, storeOptions );
+		}
+
+	}
+
 }

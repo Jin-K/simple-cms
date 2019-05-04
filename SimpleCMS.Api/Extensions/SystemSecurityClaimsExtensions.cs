@@ -3,7 +3,7 @@ using IdentityModel;
 
 namespace SimpleCMS.Api.Extensions {
 
-  public static partial class CustomExtensions {
+  public static class CustomExtensions {
 
     public static string GetClaim(this ClaimsPrincipal principal, string claimType)
     => principal?.FindFirst( claimType )?.Value;
@@ -11,9 +11,6 @@ namespace SimpleCMS.Api.Extensions {
     public static string GetSub(this ClaimsPrincipal principal)
     => principal?.GetClaim( JwtClaimTypes.Subject );
 
-    public static string GetEmail(this ClaimsPrincipal principal)
-    => principal?.GetClaim( JwtClaimTypes.Email );
-    
   }  
 
 }

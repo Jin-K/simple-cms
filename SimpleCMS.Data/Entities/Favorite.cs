@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimpleCMS.Data.Entities {
 
-	[Table("Favorites")]
+	[Table( "Favorites" )]
 	public class Favorite {
 
 		[Required]
@@ -18,15 +18,15 @@ namespace SimpleCMS.Data.Entities {
 		[Required]
 		public System.DateTime Created { get; set; } = System.DateTime.Now;
 
-    [ForeignKey( "UserId" )]
-    [InverseProperty( "Favorites" )]
-    public AppUser User { get; set; }
+		[ForeignKey( "UserId" )]
+		[InverseProperty( "Favorites" )]
+		public AppUser User { get; set; }
 
-    [NotMapped]
-    public Entity Entity { get; set; } = default(Entity);
+		[NotMapped]
+		public Entity Entity { get; set; } = default( Entity );
 
-    [NotMapped]
-    public IEntidad Item { get; set; } = default(IEntidad);
+		[NotMapped]
+		public IEntidad Item { get; set; } = default( IEntidad );
 
 		public Favorite(int userId, int entityId, int itemId) {
 			UserId = userId;

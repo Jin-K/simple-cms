@@ -15,7 +15,7 @@
         masterWnd.postMessage({
           action: 'hash',
           message: window.location.hash.substr(1),  // token from the URL without the `#` symbol
-        }, 'https://localhost:44300');              // "*" or the app's URL (more secure)
+        }, window.location.origin);                 // "*" or the app's URL (more secure)
       }
     };
   </script>  

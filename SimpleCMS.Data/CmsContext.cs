@@ -1,13 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SimpleCMS.Data.Config;
 using SimpleCMS.Data.Entities;
-using SimpleCMS.Data.Extensions;
-using Action = SimpleCMS.Data.Entities.Action;
-using GenFu;
 
 namespace SimpleCMS.Data {
 
@@ -16,47 +10,8 @@ namespace SimpleCMS.Data {
 	/// <para>&#160;</para>
 	/// Main database context of simple-cms
 	/// </summary>
+	/// <inheritdoc />
 	public class CmsContext : IdentityDbContext<AppUser, AppRole, int> {
-
-		/// <summary>
-		/// Public static hardcoded connection string, 
-		/// I think it is needed for auto-generated db contexts in SimpleCMS.Data/Migrations
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryCmsContext.CreateDbContext(string[])"/>
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryPersistedGrantDbContext.CreateDbContext(string[])"/>
-		/// <para>&#160;</para>
-		/// <seealso cref="TemporaryConfigurationDbContext.CreateDbContext(string[])"/>
-		/// </summary>
-		internal const string HcConnectionString = "Data Source=localhost;Initial Catalog=SimpleCMS;Integrated Security=False;User ID=user1;Password=Password123";
-
-		/// <summary>
-		/// Constant string delimiter for array of string during ef core conversion
-		/// <para>&#160;</para>
-		/// <seealso cref="aosToSConverter" />
-		/// </summary>
-		private const string AosDelimiter = "d;^_°;b";
-
-		/// <summary>
-		/// Type of database context ==> SQL Server, Sqlite, ...
-		/// </summary>
-		private readonly ContextType contextType;
-
-		/// <summary>
-		/// Sql statement to get sql NOW datetime ==> getdate(), now(), datetime('now'), ...
-		/// </summary>
-		internal static string DefaultNowSql;
-
-		/// <summary>
-		/// Array of string to string converter
-		/// </summary>
-		/// <remarks>
-		/// Is used by EF core >=2.1 method: <see cref="Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder{TProperty}.HasConversion{TProvider}(ValueConverter{TProperty, TProvider})" />
-		/// </remarks>
-		/// <typeparam name="string[]">c# array of string type property</typeparam>
-		/// <typeparam name="string">sql raw string type provider</typeparam>
-		/// <value>Value of the converter</value>
-		readonly ValueConverter<string[], string> aosToSConverter = new ValueConverter<string[], string>(c_aos => string.Join(AosDelimiter, c_aos), s_s => s_s.Split(AosDelimiter, StringSplitOptions.RemoveEmptyEntries));
 
 		#region DbSet<> properties are here
 
@@ -88,7 +43,7 @@ namespace SimpleCMS.Data {
 
 		#endregion
 
-		#region (Others): Accounts, NewsGroups, Labels, Widgets
+		#region (Others, Misc): Labels, Widgets, Addresses, Favorites, NewsItemEntities, NewsGroups
 
 		/// <summary>Contains all labels in database table dbo.Labels</summary>
 		/// <value>Get the value of Labels</value>
@@ -106,10 +61,6 @@ namespace SimpleCMS.Data {
 		/// <value>Get the value of Favorites</value>
 		public DbSet<Favorite> Favorites { get; set; }
 
-		#endregion
-
-		#region NewsItemEntities, NewsGroups
-
 		/// <summary>Contains all news item entities in database table dbo.NewsItemEntities</summary>
 		/// <value>Get the value of NewsItemEntities</value>
 		public DbSet<NewsItemEntity> NewsItemEntities { get; set; }
@@ -125,245 +76,72 @@ namespace SimpleCMS.Data {
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="options">The options to be used by a <see cref="DbContext" /></param>
-		public CmsContext(DbContextOptions<CmsContext> options) : base(options) {
-
-			// detect and set context type
-			contextType = options.FindExtension<SqlServerOptionsExtension>() != null ? ContextType.SqlServer : ContextType.Sqlite;
-
-			// set correct sql statement for sql NOW
-			DefaultNowSql = contextType == ContextType.SqlServer ? "getdate()" : "datetime('now')";
-		}
+		/// <remarks>
+		/// Sets correct sql statement for sql NOW (in <see cref="F:SimpleCMS.Data.CmsContext.DefaultNowSql" />)
+		/// </remarks>
+		/// <param name="options">The options to be used by a <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /></param>
+		/// <inheritdoc />
+		// ReSharper disable once SuggestBaseTypeForParameter
+		public CmsContext(DbContextOptions<CmsContext> options) : base( options ) { }
 
 		/// <summary>
 		/// Configures database tables.
 		/// Override of <see cref="DbContext.OnModelCreating(ModelBuilder)" />
 		/// </summary>
 		/// <param name="builder">The builder being used to construct the model for this context. Databases (and other extensions) typically</param>
+		/// <inheritdoc />
 		protected override void OnModelCreating(ModelBuilder builder) {
+
+			var isSqlServer = Database.IsSqlServer();
 
 			#region CMS Tables
 
 			// dbo.Label
-			builder.Entity<_Label>(labelBuilder => {
-
-				// set dbo.Labels.Created's default value to sql NOW value
-				labelBuilder.Property(l => l.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// set dbo.Labels.Custom's default value to 0 (false)
-				labelBuilder.Property(l => l.Custom).HasDefaultValueSql("0");
-
-				// seed dbo.Labels table
-				labelBuilder.HasData(
-                    new _Label { Id = 1, Label = "Sociétés" },
-                    new _Label { Id = 2, Label = "Contacts" },
-                    new _Label { Id = 3, Label = "Projets" },
-                    new _Label { Id = 4, Label = "Documents" },
-                    new _Label { Id = 5, Label = "Actions" }
-				);
-			});
-
+			builder.ApplyConfiguration( new LabelConfig( isSqlServer ) );
 			// dbo.Entities
-			builder.Entity<Entity>(entityBuilder => {
-
-				// set dbo.Entities.Created's default value to sql NOW value
-				entityBuilder.Property(e => e.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// set dbo.Entities.Custom's default value to 0 (false)
-				entityBuilder.Property(e => e.Custom).HasDefaultValueSql("0");
-
-				// seed dbo.Entities table
-				entityBuilder.HasData(
-                    new Entity { Id = 10, Name = "Companies", LabelId = 1 },
-                    new Entity { Id = 11, Name = "Contacts", LabelId = 2 },
-                    new Entity { Id = 20, Name = "Projects", LabelId = 3 },
-                    new Entity { Id = 31, Name = "Documents", LabelId = 4 },
-                    new Entity { Id = 32, Name = "Actions", LabelId = 5 }
-				);
-			});
-
+			builder.ApplyConfiguration( new EntityConfig( isSqlServer ) );
 			// dbo.Accounts
-			builder.Entity<Account>().Property(a => a.Created).HasDefaultValueSql(DefaultNowSql);
-
+			builder.ApplyConfiguration( new AccountConfig( isSqlServer ) );
 			// dbo.Contacts
-			builder.Entity<Contact>(contactBuilder => {
-
-				// set dbo.Contacts.Created's default value to sql NOW value
-				contactBuilder.Property(c => c.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// inform EF core that some properties need CLR conversion (using aosToSConverter)
-				contactBuilder.Property(c => c.Phones).HasConversion(aosToSConverter);
-				contactBuilder.Property(c => c.Faxes).HasConversion(aosToSConverter);
-				contactBuilder.Property(c => c.Websites).HasConversion(aosToSConverter);
-				contactBuilder.Property(c => c.Emails).HasConversion(aosToSConverter);
-
-				// seed dbo.Contacts table
-				var i = 0;
-                var contactsToSeed = A.ListOf<Contact>(17);
-                contactsToSeed.ForEach(x => {
-                    x.Id = ++i;
-                    x.Created = i == 1 ? 
-                        "16/08/2018 12:30:05.237".ToDateTime() :
-                        i == 2 ?
-                            "17/08/2018 09:00:00.000".ToDateTime() :
-                            DateTime.Now.AddMinutes(i * -25);
-                });
-				contactBuilder.HasData(contactsToSeed);
-			});
-
+			builder.ApplyConfiguration( new ContactConfig( isSqlServer ) );
 			// dbo.Companies
-			builder.Entity<Company>(companyBuilder => {
-
-				// set dbo.Companies.Created's default value to sql NOW value
-				companyBuilder.Property(c => c.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// inform EF core that some properties need CLR conversion (using aosToSConverter)
-				companyBuilder.Property(c => c.Phones).HasConversion(aosToSConverter);
-				companyBuilder.Property(c => c.Faxes).HasConversion(aosToSConverter);
-				companyBuilder.Property(c => c.Websites).HasConversion(aosToSConverter);
-				companyBuilder.Property(c => c.Emails).HasConversion(aosToSConverter);
-
-				// seed dbo.Companies table
-                var i = 0;
-                var companiesToSeed = A.ListOf<Company>(2);
-                companiesToSeed.ForEach(c => c.Id = ++i);
-				companyBuilder.HasData(companiesToSeed);
-			});
-
+			builder.ApplyConfiguration( new CompanyConfig( isSqlServer ) );
 			// dbo.Actions
-			builder.Entity<Action>(actionBuilder => {
-
-				// set dbo.Actions.Created's default value to sql NOW value
-				actionBuilder.Property(c => c.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// seed dbo.Actions table
-                var i = 0;
-                var actionsToSeed = A.ListOf<Action>(3);
-                actionsToSeed.ForEach(a => a.Id = ++i);
-                actionBuilder.HasData(actionsToSeed);
-			});
-
+			builder.ApplyConfiguration( new ActionConfig( isSqlServer ) );
 			// dbo.Addresses
-			builder.Entity<Address>(addressBuilder => {
-
-				// set dbo.Addresses.Created's default value to sql NOW value
-				addressBuilder.Property(c => c.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// seed dbo.Addresses table
-				addressBuilder.Property(c => c.Main).HasDefaultValue(false);
-				addressBuilder.HasData(
-                    new Address { Id = 1, ContactId = 1, Street = "Avenue des Arts", Number = "4", Zip = "1040", City = "Brussels", Country = "BE" },
-                    new Address { Id = 2, Name = "Planque", Main = true, ContactId = 1, Street = "Rue d'en dessous", Number = "11", Zip = "75000", City = "Paris", Country = "FR" },
-                    new Address { Id = 3, Main = true, ContactId = 2, Street = "Chaussée des délires", Number = "357", Zip = "1337", City = "South Park", Country = "BE" },
-                    new Address { Id = 4, Name = "QG", Main = true, CompanyId = 2, Street = "Place de la duchesse", Zip = "1080", City = "Brussels", Country = "BE" }
-				);
-			});
-
+			builder.ApplyConfiguration( new AddressConfig( isSqlServer ) );
 			// dbo.Favorites
-			builder.Entity<Favorite>(favoritesBuilder => {
-
-				// clustered primary key
-				favoritesBuilder.HasKey(c => new { c.UserId, c.EntityId, c.ItemId });
-
-				// set dbo.Favorites.Created's default value to sql NOW value
-				favoritesBuilder.Property(f => f.Created).HasDefaultValueSql(DefaultNowSql);
-
-				// seed dbo.Favorites table
-				favoritesBuilder.HasData(
-                    new Favorite(1, 11, 1),
-                    new Favorite(1, 11, 3),
-                    new Favorite(1, 11, 7),
-                    new Favorite(1, 11, 11),
-                    new Favorite(1, 11, 16),
-                    new Favorite(1, 10, 2),
-                    new Favorite(1, 32, 1)
-				);
-			});
-
+			builder.ApplyConfiguration( new FavoriteConfig( isSqlServer ) );
 			// dbo.Widgets
-			builder.ApplyConfiguration(new WidgetConfig());
-
+			builder.ApplyConfiguration( new WidgetConfig( isSqlServer ) );
 			// dbo.NewsItemEntities
-			builder.ApplyConfiguration(new NewsItemsConfig());
-
+			builder.ApplyConfiguration( new NewsItemsConfig() );
 			// dbo.NewsGroups      
-			builder.ApplyConfiguration(new NewsGroupConfig());
+			builder.ApplyConfiguration( new NewsGroupConfig() );
 
 			#endregion
 
 			#region Identity Auth Tables
 
 			// dbo.Users
-			builder.Entity<AppUser>(userBuilder => {
-
-				// rename table as dbo.Users
-				userBuilder.ToTable("Users");
-
-				// rename Id column as dbo.Users.UserId
-				userBuilder.Property(p => p.Id).HasColumnName("UserId");
-
-				// create default test user
-				userBuilder.HasData(new AppUser {
-					Id = 1,
-					AccessFailedCount = 0,
-					ConcurrencyStamp = "fe80632a-a20f-4510-9237-205ebab34516",
-					Email = "test@test.com",
-					EmailConfirmed = false,
-					IsAdmin = false,
-					DataEventRecordsRole = null,
-					SecuredFilesRole = null,
-					LockoutEnabled = true,
-					LockoutEnd = null,
-					NormalizedEmail = "TEST@TEST.COM",
-					NormalizedUserName = "TEST@TEST.COM",
-					PasswordHash = "AQAAAAEAACcQAAAAEEh1H8KfznRWQglPFMBIyzLo4AevzKuZYHJq+1vw6sZsvJQgbiIIJYJaTtXg0e3l7A==",
-					PhoneNumber = null,
-					PhoneNumberConfirmed = false,
-					SecurityStamp = "LFEFYRS5H6M3M7QURCCLH76HKHPWXQHZ",
-					TwoFactorEnabled = false,
-					UserName = "test@test.com"
-				});
-			});
-
+			builder.ApplyConfiguration( new AppUserConfig() );
 			// dbo.Roles
-			builder.Entity<AppRole>().ToTable("Roles")
-			    .Property(p => p.Id).HasColumnName("RoleId");
-
+			builder.ApplyConfiguration( new AppRoleConfig() );
 			// auth.UserRoles      
-			builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles", "auth")
-			    .HasKey(p => new { p.RoleId, p.UserId });
-
+			builder.ApplyConfiguration( new IdentityUserRoleConfig() );
 			// auth.UserClaims      
-			builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims", "auth")
-			    .Property(e => e.Id).HasColumnName("UserClaimId");
-
+			builder.ApplyConfiguration( new IdentityUserClaimConfig() );
 			// auth.RoleClaims
-			builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims", "auth")
-			    .Property(p => p.Id).HasColumnName("RoleClaimId");
-
+			builder.ApplyConfiguration( new IdentityRoleClaimConfig() );
 			// auth.UserLogins
-			builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins", "auth")
-			    .HasKey(p => new { p.LoginProvider, p.ProviderKey });
-
+			builder.ApplyConfiguration( new IdentityUserLoginConfig() );
 			// auth.UserTokens      
-			builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens", "auth")
-			    .HasKey(p => new { p.UserId, p.LoginProvider, p.Name });
+			builder.ApplyConfiguration( new IdentityUserTokenConfig() );
 
 			#endregion
 
 		}
 
-	}
-
-	/// <summary>
-	/// The main ContextType enum
-	/// </summary>
-	/// <remarks>
-	/// Used in <see cref="CmsContext" /> constructor to determine the type of database
-	/// </remarks>
-	internal enum ContextType {
-		SqlServer,
-		Sqlite
 	}
 
 }
