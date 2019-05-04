@@ -108,7 +108,7 @@ namespace SimpleCMS.Auth {
       else app.UseExceptionHandler( "/Home/Error" );
 
       app.UseXfo( s => s.Deny() );
-      app.UseCsp( configurer => configurer.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
+      app.UseCsp( configurator => configurator.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
 
       app.UseStaticFiles()
         .UseIdentityServer()
