@@ -32,7 +32,7 @@ namespace SimpleCMS.Api.Controllers {
 	///
 	/// - GET     entity/entity-items                                                                   : <see cref="GetEntityItems()"></see>
 	///
-	/// - POST    entity/entity-items/{id}                                                              : <see cref="PostEntityItems(string, dynamic)"></see>
+	/// - POST    entity/entity-items/{id}                                                              : <see cref="PostEntityItems(string, object)"></see>
 	///
 	/// - GET     entity/entity-items-user                                                              : <see cref="GetEntityItemsUser()"></see>
 	///
@@ -245,7 +245,7 @@ namespace SimpleCMS.Api.Controllers {
 		}
 
 		/// <summary>
-		/// TODELETE Get dummy entity items for tests
+		/// TODO: DELETE Get dummy entity items for tests
 		/// </summary>
 		/// <returns>Returns a json array of dummy items</returns>
 		[HttpGet("entity-items")]
@@ -253,7 +253,7 @@ namespace SimpleCMS.Api.Controllers {
 			=> Ok(_elementsStore.GetItems());
 
 		/// <summary>
-		/// TODELETE Post entity item data to fake db
+		/// TODO: DELETE Post entity item data to fake db
 		/// </summary>
 		/// <param name="id">id of the item to push or replace</param>
 		/// <param name="rawContent">raw content of entity item</param>
@@ -269,7 +269,7 @@ namespace SimpleCMS.Api.Controllers {
 		}
 
 		/// <summary>
-		/// TODELETE Get dummy entity items user data
+		/// TODO: DELETE Get dummy entity items user data
 		/// </summary>
 		/// <returns>Returns a json containing user data</returns>
 		[HttpGet("entity-items-user")]
