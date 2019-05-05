@@ -17,11 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Common", "SimpleC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleCMS.Tests", "SimpleCMS.Tests", "{D6446DB3-B059-4642-8C97-DBF4AE4EA471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCMS.Data.Tests", "SimpleCMS.Tests\SimpleCMS.Data.Tests\SimpleCMS.Data.Tests.csproj", "{884002D2-669C-4D29-B9C4-7C46EA0619C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Data.Tests", "SimpleCMS.Tests\SimpleCMS.Data.Tests\SimpleCMS.Data.Tests.csproj", "{884002D2-669C-4D29-B9C4-7C46EA0619C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCMS.Api.Tests", "SimpleCMS.Tests\SimpleCMS.Api.Tests\SimpleCMS.Api.Tests.csproj", "{4DC024C6-A5D2-45EE-994F-5B84C9E3E293}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Api.Tests", "SimpleCMS.Tests\SimpleCMS.Api.Tests\SimpleCMS.Api.Tests.csproj", "{4DC024C6-A5D2-45EE-994F-5B84C9E3E293}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCMS.Auth.Tests", "SimpleCMS.Tests\SimpleCMS.Auth.Tests\SimpleCMS.Auth.Tests.csproj", "{A6860244-A2EB-44DB-84EE-D7D601E72CAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Auth.Tests", "SimpleCMS.Tests\SimpleCMS.Auth.Tests\SimpleCMS.Auth.Tests.csproj", "{A6860244-A2EB-44DB-84EE-D7D601E72CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCMS.Domain", "SimpleCMS.Domain\SimpleCMS.Domain.csproj", "{1D264A6A-A86C-4867-8445-27C672320ACB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,16 +67,20 @@ Global
 		{A6860244-A2EB-44DB-84EE-D7D601E72CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6860244-A2EB-44DB-84EE-D7D601E72CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6860244-A2EB-44DB-84EE-D7D601E72CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D264A6A-A86C-4867-8445-27C672320ACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D264A6A-A86C-4867-8445-27C672320ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D264A6A-A86C-4867-8445-27C672320ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D264A6A-A86C-4867-8445-27C672320ACB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9557ED26-74BB-43D5-BED6-FCC2BED0D0FA}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{884002D2-669C-4D29-B9C4-7C46EA0619C6} = {D6446DB3-B059-4642-8C97-DBF4AE4EA471}
 		{4DC024C6-A5D2-45EE-994F-5B84C9E3E293} = {D6446DB3-B059-4642-8C97-DBF4AE4EA471}
 		{A6860244-A2EB-44DB-84EE-D7D601E72CAB} = {D6446DB3-B059-4642-8C97-DBF4AE4EA471}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9557ED26-74BB-43D5-BED6-FCC2BED0D0FA}
 	EndGlobalSection
 EndGlobal

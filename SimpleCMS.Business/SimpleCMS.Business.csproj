@@ -8,5 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleCMS.Common\SimpleCMS.Common.csproj" />
     <ProjectReference Include="..\SimpleCMS.Data\SimpleCMS.Data.csproj" />
+    <ProjectReference Include="..\SimpleCMS.Domain\SimpleCMS.Domain.csproj" />
   </ItemGroup>
 </Project>

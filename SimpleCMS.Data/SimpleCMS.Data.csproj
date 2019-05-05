@@ -18,4 +18,7 @@
     <Folder Include="Migrations\Entities\" />
     <Folder Include="Migrations\IdentityServer\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleCMS.Domain\SimpleCMS.Domain.csproj" />
+  </ItemGroup>
 </Project>
