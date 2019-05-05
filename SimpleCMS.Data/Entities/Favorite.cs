@@ -26,7 +26,7 @@ namespace SimpleCMS.Data.Entities {
 		public Entity Entity { get; set; } = default( Entity );
 
 		[NotMapped]
-		public IElement Item { get; set; } = default( IElement );
+		public IEntity Item { get; set; } = default( IEntity );
 
 		public Favorite(int userId, int entityId, int itemId) {
 			UserId = userId;

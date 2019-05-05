@@ -52,11 +52,11 @@ namespace SimpleCMS.Business.Models {
     public bool Starred { get; set; }
 
     /// <summary>
-    /// Static method to transforms a IElement typed entity item to a Item typed strucure
+    /// Static method to transforms a IEntity typed entity item to a Item typed strucure
     /// </summary>
     /// <param name="item">original entity item</param>
     /// <returns>returns the created Item</returns>
-    public static Item FromEntidad(IElement item, bool starred) => new Item { Id = item.Id, Active = true, Created = item.Created, Starred = starred };
+    public static Item FromEntidad(IEntity item, bool starred) => new Item { Id = item.Id, Active = true, Created = item.Created, Starred = starred };
 
   }
 

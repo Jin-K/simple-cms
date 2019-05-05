@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimpleCMS.Data.Entities {
 
-	public class Contact : IElement {
+	public class Contact : IEntity {
 
 		[Key]
 		public int Id { get; set; }

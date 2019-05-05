@@ -10,7 +10,7 @@ namespace SimpleCMS.Business.Providers {
          int GetEntityIdByName(string entityName);
          IEnumerable<Item> GetFilteredAndOrderedItems(string entity, string orderBy, bool descending, uint page, uint pageCount, out int totalCount, int userId = 0, EntityListCategory listCategory = EntityListCategory.All);
          int GetTotalItemsCount(string entity);
-         IElement GetItem(string entityName, int id, bool loadRelatedData = false);
+         IEntity GetItem(string entityName, int id, bool loadRelatedData = false);
          List<dynamic> GetItems();
          void PostItem(string id, dynamic item);
          bool DeleteItem(string entityName, int id);

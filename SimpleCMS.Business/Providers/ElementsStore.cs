@@ -73,7 +73,7 @@ namespace SimpleCMS.Business.Providers {
 		/// <param name="entity">entity name</param>
 		/// <returns>Returns the count</returns>
 		public int GetTotalItemsCount(string entity)
-		=> _cmsContext.AsQueryable<IElement>(entity).Count();
+		=> _cmsContext.AsQueryable<IEntity>(entity).Count();
 
 		/// <summary>
 		/// Get all entity items filtered by parameters
@@ -93,7 +93,7 @@ namespace SimpleCMS.Business.Providers {
 			if (userId == 0) throw new System.ArgumentException("userId cannot be 0");
 
 			// call special reflection method to get all items of desired table (one of CmsContext's DbSet<> properties)
-			IQueryable<IElement> itemsSet = _cmsContext.AsQueryable<IElement>(entity);
+			IQueryable<IEntity> itemsSet = _cmsContext.AsQueryable<IEntity>(entity);
 
 			// get entityId
 			var entityId = _cmsContext.Entities.SingleOrDefault(e => e.Name == entity)?.Id ?? 0;
@@ -150,7 +150,7 @@ namespace SimpleCMS.Business.Providers {
 				itemsSet = itemsSet.OrderBy(orderBy, descending);
 			}
 
-			// return all items starting from ordered query of IElement objects
+			// return all items starting from ordered query of IEntity objects
 			return itemsSet
 
 			  // skip calculated amount depending on PageCount and Page
@@ -159,7 +159,7 @@ namespace SimpleCMS.Business.Providers {
 			  // take amount depending on PageCount
 			  .Take((int)pageCount)
 
-			  // cast IElement object to Item object
+			  // cast IEntity object to Item object
 			  .Select(item => Item.FromEntidad(item, favoriteIds.Contains(item.Id)));
 
 		}
@@ -170,8 +170,8 @@ namespace SimpleCMS.Business.Providers {
 		/// <param name="entityName">entity name for items</param>
 		/// <param name="id">id of item</param>
 		/// <param name="loadRelatedData">do we need to load related data ?</param>
-		/// <returns>returns a raw <see cref="IElement" /> object</returns>
-		public IElement GetItem(string entityName, int id, bool loadRelatedData = false) {
+		/// <returns>returns a raw <see cref="IEntity" /> object</returns>
+		public IEntity GetItem(string entityName, int id, bool loadRelatedData = false) {
 
 			// prepare query
 			var query = $"select * from dbo.{entityName} where dbo.{entityName}.id = {id}";
@@ -180,7 +180,7 @@ namespace SimpleCMS.Business.Providers {
 			var entityType = _cmsContext.GetEntityType(entityName);
 
 			// get appropriate DbSet<TEntity> as IQueryable<TEntity>
-			var set = _cmsContext.Query<IElement>(entityType);
+			var set = _cmsContext.Query<IEntity>(entityType);
 
 			// filter on id (query)
 			set = set.FromSql(query);
@@ -208,7 +208,7 @@ namespace SimpleCMS.Business.Providers {
 		/// <returns>returns true if delete succeeded</returns>
 		public bool DeleteItem(string entityName, int id) {
 
-			var itemToDelete = (from i in _cmsContext.AsQueryable<IElement>(entityName) where i.Id == id select i).First();
+			var itemToDelete = (from i in _cmsContext.AsQueryable<IEntity>(entityName) where i.Id == id select i).First();
 
 			// TODO Use reflection ?
 			switch (itemToDelete) {
@@ -246,7 +246,7 @@ namespace SimpleCMS.Business.Providers {
 		/// <returns>returns true if delete succeeded for all items</returns>
 		public bool DeleteItems(string entityName, int[] ids) {
 
-			var itemsToDelete = from i in _cmsContext.AsQueryable<IElement>(entityName) where ids.Contains(i.Id) select i;
+			var itemsToDelete = from i in _cmsContext.AsQueryable<IEntity>(entityName) where ids.Contains(i.Id) select i;
 
 			switch (entityName) {
 				case "Contacts":
@@ -325,7 +325,7 @@ namespace SimpleCMS.Business.Providers {
 		/// <returns>Returns the list of normalized ids as enumerable</returns>
 		public IEnumerable<int> GetInverseIdsForEntity(string entity, int userId, string category, IEnumerable<int> inverseIds, int limit = 100) {
 
-			var inverseIdsSet = from item in _cmsContext.AsQueryable<IElement>(entity) where !inverseIds.Contains(item.Id) select item.Id;
+			var inverseIdsSet = from item in _cmsContext.AsQueryable<IEntity>(entity) where !inverseIds.Contains(item.Id) select item.Id;
 
 			if (userId > 0) {
 
