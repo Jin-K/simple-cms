@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
+using SimpleCMS.Api.Extensions;
+using SimpleCMS.Business.Services;
 
 namespace SimpleCMS.Api {
 
@@ -85,6 +87,12 @@ namespace SimpleCMS.Api {
 			services.AddScoped<UsersStore>();
 			services.AddScoped<WidgetsStore>();
 			services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
+
+			// add business services
+			services.AddScoped<IEntityService, EntityService>();
+
+			// add AutoMapper extension
+			services.AddAutoMapperSetup();
 
 			// create custom cors policy
 			var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
