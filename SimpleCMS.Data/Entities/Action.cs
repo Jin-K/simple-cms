@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleCMS.Data.Entities {
-	public class Action : IEntidad {
+	public class Action : IElement {
 
 		[Key]
 		public int Id { get; set; }

@@ -165,7 +165,7 @@ namespace SimpleCMS.Api.Controllers {
 		/// Gets an item depending on query parameters (<paramref name="getItemParameters"/>).
 		/// </summary>
 		/// <param name="getItemParameters">query and find parameters</param>
-		/// <returns>Returns a json object of type <see cref="IEntidad" /></returns>
+		/// <returns>Returns a json object of type <see cref="IElement" /></returns>
 		[HttpGet("item")]
 		public IActionResult GetItem([FromQuery] GetItemParameters getItemParameters) {
 

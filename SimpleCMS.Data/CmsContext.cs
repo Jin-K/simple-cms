@@ -6,9 +6,7 @@ using SimpleCMS.Data.Entities;
 namespace SimpleCMS.Data {
 
 	/// <summary>
-	/// The main CmsContext class
-	/// <para>&#160;</para>
-	/// Main database context of simple-cms
+	/// The CmsContext class, main <see cref="DbContext"/> of simple-cms.
 	/// </summary>
 	/// <inheritdoc />
 	public class CmsContext : IdentityDbContext<AppUser, AppRole, int> {
@@ -47,7 +45,7 @@ namespace SimpleCMS.Data {
 
 		/// <summary>Contains all labels in database table dbo.Labels</summary>
 		/// <value>Get the value of Labels</value>
-		public DbSet<_Label> Labels { get; set; }
+		public DbSet<Label_> Labels { get; set; }
 
 		/// <summary>Contains all widgets in database table dbo.Widgets</summary>
 		/// <value>Get the value of Widgets</value>
@@ -82,7 +80,7 @@ namespace SimpleCMS.Data {
 		/// <param name="options">The options to be used by a <see cref="T:Microsoft.EntityFrameworkCore.DbContext" /></param>
 		/// <inheritdoc />
 		// ReSharper disable once SuggestBaseTypeForParameter
-		public CmsContext(DbContextOptions<CmsContext> options) : base( options ) { }
+		public CmsContext(DbContextOptions<CmsContext> options = null) : base( options ?? new DbContextOptionsBuilder<CmsContext>().Options ) { }
 
 		/// <summary>
 		/// Configures database tables.

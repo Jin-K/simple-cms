@@ -22,7 +22,7 @@ namespace SimpleCMS.Data.Entities {
 
 		[ForeignKey( "LabelId" )]
 		[InverseProperty( "Entities" )]
-		public _Label Label { get; set; }
+		public Label_ Label { get; set; }
 
 	}
 

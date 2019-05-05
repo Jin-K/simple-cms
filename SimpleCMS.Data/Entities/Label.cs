@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SimpleCMS.Data.Entities {
 
 	[Table( "Labels" )]
-	public class _Label {
+	public class Label_ {
 
 		[Required, Key]
 		public int Id { get; set; }

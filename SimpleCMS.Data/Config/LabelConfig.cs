@@ -4,11 +4,11 @@ using SimpleCMS.Data.Entities;
 
 namespace SimpleCMS.Data.Config {
 
-	public class LabelConfig : WithDefaultSqlNowBaseConfig, IEntityTypeConfiguration<_Label> {
+	public class LabelConfig : WithDefaultSqlNowBaseConfig, IEntityTypeConfiguration<Label_> {
 
 		internal LabelConfig(bool isSqlServer) : base( isSqlServer ) {}
 
-		public void Configure(EntityTypeBuilder<_Label> builder) {
+		public void Configure(EntityTypeBuilder<Label_> builder) {
 
 			// set dbo.Labels.Created's default value to sql NOW value
 			builder.Property( l => l.Created ).HasDefaultValueSql( DefaultNowSql );
@@ -18,11 +18,11 @@ namespace SimpleCMS.Data.Config {
 
 			// seed dbo.Labels table
 			builder.HasData(
-				new _Label { Id = 1, Label = "Sociétés" },
-				new _Label { Id = 2, Label = "Contacts" },
-				new _Label { Id = 3, Label = "Projets" },
-				new _Label { Id = 4, Label = "Documents" },
-				new _Label { Id = 5, Label = "Actions" }
+				new Label_ { Id = 1, Label = "Sociétés" },
+				new Label_ { Id = 2, Label = "Contacts" },
+				new Label_ { Id = 3, Label = "Projets" },
+				new Label_ { Id = 4, Label = "Documents" },
+				new Label_ { Id = 5, Label = "Actions" }
 			);
 
 		}

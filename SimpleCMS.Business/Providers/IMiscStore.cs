@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SimpleCMS.Data.Entities;
-using Label = SimpleCMS.Data.Entities._Label;
 
 namespace SimpleCMS.Business.Providers {
 
 	public interface IMiscStore {
 
-		Task<List<Label>> GetAllLabels();
+		Task<List<Label_>> GetAllLabels();
 
 		Task<List<Widget>> GetAllWidgets();
 

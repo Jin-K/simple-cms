@@ -3,9 +3,9 @@
 namespace SimpleCMS.Data.Entities {
 
 	/// <summary>
-	/// IEntidad interface for entity-items (CMS entity-tables)
+	/// IElement interface for entity-items (CMS entity-tables)
 	/// </summary>
-	public interface IEntidad {
+	public interface IElement {
 
 		/// <summary>
 		/// Unique primary key, indented

@@ -44,7 +44,7 @@ namespace SimpleCMS.Business.Providers {
 		/// Gets all labels in database
 		/// </summary>
 		/// <returns>Returns a generic list of labels asynchronously</returns>
-		public Task<List<_Label>> GetAllLabels()
+		public Task<List<Label_>> GetAllLabels()
 		=> this._context.Labels.ToListAsync();
 
 		/// <summary>
