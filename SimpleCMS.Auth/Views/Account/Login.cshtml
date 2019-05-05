@@ -30,7 +30,7 @@
                     <div class="checkbox">
                         <label asp-for="RememberMe">
                             <input asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
+                            @Html.DisplayNameFor( m => m.RememberMe )
                         </label>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
             <h4>Use another service to log in.</h4>
             <hr />
             @{
-                var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                var loginProviders = ( await SignInManager.GetExternalAuthenticationSchemesAsync() ).ToList();
                 if (loginProviders.Count == 0) {
                     <div>
                         <p>
@@ -61,7 +61,8 @@
                             for details on setting up this ASP.NET application to support logging in via external services.
                         </p>
                     </div>
-                } else {
+                }
+                else {
                     <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                         <div>
                             <p>
@@ -78,58 +79,64 @@
 </div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
+    @await Html.PartialAsync( "_ValidationScriptsPartial" )
     <script>
 
-      var origin = 'http://localhost:4200';
-      var external_login_param = 'external_login='
+    var origin = '@ViewData["Origin"]';
+    var external_login_param = 'external_login='
 
-      $(function() {
+    $(function() {
         var masterWnd = window.opener || window.parent || window.top;
         masterWnd.postMessage({
-          action  : 'loaded',
-          message : JSON.parse(JSON.stringify(window.location))
+            action  : 'loaded',
+            message : JSON.parse(JSON.stringify(window.location))
         }, origin);
-        
+
         var validationErrors = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["ValidationErrors"]));
         if (validationErrors.length) {
-          window.top.postMessage({
-            action: 'validation_errors',
-            message: validationErrors
-          }, origin);
+            window.top.postMessage({
+                action: 'validation_errors',
+                message: validationErrors
+            }, origin);
         }
-      });
+    });
 
-      $(window).on('message', function(event) {
+    $(window).on('message', function(event) {
         // Check the origin of the data
         var _origin = event.originalEvent.origin;
-        if (~_origin.indexOf('https://localhost:44300') || ~_origin.indexOf('http://localhost:4200')) {
-          var data = event.originalEvent.data;
-          
-          if (!data.action || !data.message) return;
-          
-          switch(data.action) {
+        var allowedCorsOrigins = @Html.Raw(Json.Serialize(ViewData["AllowedCorsOrigins"] ));
 
-            case 'login':
-              var formData = data.message;
-              for(var prop in formData) {
-                var input = $('#' + prop);
-                input.val(formData[prop]);
-                if (input.prop('type') === 'checkbox') input.prop('checked', formData[prop]);
-              }
-              $('#login_form').submit();
-              return;
-            
-            case 'external_login':
-              $('#external_login_btn').trigger('click');
-              return;
+        for (var i = 0; i < allowedCorsOrigins.length; i++) {
+            var allowedCorsOrigin = allowedCorsOrigins[i];
+            if (~_origin.indexOf(allowedCorsOrigin)) {
+                var data = event.originalEvent.data;
 
-            default:
-              return;
+                if (!data.action || !data.message) return;
 
-          }
+                switch(data.action) {
+
+                    case 'login':
+                        var formData = data.message;
+                        for(var prop in formData) {
+                            var input = $('#' + prop);
+                            input.val(formData[prop]);
+                            if (input.prop('type') === 'checkbox') input.prop('checked', formData[prop]);
+                        }
+                        $('#login_form').submit();
+                        return;
+
+                    case 'external_login':
+                        $('#external_login_btn').trigger('click');
+                        return;
+
+                    default:
+                        return;
+
+                }
+            }
         }
-        else return;
-      });
+
+        return;
+    });
     </script>
 }

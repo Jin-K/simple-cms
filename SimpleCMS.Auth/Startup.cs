@@ -14,108 +14,109 @@ using SimpleCMS.Auth.Stores;
 using SimpleCMS.Common;
 using SimpleCMS.Data;
 using SimpleCMS.Data.Entities;
-using SimpleCMS.Data.Extensions;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace SimpleCMS.Auth {
 	public class Startup {
 
-    private IConfigurationRoot Configuration { get; }
+		private IConfigurationRoot Configuration { get; }
 
-    public Startup(IHostingEnvironment env) {
-      Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Verbose()
-        .Enrich.WithProperty( "App", "SimpleCMS.Auth" )
-        .Enrich.FromLogContext()
-        .WriteTo.Seq( "http://localhost:5341" )
-        .WriteTo.RollingFile( "../Logs/Auth" )
-        .CreateLogger();
+		public Startup(IHostingEnvironment env) {
+			var builder = new ConfigurationBuilder()
+			  .SetBasePath( env.ContentRootPath )
+			  .AddJsonFile( "appsettings.json", optional: true, reloadOnChange: true )
+			  .AddJsonFile( $"appsettings.{env.EnvironmentName}.json", optional: true );
 
-      var builder = new ConfigurationBuilder()
-        .SetBasePath( env.ContentRootPath )
-        .AddJsonFile( "appsettings.json", optional: true, reloadOnChange: true )
-        .AddJsonFile( $"appsettings.{env.EnvironmentName}.json", optional: true );
+			if (env.IsDevelopment()) builder.AddUserSecrets( "AspNetCoreID4External...." );
 
-      if (env.IsDevelopment()) builder.AddUserSecrets( "AspNetCoreID4External...." );
+			builder.AddEnvironmentVariables();
+			Configuration = builder.Build();
 
-      builder.AddEnvironmentVariables();
-      Configuration = builder.Build();
-    }
+			// extract serilog post config data from config
+			var serilogConfigurationSection = Configuration.GetSection( "Serilog:Configuration" );
+			var serilogPropertySection = serilogConfigurationSection.GetSection( "property" );
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services) {
-      var clientId = Configuration["MicrosoftClientId"];
-      var clientSecret = Configuration["MicrosoftClientSecret"];
+			Log.Logger = new LoggerConfiguration()
+			  .MinimumLevel.Verbose()
+			  .Enrich.WithProperty( serilogPropertySection["name"], serilogPropertySection["value"] )
+			  .Enrich.FromLogContext()
+			  .WriteTo.Seq( serilogConfigurationSection["serverUrl"] )
+			  .WriteTo.RollingFile( serilogConfigurationSection["pathFormat"] )
+			  .CreateLogger();
+		}
 
-      var connectionString = Configuration.GetConnectionString( "DefaultConnection" );
-      var migrationsAssembly = typeof( CmsContext ).GetTypeInfo().Assembly.GetName().Name;
+		// This method gets called by the runtime. Use this method to add services to the container.
+		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+		public void ConfigureServices(IServiceCollection services) {
+			var clientId = Configuration["MicrosoftClientId"];
+			var clientSecret = Configuration["MicrosoftClientSecret"];
 
-      var certificatePath = Configuration["certificates:signing"];
-      var certificatePassword = Configuration["certificates:password"];
+			var connectionString = Configuration.GetConnectionString( "DefaultConnection" );
+			var migrationsAssembly = typeof( CmsContext ).GetTypeInfo().Assembly.GetName().Name;
 
-      // load identityserver config from file and set into configuration
-      services.AddOptions();
-      services.Configure<IdentityServerConfiguration>( Configuration.GetSection( "IdentityServerConfiguration" ) );
+			// load security configuration
+			var identityServerConfigurationSection = Configuration.GetSection("IdentityServerConfiguration");
+			var identityServerConfiguration = identityServerConfigurationSection.Get<IdentityServerConfiguration>();
 
-      // add main database context using SQL Server
-      services.AddDbContext<CmsContext>( options => options.UseSqlServer( connectionString ) );
+			// create identityserver config options singleton for DI
+			services.AddOptions();
+			services.Configure<IdentityServerConfiguration>( identityServerConfigurationSection );
 
-      services.AddIdentity<AppUser, AppRole>()
-        .AddEntityFrameworkStores<CmsContext>()
-        .AddDefaultTokenProviders();
+			// add main database context using SQL Server
+			services.AddDbContext<CmsContext>( options => options.UseSqlServer( connectionString ) );
 
-      services.AddAuthentication()
-        .AddMicrosoftAccount( options => {
-          options.ClientId = clientId;
-          options.SignInScheme = "Identity.External";
-          options.ClientSecret = clientSecret;
-        } );
+			services.AddIdentity<AppUser, AppRole>()
+			  .AddEntityFrameworkStores<CmsContext>()
+			  .AddDefaultTokenProviders();
 
-      services.AddMvc();
+			services.AddAuthentication()
+			  .AddMicrosoftAccount( options => {
+				  options.ClientId = clientId;
+				  options.SignInScheme = "Identity.External";
+				  options.ClientSecret = clientSecret;
+			  } );
 
-      services.AddTransient<IClientStore, CmsClientsStore>();
-      services.AddTransient<IResourceStore, CmsResourceStore>();
-      services.AddTransient<IProfileService, CmsProfileService>();
-      services.AddTransient<IEmailSender, AuthMessageSender>();
-      services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
+			services.AddMvc();
 
-      services.AddIdentityServer( x => x.IssuerUri = "https://localhost:44321/" )
-        .AddSigningCredential()
-        .AddConfigurationStore( options => {
-          options.ConfigureDbContext = builder =>
-            builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
-          options.DefaultSchema = "auth";
-        } )
-        .AddOperationalStore( options => {
-          options.ConfigureDbContext = builder =>
-            builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
-          options.DefaultSchema = "auth";
-        } )
-        .AddAspNetIdentity<AppUser>()
-        .AddClientStore<CmsClientsStore>()
-        .AddProfileService<CmsProfileService>()
-        .AddResourceStore<CmsResourceStore>();
-    }
+			services.AddTransient<IClientStore, CmsClientsStore>();
+			services.AddTransient<IResourceStore, CmsResourceStore>();
+			services.AddTransient<IProfileService, CmsProfileService>();
+			services.AddTransient<IEmailSender, AuthMessageSender>();
+			services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+			services.AddIdentityServer( x => x.IssuerUri = identityServerConfiguration.IssuerUri )
+			  .AddSigningCredential()
+			  .AddConfigurationStore( options => {
+				  options.ConfigureDbContext = builder => builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
+				  options.DefaultSchema = "auth";
+			  } )
+			  .AddOperationalStore( options => {
+				  options.ConfigureDbContext = builder => builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
+				  options.DefaultSchema = "auth";
+			  } )
+			  .AddAspNetIdentity<AppUser>()
+			  .AddClientStore<CmsClientsStore>()
+			  .AddProfileService<CmsProfileService>()
+			  .AddResourceStore<CmsResourceStore>();
+		}
 
-      if (env.IsDevelopment()) {
-        app.UseDeveloperExceptionPage();
-        app.UseDatabaseErrorPage();
-      }
-      else app.UseExceptionHandler( "/Home/Error" );
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<IdentityServerConfiguration> identityServerConfigurationOptions) {
 
-      app.UseXfo( s => s.Deny() );
-      app.UseCsp( configurator => configurator.FrameAncestors( config => config.CustomSources( "http://localhost:4200", "https://localhost:44300" ) ) );
+			if (env.IsDevelopment()) {
+				app.UseDeveloperExceptionPage();
+				app.UseDatabaseErrorPage();
+			}
+			else app.UseExceptionHandler( "/Home/Error" );
 
-      app.UseStaticFiles()
-        .UseIdentityServer()
-        .UseAuthentication()
-        .UseMvc( routes => routes.MapRoute( "default", "{controller=Home}/{action=Index}/{id?}" ) );
+			app.UseXfo( s => s.Deny() );
+			app.UseCsp( configurator => configurator.FrameAncestors( config => config.CustomSources( identityServerConfigurationOptions.Value.CustomSources ) ) );
 
-      app.InitializeDatabase();
-    }
-  }
+			app.UseStaticFiles()
+			  .UseIdentityServer()
+			  .UseAuthentication()
+			  .UseMvc( routes => routes.MapRoute( "default", "{controller=Home}/{action=Index}/{id?}" ) );
+		}
+	}
 }
