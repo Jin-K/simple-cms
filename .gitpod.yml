@@ -1,0 +1,5 @@
+image: gitpod/workspace-dotnet
+
+vscode:
+  extensions:
+    - mhutchie.git-graph@1.18.0:LzqJ/RuqakaRZud6LtvTQw==
