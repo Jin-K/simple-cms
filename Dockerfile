@@ -9,8 +9,4 @@ RUN sudo apt-get update
 RUN sudo apt-get install -y mssql-server
 
 # Setup SQL Server
-ENV ACCEPT_EULA="Y"
-ENV MSSQL_PID="Developer"
-ENV MSSQL_SA_PASSWORD="Password123"
-ENV MSSQL_TCP_PORT="1234"
-RUN sudo /opt/mssql/bin/mssql-conf setup
+RUN sudo ACCEPT_EULA=Y MSSQL_PID=Developer MSSQL_SA_PASSWORD=Password123 MSSQL_TCP_PORT=1234 /opt/mssql/bin/mssql-conf setup
