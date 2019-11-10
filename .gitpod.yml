@@ -1,4 +1,6 @@
-image: gitpod/workspace-dotnet
+# image: gitpod/workspace-dotnet
+image:
+  file: Dockerfile
 
 vscode:
   extensions:
