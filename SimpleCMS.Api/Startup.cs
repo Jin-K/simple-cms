@@ -74,10 +74,10 @@ namespace SimpleCMS.Api {
 		public void ConfigureServices(IServiceCollection services) {
 
 			// get connection string
-			var defaultConnection = _configuration.GetConnectionString( "DefaultConnection" );
+			var defaultConnection = "Host=localhost;Username=gitpod;Database=simple-cms";
 
 			// add main database context using SQL Server
-			services.AddDbContext<CmsContext>( options => options.UseSqlServer( defaultConnection ), ServiceLifetime.Scoped );
+			services.AddDbContext<CmsContext>(options => options.UseNpgsql(defaultConnection));
 
 			// add singletons of store services for DI
 			services.AddScoped<NewsStore>();
@@ -86,7 +86,7 @@ namespace SimpleCMS.Api {
 			services.AddScoped<IMiscStore, MiscStore>();
 			services.AddScoped<UsersStore>();
 			services.AddScoped<WidgetsStore>();
-			services.AddSingleton<IMetricsUtil>( MetricsUtil.Singleton );
+			services.AddSingleton<IMetricsUtil>(MetricsUtil.Singleton);
 
 			// add business services
 			services.AddScoped<IEntityService, EntityService>();
@@ -211,9 +211,6 @@ namespace SimpleCMS.Api {
 
 			// use authentication
 			app.UseAuthentication();
-
-			// use https redirection (if we try to connect to http route)
-			app.UseHttpsRedirection();
 
 			// define route that SignalR should use
 			app.UseSignalR( routes => {

@@ -23,7 +23,7 @@ export class CoreOidcConfigService {
   /**
    * Well known endpoints json object.
    * Is retrieved from sts server
-   * 
+   *
    * @description Contains informations about other endpoints of the sts server
    * @private
    * @type {*}
@@ -34,7 +34,7 @@ export class CoreOidcConfigService {
   /**
    * Client configuration object for our application.
    * Check {@link #getClientConfig()}
-   * 
+   *
    * @private
    * @type {*}
    * @memberof CoreOidcConfigService
@@ -55,7 +55,7 @@ export class CoreOidcConfigService {
   constructor( @Inject(CORE_CONFIG) private _config, private _store: Store<any> ) { }
 
   async load() {
-    if (!this._config.stsServer || !this._config.apiServer) return;
+    if (!this._config.stsServer) return;
     this._clientConfiguration = this.getClientConfig();
     await this.load_using_stsServer(this.clientConfiguration.stsServer);
   }

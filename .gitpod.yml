@@ -2,10 +2,12 @@
 image:
   file: postgres.Dockerfile
 tasks:
-    - command: >
-        echo DATABASE_URL=$DATABASE_URL >> .env &&
-        pg_start.sh
-
+  - command: pg_start.sh
+ports:
+  - port: 64907
+    onOpen: ignore
+  - port: 50772
+    onOpen: ignore
 vscode:
   extensions:
     - mhutchie.git-graph@1.18.0:LzqJ/RuqakaRZud6LtvTQw==

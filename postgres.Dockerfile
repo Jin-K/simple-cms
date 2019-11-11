@@ -21,7 +21,7 @@ RUN chmod +x ~/pg/scripts/*
 ENV PATH="$HOME/pg/scripts:$PATH"
 
 # Set some environment variables
-ENV DATABASE_URL=postgres://gitpod@127.0.0.1/rust-web-with-rocket
+ENV DATABASE_URL=postgres://gitpod@127.0.0.1/simple-cms
 
 # Give back control
 USER root

@@ -12,7 +12,6 @@ namespace SimpleCMS.Auth {
 
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
       var builder = WebHost.CreateDefaultBuilder( args );
-      if (RuntimeInformation.IsOSPlatform( OSPlatform.Linux )) builder = builder.Listen4Certificates();
       return builder.ConfigSerilog( BuildConfig().GetSection( "Serilog:Logging" ) ).UseStartup<Startup>();
     }
 

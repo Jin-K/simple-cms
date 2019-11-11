@@ -52,7 +52,7 @@ namespace SimpleCMS.Auth {
 			var clientId = Configuration["MicrosoftClientId"];
 			var clientSecret = Configuration["MicrosoftClientSecret"];
 
-			var connectionString = Configuration.GetConnectionString( "DefaultConnection" );
+			var connectionString = "Host=localhost;Username=gitpod;Database=simple-cms";
 			var migrationsAssembly = typeof( CmsContext ).GetTypeInfo().Assembly.GetName().Name;
 
 			// load security configuration
@@ -64,7 +64,7 @@ namespace SimpleCMS.Auth {
 			services.Configure<IdentityServerConfiguration>( identityServerConfigurationSection );
 
 			// add main database context using SQL Server
-			services.AddDbContext<CmsContext>( options => options.UseSqlServer( connectionString ) );
+			services.AddDbContext<CmsContext>(options => options.UseNpgsql(connectionString));
 
 			services.AddIdentity<AppUser, AppRole>()
 			  .AddEntityFrameworkStores<CmsContext>()
@@ -88,11 +88,11 @@ namespace SimpleCMS.Auth {
 			services.AddIdentityServer( x => x.IssuerUri = identityServerConfiguration.IssuerUri )
 			  .AddSigningCredential()
 			  .AddConfigurationStore( options => {
-				  options.ConfigureDbContext = builder => builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
+				  options.ConfigureDbContext = builder => builder.UseNpgsql( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
 				  options.DefaultSchema = "auth";
 			  } )
 			  .AddOperationalStore( options => {
-				  options.ConfigureDbContext = builder => builder.UseSqlServer( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
+				  options.ConfigureDbContext = builder => builder.UseNpgsql( connectionString, sql => sql.MigrationsAssembly( migrationsAssembly ) );
 				  options.DefaultSchema = "auth";
 			  } )
 			  .AddAspNetIdentity<AppUser>()

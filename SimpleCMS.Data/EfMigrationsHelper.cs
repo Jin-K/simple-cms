@@ -17,7 +17,7 @@ namespace SimpleCMS.Data {
 		/// <summary>
 		/// The SQL connection string.
 		/// </summary>
-		protected readonly string ConnectionString;
+		protected readonly string ConnectionString = "Host=localhost;Username=gitpod;Database=simple-cms";
 
 		/// <summary>
 		/// The assembly name where all our custom <see cref="DbContext"/> derived types are defined.
@@ -30,17 +30,6 @@ namespace SimpleCMS.Data {
 		protected abstract bool CreateDbOptionsBuilder { get; }
 
 		/// <summary>
-		/// Creates a new instance of <see cref="DesignTimeDbContextFactory{TContext}"/>.
-		/// </summary>
-		protected DesignTimeDbContextFactory() {
-			var configuration = new ConfigurationBuilder().SetBasePath( Directory.GetCurrentDirectory() )
-				.AddJsonFile( "appsettings.json" )
-				.Build();
-
-			ConnectionString = configuration.GetConnectionString( "DefaultConnection" );
-		}
-
-		/// <summary>
 		/// Creates a new instance of a derived context.
 		/// </summary>
 		/// <param name="args"> Arguments provided by the design-time service. </param>
@@ -49,7 +38,7 @@ namespace SimpleCMS.Data {
 			if (!CreateDbOptionsBuilder) return CreateInstance();
 
 			var builder = new DbContextOptionsBuilder<TContext>();
-			builder.UseSqlServer( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
+			builder.UseNpgsql( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
 			return CreateInstance( builder.Options );
 		}
 
@@ -121,7 +110,7 @@ namespace SimpleCMS.Data {
 		/// <returns>An instance of <see cref="CustomConfigurationDbContext"/>.</returns>
 		protected override CustomConfigurationDbContext CreateInstance(DbContextOptions<CustomConfigurationDbContext> builderOptions = null) {
 			var builder = new DbContextOptionsBuilder<ConfigurationDbContext>();
-			builder.UseSqlServer( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
+			builder.UseNpgsql( ConnectionString, b => b.MigrationsAssembly( AssemblyName ) );
 			var storeOptions = new ConfigurationStoreOptions { DefaultSchema = "auth" };
 			return new CustomConfigurationDbContext( builder.Options, storeOptions );
 		}

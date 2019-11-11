@@ -1,4 +1,4 @@
-﻿namespace SimpleCMS.Data.Config {
+namespace SimpleCMS.Data.Config {
 
 	/// <summary>
 	/// The main WithDefaultSqlNowBaseConfig class.
@@ -14,7 +14,7 @@
 		/// The main constructor used to initialize the default now sql statement
 		/// </summary>
 		/// <param name="isSqlServer"></param>
-		protected WithDefaultSqlNowBaseConfig(bool isSqlServer) => DefaultNowSql = isSqlServer ? "getdate()" : "datetime('now')";
+		protected WithDefaultSqlNowBaseConfig(bool isSqlServer) => DefaultNowSql = isSqlServer ? "getdate()" : "NOW()";
 
 	}
 
