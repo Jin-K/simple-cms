@@ -1,8 +1,8 @@
 # image: gitpod/workspace-dotnet
 image:
   file: Dockerfile
-tasks:
- - command: mssql-launch.sh
+# tasks:
+#  - command: mssql-launch.sh
 
 vscode:
   extensions:
