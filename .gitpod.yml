@@ -2,9 +2,7 @@
 image:
   file: Dockerfile
 tasks:
- - command: >
-    echo Starting &&
-    mssql-launch.sh
+ - command: mssql-launch.sh
 
 vscode:
   extensions:
