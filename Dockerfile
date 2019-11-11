@@ -18,5 +18,15 @@ RUN sudo apt-get install -y mssql-server
 # USER root
 # RUN chown -R gitpod:gitpod /etc/mssql
 
-ENV ACCEPT_EULA=y
+USER gitpod
+ENV PATH="/opt/mssql/bin:$PATH"
+RUN mkdir -p ~/mssql/scripts
+COPY mssql-launch.sh ~/mssql/scripts/mssql-launch.sh
+RUN chmod +x ~/mssql/scripts/*
+ENV PATH="$HOME/mssql/scripts:$PATH"
+
+ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=Password123
+
+# Give back control
+USER root
