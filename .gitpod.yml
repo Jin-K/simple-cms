@@ -1,8 +1,7 @@
 # image: gitpod/workspace-dotnet
 image:
   file: postgres.Dockerfile
-# tasks:
-#  - command: mssql-launch.sh
+tasks:
     - command: >
         echo DATABASE_URL=$DATABASE_URL >> .env &&
         pg_start.sh
