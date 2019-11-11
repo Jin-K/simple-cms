@@ -13,6 +13,6 @@ RUN sudo apt-get install -y mssql-server
 # RUN sudo /opt/mssql/bin/sqlservr --accept-eula
 
 COPY mssql-bashrc-launch.sh /etc/mssql/mssql-bashrc-launch.sh
-RUN chown -R gitpod:gitpod /etc/mssql
 USER gitpod
 RUN echo "/etc/mssql/mssql-bashrc-launch.sh" >> ~/.bashrc
+RUN chown -R gitpod:gitpod /etc/mssql
