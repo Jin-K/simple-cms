@@ -22,7 +22,7 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=Password123
 
 USER root
-RUN sudo ACCEPT_EULA=Y MSSQL_PID='Developer' MSSQL_SA_PASSWORD='Password123' /opt/mssql/bin/mssql-conf setup
+RUN sudo ACCEPT_EULA=Y MSSQL_PID='Developer' MSSQL_SA_PASSWORD='Password123' DEBIAN_FRONTEND=noninteractive /opt/mssql/bin/mssql-conf setup --no-install-recommends
 
 # Install SQL Server command-line tools
 USER root
