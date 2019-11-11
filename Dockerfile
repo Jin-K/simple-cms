@@ -20,8 +20,8 @@ RUN sudo apt-get install -y mssql-server
 
 COPY mssql-launch.sh /home/gitpod/mssql/scripts/mssql-launch.sh
 RUN chown -R gitpod:gitpod /home/gitpod/mssql
-RUN mkdir /var/opt/mssql/system
-RUN chown -R gitpod:gitpod /var/opt/mssql/system
+RUN mkdir /var/opt/mssql/system; mkdir /var/opt/mssql/profiles
+RUN chown -R gitpod:gitpod /var/opt/mssql
 
 USER gitpod
 ENV PATH="/opt/mssql/bin:$PATH"
