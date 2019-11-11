@@ -22,7 +22,6 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=Password123
 
 USER root
-RUN sudo /opt/mssql/bin/mssql-conf set-sa-password 'Password123'
 RUN sudo systemctl start mssql-server
 
 # Install SQL Server command-line tools
