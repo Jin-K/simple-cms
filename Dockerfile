@@ -18,10 +18,11 @@ RUN sudo apt-get install -y mssql-server
 # USER root
 # RUN chown -R gitpod:gitpod /etc/mssql
 
+COPY mssql-launch.sh /home/gitpod/mssql/scripts/mssql-launch.sh
+RUN chown -R gitpod:gitpod /home/gitpod/mssql
+
 USER gitpod
 ENV PATH="/opt/mssql/bin:$PATH"
-RUN mkdir -p /home/gitpod/mssql/scripts
-COPY mssql-launch.sh /home/gitpod/mssql/scripts/mssql-launch.sh
 RUN chmod +x /home/gitpod/mssql/scripts/*
 ENV PATH="$HOME/mssql/scripts:$PATH"
 
