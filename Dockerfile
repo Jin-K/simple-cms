@@ -29,6 +29,8 @@ RUN sudo apt-get update
 RUN sudo ACCEPT_EULA=y DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mssql-tools unixodbc-dev
 
 # Setup SQL Server command-line tools for gitpod
+RUN chown -R gitpod:gitpod /opt/mssql-tools
+
 USER gitpod
 RUN chmod +x /opt/mssql-tools/bin/*
 ENV PATH="/opt/mssql-tools/bin:$PATH"
