@@ -1,8 +1,11 @@
 # image: gitpod/workspace-dotnet
 image:
-  file: Dockerfile
+  file: postgres.Dockerfile
 # tasks:
 #  - command: mssql-launch.sh
+    - command: >
+        echo DATABASE_URL=$DATABASE_URL >> .env &&
+        pg_start.sh
 
 vscode:
   extensions:
