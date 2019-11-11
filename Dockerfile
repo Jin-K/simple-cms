@@ -22,7 +22,8 @@ ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=Password123
 
 USER root
-RUN sudo MSSQL_SA_PASSWORD=Password123 MSSQL_PID=evaluation /opt/mssql/bin/mssql-conf -n setup accept-eula
+RUN sudo systemctl status mssql-server
+# RUN sudo MSSQL_SA_PASSWORD=Password123 MSSQL_PID=evaluation /opt/mssql/bin/mssql-conf -n setup accept-eula
 
 # Install SQL Server command-line tools
 USER root
